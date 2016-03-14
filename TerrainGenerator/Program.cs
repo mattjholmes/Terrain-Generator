@@ -28,7 +28,7 @@ namespace TerrainGenerator
                 {
                     for (int j = 0; j < 1024; j++)
                     {
-                        UInt16 output = (ushort)(generator.OctavePerlin(i * .001, j * .001, 0, frequency, octaves, persistance, lacunarity) * 65536);
+                        UInt16 output = (ushort)(generator.OctavePerlin(i * .001, j * .001, 0, frequency, octaves, persistance, lacunarity) * 65536); 
                         //Console.WriteLine(output);
                         writer.Write(output);
                     }
