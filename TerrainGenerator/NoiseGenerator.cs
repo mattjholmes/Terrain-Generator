@@ -51,7 +51,7 @@ namespace TerrainGenerator
         private const int hashMask = 255;
 
         // table to hold the exponential noise distribution
-        private static double[] m = new double[256];
+        private double[] m = new double[256];
 
         // table containing the possible vectors to be used in generating the gradients
         private static Vector[] grad2d = {
@@ -69,7 +69,7 @@ namespace TerrainGenerator
         private const int grad2dmask = 7;
 
         // function to initialized the exponential noise distribution table
-        private static void InitExpMagTable(double mu)
+        public void InitExpMagTable(double mu)
         {
             double s = 1.0; // initial magnitude
             for (int i = 0; i < m.Length; i++)
@@ -175,11 +175,12 @@ namespace TerrainGenerator
             return (output + 1) / 2;
         }
 
-        public double ExpPerlin2dNoise(double x, double y, double mu)
+        public double ExpPerlin2dNoise(double x, double y)
         {
+            // if the magnitude table hasn't be initialized, initialize with mu = 1
             if (m[0] != 1.0)
             {
-                InitExpMagTable(mu);
+                InitExpMagTable(1);
             }
             if (repeat > 0)
             {
@@ -277,11 +278,12 @@ namespace TerrainGenerator
             return (Lerp(y1, y2, w) + 1) / 2; // return interpolated result, change range from -1...1 to 0...1
         }
 
-        public double ExpPerlinNoise(double x, double y, double z, double mu)
+        public double ExpPerlinNoise(double x, double y, double z)
         {
+            // if the magnitude isn't initialized, do so using mu = 1
             if (m[0] != 1.0)
             {
-                InitExpMagTable(mu);
+                InitExpMagTable(1);
             }
             if (repeat > 0)
             {
@@ -361,14 +363,14 @@ namespace TerrainGenerator
             return total / maxValue;
         }
 
-        public double OctaveExpPerlin(double x, double y, double z, double frequency, int octaves, double persistance, double lacunarity, double mu)
+        public double OctaveExpPerlin(double x, double y, double z, double frequency, int octaves, double persistance, double lacunarity)
         {
             double total = 0;
             double amplitude = 1;
             double maxValue = 0;
             for (int i = 0; i < octaves; i++)
             {
-                total += ExpPerlinNoise(x * frequency, y * frequency, z * frequency, mu) * amplitude;
+                total += ExpPerlinNoise(x * frequency, y * frequency, z * frequency) * amplitude;
                 maxValue += amplitude;
                 amplitude *= persistance;
                 frequency *= lacunarity;
@@ -376,14 +378,14 @@ namespace TerrainGenerator
             return total / maxValue;
         }
 
-        public double OctaveExpPerlin2d(double x, double y, double frequency, int octaves, double persistance, double lacunarity, double mu)
+        public double OctaveExpPerlin2d(double x, double y, double frequency, int octaves, double persistance, double lacunarity)
         {
             double total = 0;
             double amplitude = 1;
             double maxValue = 0;
             for (int i = 0; i < octaves; i++)
             {
-                total += ExpPerlin2dNoise(x * frequency, y * frequency, mu) * amplitude;
+                total += ExpPerlin2dNoise(x * frequency, y * frequency) * amplitude;
                 maxValue += amplitude;
                 amplitude *= persistance;
                 frequency *= lacunarity;
