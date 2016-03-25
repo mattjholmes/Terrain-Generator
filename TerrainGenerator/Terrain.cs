@@ -52,8 +52,8 @@ namespace TerrainGenerator
             
             LinearGradientBrush grBrush = new LinearGradientBrush(targetRect, Color.Black, Color.Black, 0, false);
             ColorBlend cb = new ColorBlend();
-            cb.Positions = new[] { 0, 1 / 4f, 2 / 4f, 3 / 4f,  1 };
-            cb.Colors = new[] { Color.SlateBlue, Color.Tan, Color.ForestGreen, Color.SlateGray, Color.White };
+            cb.Positions = new[] { 0, 1/3f, 1/2f, 3/4f, 7/8f,  1 };
+            cb.Colors = new[] { Color.FromArgb(61, 84, 51), Color.FromArgb(35, 50, 32), Color.FromArgb(35, 50, 32), Color.FromArgb(160, 153, 147), Color.FromArgb(247, 247, 251), Color.FromArgb(247, 247, 251) };
             grBrush.InterpolationColors = cb;
             g.FillRectangle(grBrush, 0, 0, 1024, 1024);
             texSample.Save("texSample.bmp");

@@ -17,13 +17,13 @@ namespace TerrainGenerator
         //[STAThread]
         static void Main()
         {
-            int xSize = 1024;
+            int xSize = 4096;
             int ySize = xSize;
-            int octaves = 8;
-            double frequency = 5;
-            double persistance = .5;
-            double lacunarity = 2.12;
-            double mu = 1.001; // useful range - 1.0 - about 1.01
+            int octaves = 7;
+            double frequency = 4;
+            double persistance = .45;
+            double lacunarity = 1.95;
+            double mu = 1.009; // useful range - 1.0 - about 1.01
             NoiseGenerator generator = new NoiseGenerator();
             string filename = "terrain.raw";
             string bmpFile = "terrain.bmp";
