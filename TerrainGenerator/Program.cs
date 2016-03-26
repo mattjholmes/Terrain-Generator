@@ -28,6 +28,7 @@ namespace TerrainGenerator
             string filename = "terrain.raw";
             string bmpFile = "terrain.bmp";
             string texFile = "texture.bmp";
+            string tifFile = "terrain.tif";
             Bitmap bmp = new Bitmap(xSize, ySize);
             Terrain terrain = new Terrain(xSize, ySize);
 
@@ -35,6 +36,7 @@ namespace TerrainGenerator
             terrain.setTextureSample();
             terrain.normalizeTerrain();
             terrain.saveHeightRaw(filename);
+            terrain.saveTIFF(tifFile);
             bmp = terrain.getHeightBitmap();
             bmp.Save(bmpFile);
             bmp = terrain.getTexture();

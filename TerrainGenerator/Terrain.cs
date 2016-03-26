@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BitMiracle.LibTiff.Classic;
 
 namespace TerrainGenerator
 {
@@ -121,6 +122,39 @@ namespace TerrainGenerator
                         output16 = (ushort)(terrain[x, y] * 65536);
                         writer.Write(output16);
                     }
+                }
+            }
+        }
+
+        // save 16-bit grayscale TIFF heightmap
+        public void saveTIFF(string filename)
+        {
+            using (Tiff output = Tiff.Open(filename, "w"))
+            {
+                output.SetField(TiffTag.IMAGEWIDTH, xSize);
+                output.SetField(TiffTag.IMAGELENGTH, ySize);
+                output.SetField(TiffTag.SAMPLESPERPIXEL, 1); // 1 color channel
+                output.SetField(TiffTag.BITSPERSAMPLE, 16); // 16 bits per pixel
+                output.SetField(TiffTag.ORIENTATION, Orientation.TOPLEFT);
+                output.SetField(TiffTag.ROWSPERSTRIP, ySize);
+                output.SetField(TiffTag.XRESOLUTION, 88.0);
+                output.SetField(TiffTag.YRESOLUTION, 88.0);
+                output.SetField(TiffTag.RESOLUTIONUNIT, ResUnit.CENTIMETER);
+                output.SetField(TiffTag.PLANARCONFIG, PlanarConfig.CONTIG);
+                output.SetField(TiffTag.PHOTOMETRIC, Photometric.MINISBLACK);
+                output.SetField(TiffTag.COMPRESSION, Compression.NONE);
+                output.SetField(TiffTag.FILLORDER, FillOrder.MSB2LSB);
+
+                for (int y = 0; y < ySize; y++)
+                {
+                    ushort[] samples = new ushort[xSize];
+                    for (int x = 0; x < xSize; x++)
+                    {
+                        samples[x] = (ushort)(terrain[x, y] * ushort.MaxValue);
+                    }
+                    byte[] buffer = new byte[samples.Length * sizeof(ushort)];
+                    Buffer.BlockCopy(samples, 0, buffer, 0, buffer.Length);
+                    output.WriteScanline(buffer, y);
                 }
             }
         }
