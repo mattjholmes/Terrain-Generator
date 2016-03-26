@@ -16,6 +16,9 @@ namespace TerrainGenerator
         // 2d array to hold the height information
         private double[,] terrain;
 
+        // Maximum altitude of the map, used in slope calculations
+        private float maxAltitude;
+
         // x and y size of terrain map
         private int xSize;
         private int ySize;
@@ -27,8 +30,10 @@ namespace TerrainGenerator
         private NoiseGenerator generator = new NoiseGenerator();
 
         // Terrain class constructer, requires x and y size - this should be square for unity .raw terrain maps, or 2:1 rect for spherical terrain maps
-        public Terrain(int x, int y)
+        // Also takes a maximum altitude, this is in the same units as x, y
+        public Terrain(int x, int y, float maxAlt)
         {
+            maxAltitude = maxAlt;
             xSize = x;
             ySize = y;
             terrain = new double[x,y];
@@ -40,10 +45,20 @@ namespace TerrainGenerator
             return terrain[x, y];
         }
 
+        public float getMaxAlt()
+        {
+            return maxAltitude;
+        }
+
         // set height at x, y
         public void setHeight(int x, int y, double height)
         {
             terrain[x, y] = height;
+        }
+
+        public void setMaxAlt(float maxAlt)
+        {
+            maxAltitude = maxAlt;
         }
 
         public void setTextureSample()
@@ -101,6 +116,49 @@ namespace TerrainGenerator
                     terrain[x, y] = (terrain[x, y] - min) * scale;
                 }
             }
+        }
+
+        public void thermalErosion(float talusAngle, int passes)
+        {
+            // maximum difference between neighboring locations
+            double maxDiff = (Math.Tan(talusAngle * (Math.PI / 180))) / maxAltitude;
+            double hChange = maxDiff / 2;
+            for (int i = 0; i < passes; i++)
+            {
+                for (int x = 0; x < xSize; x++)
+                {
+                    for (int y = 0; y < ySize; y++)
+                    {
+                        // find the minimum height neighbor
+                        int minx = 0, miny = 0;
+                        double minHeight = 1;
+                        for (int nx = -1; nx <= 1; nx++)
+                        {
+                            for (int ny = -1; ny <= 1; ny++)
+                            {
+                                // make sure we don't go out of bounds
+                                if ( x + nx >= 0 && x + nx < xSize && y + ny >=0 && y + ny < ySize)
+                                {
+                                    if (terrain[x + nx, y + ny] < minHeight)
+                                    {
+                                        minHeight = terrain[x + nx, y + ny];
+                                        minx = x + nx;
+                                        miny = y + ny;
+                                    }
+                                }
+                            } // for neighboring y
+                        }// for neighboring x
+                        // if any of the neighbors are lower than the max difference, swap the height change amount with the lowest neighbor
+                        // special case - if current location is the lowest, skip this step
+                        if (terrain[x, y] - minHeight > maxDiff && terrain[x,y] != terrain[minx, miny])
+                        {
+                            terrain[x, y] -= hChange;
+                            terrain[minx, miny] += hChange;
+                        }
+                    }// for y
+                }// for x
+            }// for passes
+
         }
 
         // write a file to "filename", in unity compatible .raw heightmap format

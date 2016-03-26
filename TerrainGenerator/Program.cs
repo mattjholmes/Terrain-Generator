@@ -19,22 +19,27 @@ namespace TerrainGenerator
         {
             int xSize = 4096;
             int ySize = xSize;
+            float maxAlt = 512;
             int octaves = 7;
             double frequency = 4;
             double persistance = .45;
             double lacunarity = 1.95;
-            double mu = 1.009; // useful range - 1.0 - about 1.01
+            double mu = 1.01; // useful range - 1.0 - about 1.01
             NoiseGenerator generator = new NoiseGenerator();
             string filename = "terrain.raw";
             string bmpFile = "terrain.bmp";
             string texFile = "texture.bmp";
             string tifFile = "terrain.tif";
             Bitmap bmp = new Bitmap(xSize, ySize);
-            Terrain terrain = new Terrain(xSize, ySize);
+            Terrain terrain = new Terrain(xSize, ySize, maxAlt);
 
             terrain.generateTerrain(frequency, octaves, persistance, lacunarity, mu);
             terrain.setTextureSample();
             terrain.normalizeTerrain();
+            bmp = terrain.getHeightBitmap();
+            terrain.saveHeightRaw("beforeErosion.raw");
+            bmp.Save("terrainBeforeErosion.bmp");
+            terrain.thermalErosion(40, 75);
             terrain.saveHeightRaw(filename);
             terrain.saveTIFF(tifFile);
             bmp = terrain.getHeightBitmap();
