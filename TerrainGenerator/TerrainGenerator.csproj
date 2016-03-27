@@ -65,6 +65,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MathUtility.cs" />
     <Compile Include="Terrain.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>

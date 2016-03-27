@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using static TerrainGenerator.MathUtility;
 
 namespace TerrainGenerator
 {
@@ -18,11 +19,97 @@ namespace TerrainGenerator
         }
 
         // precalculate square root of 2, for use in 2d noise function
-        private static double sqr2 = Math.Sqrt(2);
+        private static readonly double sqr2 = Math.Sqrt(2);
 
         // size of repetition, if 0, does not repeat
-        private static int repeat = 0;
-        
+        private int repeat = 0;
+
+        // Frequency determines the feature size of the first iteration of noise, smaller numbers make larger features
+        private double frequency = 1;
+        // Octaves are the number of iterations of noise to layer
+        private int octaves = 5;
+        // Persistence is the amplitude multiplier in each successive octave of noise
+        private double persistance = .5;
+        // Lacunarity is the frequency multiplier in each successive octave of noise
+        private double lacunarity = 2;
+        // Mu is the exponential decay rate for the noise distribution table
+        private double mu = 1;
+        // offset "moves" the window into the noise field around.. effectively changes the random generation seed
+        private double xOffset = 0;
+        private double yOffset = 0;
+
+        public void setFrequency(double freq)
+        {
+            frequency = freq;
+        }
+
+        public void setOctaves(int oct)
+        {
+            octaves = oct;
+        }
+
+        public void setPersistance(double pers)
+        {
+            persistance = pers;
+        }
+
+        public void setLacunarity(double lac)
+        {
+            lacunarity = lac;
+        }
+
+        public void setMu(double m)
+        {
+            mu = m;
+            InitExpMagTable();
+        }
+
+        public void setXOffset(double xoff)
+        {
+            xOffset = xoff;
+        }
+
+        public void setYOffset(double yoff)
+        {
+            yOffset = yoff;
+        }
+
+        public double getFrequency()
+        {
+            return frequency;
+        }
+
+        public int getOctaves()
+        {
+            return octaves;
+        }
+
+        public double getPersistance()
+        {
+            return persistance;
+        }
+
+        public double getLacunarity()
+        {
+            return lacunarity;
+        }
+
+        public double getMu()
+        {
+            return mu;
+        }
+
+        public double getXOffset()
+        {
+            return xOffset;
+        }
+
+        public double getYOffset()
+        {
+            return yOffset;
+        }
+
+
         // permutation table for generating psuedorandom numbers
         private static int[] p =
         {
@@ -51,7 +138,13 @@ namespace TerrainGenerator
         private const int hashMask = 255;
 
         // table to hold the exponential noise distribution
-        private double[] m = new double[256];
+        private double[] m = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        };
 
         // table containing the possible vectors to be used in generating the gradients
         private static Vector[] grad2d = {
@@ -69,7 +162,7 @@ namespace TerrainGenerator
         private const int grad2dmask = 7;
 
         // function to initialized the exponential noise distribution table
-        public void InitExpMagTable(double mu)
+        private void InitExpMagTable()
         {
             double s = 1.0; // initial magnitude
             for (int i = 0; i < m.Length; i++)
@@ -79,25 +172,7 @@ namespace TerrainGenerator
             }
         }
 
-        // linear interpolation function
-        private static double Lerp(double input1, double input2, double weight)
-        {
-            return (1 - weight) * input1 + weight * input2;
-
-        }
-
-        // Fade function used to ease the coordinate values and smooth the final output
-        private static double Fade(double t)
-        {
-            return t * t * t * (t * (t * 6 - 15) + 10);
-        }
-
-        // vector dot product function
-        private static double Dot(Vector g, double x, double y)
-        {
-            return g.X * x + g.Y * y;
-        }
-
+        /*
         // pick a random vector based on the hash
         private static double Grad(int hash, double x, double y, double z)
         {
@@ -122,9 +197,10 @@ namespace TerrainGenerator
                 default: return 0; // should never happen
             }
         }
+        */
 
         // increment function - to allow tiling to wrap properly
-        private static int Inc(int num)
+        private int Inc(int num)
         {
             num++;
             if (repeat > 0) num %= repeat;
@@ -176,12 +252,7 @@ namespace TerrainGenerator
         }
 
         public double ExpPerlin2dNoise(double x, double y)
-        {
-            // if the magnitude table hasn't be initialized, initialize with mu = 1
-            if (m[0] != 1.0)
-            {
-                InitExpMagTable(1);
-            }
+        {            
             if (repeat > 0)
             {
                 x %= repeat;
@@ -229,6 +300,43 @@ namespace TerrainGenerator
             return (output + 1) / 2;
         }
 
+        public double OctavePerlin2d(double x, double y)
+        {
+            // make a copy of the frequency, we will be modifying it for just a single execution of this function
+            double freq = frequency;
+            double total = 0;
+            double amplitude = 1;
+            double maxValue = 0;
+            for (int i = 0; i < octaves; i++)
+            {
+                total += Perlin2dNoise((x + xOffset) * freq, (y + yOffset) * freq) * amplitude;
+                maxValue += amplitude;
+                amplitude *= persistance;
+                freq *= lacunarity;
+            }
+            return total / maxValue;
+        }
+
+        public double OctaveExpPerlin2d(double x, double y)
+        {
+            // make a copy of the frequency, we will be modifying it for just a single execution of this function
+            double freq = frequency;
+            double total = 0;
+            double amplitude = 1;
+            double maxValue = 0;
+            for (int i = 0; i < octaves; i++)
+            {
+                total += ExpPerlin2dNoise((x + xOffset) * freq, (y + yOffset) * freq) * amplitude;
+                maxValue += amplitude;
+                amplitude *= persistance;
+                freq *= lacunarity;
+            }
+            return total / maxValue;
+        }
+
+
+
+        /* UNUSED OLD FUNCTIONS
         public double PerlinNoise(double x, double y, double z)
         {
             if (repeat > 0)
@@ -348,21 +456,6 @@ namespace TerrainGenerator
             return total / maxValue;
         }
 
-        public double OctavePerlin2d(double x, double y, double frequency, int octaves, double persistance, double lacunarity)
-        {
-            double total = 0;
-            double amplitude = 1;
-            double maxValue = 0;
-            for (int i = 0; i < octaves; i++)
-            {
-                total += Perlin2dNoise(x * frequency, y * frequency) * amplitude;
-                maxValue += amplitude;
-                amplitude *= persistance;
-                frequency *= lacunarity;
-            }
-            return total / maxValue;
-        }
-
         public double OctaveExpPerlin(double x, double y, double z, double frequency, int octaves, double persistance, double lacunarity)
         {
             double total = 0;
@@ -377,22 +470,7 @@ namespace TerrainGenerator
             }
             return total / maxValue;
         }
-
-        public double OctaveExpPerlin2d(double x, double y, double frequency, int octaves, double persistance, double lacunarity)
-        {
-            double total = 0;
-            double amplitude = 1;
-            double maxValue = 0;
-            for (int i = 0; i < octaves; i++)
-            {
-                total += ExpPerlin2dNoise(x * frequency, y * frequency) * amplitude;
-                maxValue += amplitude;
-                amplitude *= persistance;
-                frequency *= lacunarity;
-            }
-            return total / maxValue;
-        }
-
+        */
     }
 }
 

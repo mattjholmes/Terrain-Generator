@@ -78,15 +78,21 @@ namespace TerrainGenerator
         // generate purely pseudorandom terrain - frequency is the initial size of the noise, octaves sets the number of layers of noise,
         // persistance is the amplitude of each successive noise layer, lacunarity is the frequency multiplier per layer
         // mu is the exponential noise distribution decay amount
-        public void generateTerrain(double frequency, int octaves, double persistance, double lacunarity, double mu)
+        public void generateTerrain(double xOffset, double yOffset, double frequency, int octaves, double persistance, double lacunarity, double mu)
         {
-            generator.InitExpMagTable(mu);
+            generator.setXOffset(xOffset);
+            generator.setYOffset(yOffset);
+            generator.setFrequency(frequency);
+            generator.setLacunarity(lacunarity);
+            generator.setMu(mu);
+            generator.setOctaves(octaves);
+            generator.setPersistance(persistance);
             double scale = 1.0 / Math.Max(xSize, ySize); 
             for (int i = 0; i < xSize; i++)
             {
                 for (int j = 0; j < ySize; j++)
                 {
-                    terrain [i, j] = generator.OctaveExpPerlin2d(i * scale, j * scale, frequency, octaves, persistance, lacunarity);
+                    terrain [i, j] = generator.OctaveExpPerlin2d(i * scale, j * scale);
                     
                 }
             }

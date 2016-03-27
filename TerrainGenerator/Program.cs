@@ -17,15 +17,17 @@ namespace TerrainGenerator
         //[STAThread]
         static void Main()
         {
-            int xSize = 4096;
+            int xSize = 2048;
             int ySize = xSize;
-            float maxAlt = 512;
-            int octaves = 7;
+            float maxAlt = 256;
+            int octaves = 5;
             double frequency = 4;
             double persistance = .45;
             double lacunarity = 1.95;
             double mu = 1.01; // useful range - 1.0 - about 1.01
-            NoiseGenerator generator = new NoiseGenerator();
+            double xOffset = 4;
+            double yOffset = 9;
+            
             string filename = "terrain.raw";
             string bmpFile = "terrain.bmp";
             string texFile = "texture.bmp";
@@ -33,7 +35,7 @@ namespace TerrainGenerator
             Bitmap bmp = new Bitmap(xSize, ySize);
             Terrain terrain = new Terrain(xSize, ySize, maxAlt);
 
-            terrain.generateTerrain(frequency, octaves, persistance, lacunarity, mu);
+            terrain.generateTerrain(xOffset, yOffset, frequency, octaves, persistance, lacunarity, mu);
             terrain.setTextureSample();
             terrain.normalizeTerrain();
             bmp = terrain.getHeightBitmap();
