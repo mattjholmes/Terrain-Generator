@@ -21,10 +21,10 @@ namespace TerrainGenerator
             int ySize = xSize;
             float maxAlt = 256;
             int octaves = 5;
-            double frequency = 4;
+            double frequency = 6;
             double persistance = .45;
             double lacunarity = 1.95;
-            double mu = 1.01; // useful range - 1.0 - about 1.01
+            double mu = 1.00; // useful range - 1.0 - about 1.01
             double xOffset = 4;
             double yOffset = 9;
             
@@ -32,16 +32,18 @@ namespace TerrainGenerator
             string bmpFile = "terrain.bmp";
             string texFile = "texture.bmp";
             string tifFile = "terrain.tif";
+            string inBmpFile = "input.bmp";
+            Bitmap inBmp = new Bitmap(inBmpFile);
             Bitmap bmp = new Bitmap(xSize, ySize);
             Terrain terrain = new Terrain(xSize, ySize, maxAlt);
 
-            terrain.generateTerrain(xOffset, yOffset, frequency, octaves, persistance, lacunarity, mu);
+            terrain.generateTerrain(inBmp, 0.3, xOffset, yOffset, frequency, octaves, persistance, lacunarity, mu);
             terrain.setTextureSample();
             terrain.normalizeTerrain();
-            bmp = terrain.getHeightBitmap();
-            terrain.saveHeightRaw("beforeErosion.raw");
-            bmp.Save("terrainBeforeErosion.bmp");
-            terrain.thermalErosion(40, 75);
+            //bmp = terrain.getHeightBitmap();
+            //terrain.saveHeightRaw("beforeErosion.raw");
+            //bmp.Save("terrainBeforeErosion.bmp");
+            terrain.thermalErosion(40, 150);
             terrain.saveHeightRaw(filename);
             terrain.saveTIFF(tifFile);
             bmp = terrain.getHeightBitmap();

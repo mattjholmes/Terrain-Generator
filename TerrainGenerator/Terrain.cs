@@ -98,6 +98,71 @@ namespace TerrainGenerator
             }
         }
 
+        public void generateTerrain(Bitmap input, double weight, double xOffset, double yOffset, double frequency, int octaves, double persistance, double lacunarity, double mu)
+        {
+            // weight input is expected to be a percentage, IE 0.0...1.0
+            if (weight > 1.0 || weight < 0.0)
+            {
+                throw new ArgumentOutOfRangeException("Weight must be less than 1.0, greater than or equal to 0.0");
+            }
+            
+            Random rand = new Random(999);
+            double scale = 1.0 / Math.Max(xSize, ySize);
+            double[,] inTerrain = new double[input.Width,input.Height];
+
+            generator.setXOffset(xOffset);
+            generator.setYOffset(yOffset);
+            generator.setFrequency(frequency);
+            generator.setLacunarity(lacunarity);
+            generator.setMu(mu);
+            generator.setOctaves(octaves);
+            generator.setPersistance(persistance);
+
+            // read the input image into an array for modification, add a little noise, this will help with smoothing the limited input height resolution (255 levels for an 8-bit grayscale bmp)
+            for (int x = 0; x < input.Width; x++)
+            {
+                for (int y = 0; y < input.Height; y ++)
+                {
+                    inTerrain[x,y] = input.GetPixel(x, y).GetBrightness();
+                    inTerrain[x,y] += rand.NextDouble() * (1 / maxAltitude) * 2;
+                }
+            }
+            // Smooth the input terrain using a slightly modified Laplacian smoothing algorithm
+            for (int x = 2; x < input.Width - 2; x++)
+            {
+                for (int y = 2; y < input.Height - 2; y++)
+                {
+                    double total = 0;
+                    int count = 0;
+                    for (int i = -2; i <= 2; i++)
+                    {
+                        for (int j = -2; j <= 2; j++)
+                        {
+                            total += inTerrain[x + i, y + j];
+                            count++;
+                        }
+                    }
+                    inTerrain[x, y] = total/count;
+                }
+            }
+            for (int i = 0; i < xSize; i++)
+            {
+                for (int j = 0; j < ySize; j++)
+                {
+                    double baseHeight = 0;
+                    if ( i < input.Width && j < input.Height)
+                    {
+                        baseHeight = inTerrain[i, j];
+                    }
+                    else
+                    {
+                        Console.WriteLine("Input bitmap too small");
+                    }
+                    terrain[i, j] = (generator.OctaveExpPerlin2d(i * scale, j * scale) * weight) + (baseHeight * (1 - weight));
+                }
+            }
+        }
+
         // Normalized the terrain, making the lowest point = 0 and the highest point = 1
         // This is useful to make the color map generation easier, as well as to use the full range of color resolution in the output heightmap
         public void normalizeTerrain()
