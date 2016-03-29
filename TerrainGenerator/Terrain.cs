@@ -69,6 +69,10 @@ namespace TerrainGenerator
         // Maximum altitude of the map, used in slope calculations
         private float maxAltitude;
 
+        // X and Y size of the overall map in meters
+        private float xActualSize;
+        private float yActualSize;
+
         // Depth of a single water particle
         private double waterSize;
 
@@ -83,13 +87,16 @@ namespace TerrainGenerator
         private NoiseGenerator generator = new NoiseGenerator();
 
         // Terrain class constructer, requires x and y size - this should be square for unity .raw terrain maps, or 2:1 rect for spherical terrain maps
-        // Also takes a maximum altitude, this is in the same units as x, y
-        public Terrain(int x, int y, float maxAlt)
+        // xMapSize and yMapSize are the overall map size in meters, this is independent of the underlying bitmap whose size is determined by the x and y parameters
+        // Also takes a maximum altitude, in meters
+        public Terrain(int x, int y, float xMapSize, float yMapSize, float maxAlt)
         {
             maxAltitude = maxAlt;
             waterSize = (1.0 / 32.0) / 10.0;
             xSize = x;
             ySize = y;
+            xActualSize = xMapSize;
+            yActualSize = yMapSize;
             terrain = new double[x, y];
             waterB = new double[x, y];
             sediment = new double[x, y];
@@ -115,6 +122,26 @@ namespace TerrainGenerator
             return maxAltitude;
         }
 
+        public float getXMapSize()
+        {
+            return xActualSize;
+        }
+
+        public float getYMapSize()
+        {
+            return yActualSize;
+        }
+
+        public int getXRes()
+        {
+            return xSize;
+        }
+
+        public int getYRes()
+        {
+            return ySize;
+        }
+
         // set height at x, y
         public void setHeight(int x, int y, double height)
         {
@@ -124,6 +151,18 @@ namespace TerrainGenerator
         public void setMaxAlt(float maxAlt)
         {
             maxAltitude = maxAlt;
+        }
+
+        public void setMapSize(float x, float y)
+        {
+            xActualSize = x;
+            yActualSize = y;
+        }
+
+        public void setResolution(int x, int y)
+        {
+            xSize = x;
+            ySize = y;
         }
 
         public void setTextureSample()
@@ -147,17 +186,19 @@ namespace TerrainGenerator
         {
             generator.setXOffset(xOffset);
             generator.setYOffset(yOffset);
-            generator.setFrequency(frequency);
+            // divide the frequency by 10 km - this results in macro features ~ 10 km across at a frequency input of 1
+            generator.setFrequency(frequency / 10000);
             generator.setLacunarity(lacunarity);
             generator.setMu(mu);
             generator.setOctaves(octaves);
             generator.setPersistance(persistance);
-            double scale = 1.0 / Math.Max(xSize, ySize); 
+            double xScale = xActualSize / xSize;
+            double yScale = yActualSize / ySize;
             for (int i = 0; i < xSize; i++)
             {
                 for (int j = 0; j < ySize; j++)
                 {
-                    terrain [i, j] = generator.OctaveExpPerlin2d(i * scale, j * scale);
+                    terrain [i, j] = generator.OctaveExpPerlin2d(i * xScale, j * yScale);
                     
                 }
             }
@@ -285,7 +326,7 @@ namespace TerrainGenerator
         public void thermalErosion(float talusAngle, int passes)
         {
             // maximum difference between neighboring locations
-            double maxDiff = (Math.Tan(talusAngle * (Math.PI / 180))) / maxAltitude;
+            double maxDiff = ((xActualSize / xSize) * Math.Tan(talusAngle * (Math.PI / 180))) / maxAltitude;
             // amount to move to the neighbor - higher values will lead to stairstepping in the output height map, but require less passes for the same effect
             double hChange = maxDiff / 4;
 
@@ -347,7 +388,6 @@ namespace TerrainGenerator
                     }// for y
                 }// for x
             }// for passes
-            normalizeTerrain();
             normalizeErosion();
         }
 
