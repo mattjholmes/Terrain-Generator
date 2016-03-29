@@ -214,17 +214,19 @@ namespace TerrainGenerator
                 throw new ArgumentOutOfRangeException("Weight must be less than 1.0, greater than or equal to 0.0");
             }
             
-            Random rand = new Random(999);
-            double scale = 1.0 / Math.Max(xSize, ySize);
+            Random rand = new Random();
             double[,] inTerrain = new double[input.Width,input.Height];
 
             generator.setXOffset(xOffset);
             generator.setYOffset(yOffset);
-            generator.setFrequency(frequency);
+            generator.setFrequency(frequency / 10000);
             generator.setLacunarity(lacunarity);
             generator.setMu(mu);
             generator.setOctaves(octaves);
             generator.setPersistance(persistance);
+
+            double xScale = xActualSize / xSize;
+            double yScale = yActualSize / ySize;
 
             // read the input image into an array for modification, add a little noise, this will help with smoothing the limited input height resolution (255 levels for an 8-bit grayscale bmp)
             for (int x = 0; x < input.Width; x++)
@@ -266,7 +268,7 @@ namespace TerrainGenerator
                     {
                         Console.WriteLine("Input bitmap too small");
                     }
-                    terrain[i, j] = (generator.OctaveExpPerlin2d(i * scale, j * scale) * weight) + (baseHeight * (1 - weight));
+                    terrain[i, j] = (generator.OctaveExpPerlin2d(i * xScale, j * yScale) * weight) + (baseHeight * (1 - weight));
                 }
             }
 

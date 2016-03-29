@@ -21,13 +21,13 @@ namespace TerrainGenerator
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());*/
 
-            int xSize = 512;
+            int xSize = 2048;
             int ySize = xSize;
             float xMapSize = 20000;
             float yMapSize = xMapSize;
             float maxAlt = 5000;
             int octaves = 5;
-            double frequency = 1;
+            double frequency = 5;
             double persistance = .45;
             double lacunarity = 1.95;
             double mu = 1.01; // useful range - 1.0 - about 1.01
@@ -46,8 +46,8 @@ namespace TerrainGenerator
             Bitmap bmp = new Bitmap(xSize, ySize);
             Terrain terrain = new Terrain(xSize, ySize, xMapSize, yMapSize, maxAlt);
 
-            //terrain.generateTerrain(inBmp, 0.4, xOffset, yOffset, frequency, octaves, persistance, lacunarity, mu);
-            terrain.generateTerrain(xOffset, yOffset, frequency, octaves, persistance, lacunarity, mu);
+            terrain.generateTerrain(inBmp, 0.4, xOffset, yOffset, frequency, octaves, persistance, lacunarity, mu);
+            //terrain.generateTerrain(xOffset, yOffset, frequency, octaves, persistance, lacunarity, mu);
             terrain.setTextureSample();
             bmp = terrain.getHeightBitmap();
             terrain.saveHeightRaw("beforeErosion.raw");
