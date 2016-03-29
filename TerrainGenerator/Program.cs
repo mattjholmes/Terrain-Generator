@@ -21,9 +21,9 @@ namespace TerrainGenerator
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());*/
 
-            int xSize = 2048;
+            int xSize = 1024;
             int ySize = xSize;
-            float maxAlt = 512;
+            float maxAlt = 128;
             int octaves = 7;
             double frequency = 4;
             double persistance = .45;
@@ -50,8 +50,8 @@ namespace TerrainGenerator
             bmp = terrain.getHeightBitmap();
             terrain.saveHeightRaw("beforeErosion.raw");
             bmp.Save("terrainBeforeErosion.bmp");
-            terrain.thermalErosion(45, 30);
-            terrain.altHydraulicErosion(.1, 10, .7, 400);
+            terrain.thermalErosion(45, 25);
+            terrain.altHydraulicErosion(15, 20, .95, 350);
             terrain.saveHeightRaw(filename);
             terrain.saveTIFF(tifFile);
             bmp = terrain.getHeightBitmap();

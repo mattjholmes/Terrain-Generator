@@ -70,7 +70,7 @@ namespace TerrainGenerator
         private float maxAltitude;
 
         // Depth of a single water particle
-        private float waterSize;
+        private double waterSize;
 
         // x and y size of terrain map
         private int xSize;
@@ -87,7 +87,7 @@ namespace TerrainGenerator
         public Terrain(int x, int y, float maxAlt)
         {
             maxAltitude = maxAlt;
-            waterSize = (1 / maxAltitude) / 10;
+            waterSize = (1.0 / 32.0) / 10.0;
             xSize = x;
             ySize = y;
             terrain = new double[x, y];
@@ -472,10 +472,10 @@ namespace TerrainGenerator
             Bitmap heightMap = getHeightBitmap();
             var form = new Form1();
 
-            /*form.Show();
+            form.Show();
             form.pictureBox1.Image = waterMap;
             form.pictureBox2.Image = heightMap;
-            form.Update();*/
+            form.Update();
 
             for (int p = 0; p < passes; p++)
             {
@@ -486,11 +486,7 @@ namespace TerrainGenerator
                         // add water to this square, based on rain amount
                         waterB[x, y] += waterSize * rainChance;
 
-                        sediment[x, y] += waterB[x, y] * solubility;
-                        terrain[x, y] -= waterB[x, y] * solubility;
-
-                        //figure out if the top particle should drain to a neighbor
-
+                        //figure out where the current cell's water should flow
                         bool[,] lowerNeighbors = new bool[3, 3];
                         int lowNeighborCount = 0;
                         double totalLowerNeighborHeight = 0;
@@ -523,16 +519,25 @@ namespace TerrainGenerator
                                 }
                             }
                         }
+
                         double avgNeighborAlt = totalLowerNeighborHeight / lowNeighborCount;
                         double avgAltitude = (totalLowerNeighborHeight + (terrain[x, y] + waterB[x, y])) / (lowNeighborCount + 1) ;
-                        double currentSediment = sediment[x, y];
+                        
                         double totalWaterMoved = 0;
+
+                        if ((terrain[x, y] + waterB[x, y]) - avgNeighborAlt > 0.00001)
+                        {
+                            sediment[x, y] += waterB[x, y] * solubility * Math.Min(0.1, ((terrain[x, y] + waterB[x, y]) - avgNeighborAlt));
+                            terrain[x, y] -= waterB[x, y] * solubility * Math.Min(0.1, ((terrain[x, y] + waterB[x, y]) - avgNeighborAlt));
+                        }
+
+                        double currentSediment = sediment[x, y];
                         for (int nx = -1; nx <= 1; nx++)
                         {
                             for (int ny = -1; ny <= 1; ny++)
                             {
                                 // make sure we don't go out of bounds
-                                if (x + nx >= 0 && x + nx < xSize && y + ny >= 0 && y + ny < ySize)
+                                if (x + nx >= 0 && x + nx < xSize + 1 && y + ny >= 0 && y + ny < ySize + 1)
                                 {
                                     if (lowerNeighbors[nx + 1, ny + 1])
                                     {
@@ -546,11 +551,12 @@ namespace TerrainGenerator
                                 }
                             }
                         }
+                        
                         sediment[x, y] -= totalWaterMoved * currentSediment;
 
                         waterB[x, y] *= (1 - evapChance);
 
-                        double maxSediment = waterB[x, y] * solubility;
+                        double maxSediment = waterB[x, y] * solubility * .0001;
 
                         if (sediment[x,y] > maxSediment)
                         {
@@ -559,15 +565,22 @@ namespace TerrainGenerator
                         }
                     }
                 }
-                /*waterMap = getWaterMapB();
+                waterMap = getWaterMapB();
                 form.textBox1.Text = p.ToString();
                 form.pictureBox1.Image = waterMap;
                 heightMap = getHeightBitmap();
                 form.pictureBox2.Image = heightMap;
-                form.Update();*/
+                form.Update();
             }
             //normalizeTerrain();
             //normalizeErosion();
+            for (int x = 0; x < xSize; x++)
+            {
+                for (int y = 0; y < ySize; y++)
+                {
+                    terrain[x, y] += sediment[x, y];
+                }
+            }
         }
 
 
