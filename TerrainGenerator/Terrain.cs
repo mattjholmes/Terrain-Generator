@@ -7,17 +7,70 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BitMiracle.LibTiff.Classic;
+using static TerrainGenerator.MathUtility;
 
 namespace TerrainGenerator
 {
     // Terrain class holds the terrain information, and provides methods to generate and modify the terrain
     class Terrain
     {
+        class WaterParticle
+        {
+            private double sedimentCapacity;
+            private double sedimentCarried;
+            public WaterParticle(double sedimentCapacity, double sedimentCarried)
+            {
+                this.sedimentCapacity = sedimentCapacity;
+                this.sedimentCarried = sedimentCarried;
+            }
+
+            public double getCapacity()
+            {
+                return sedimentCapacity;
+            }
+
+            public double getCarried()
+            {
+                return sedimentCarried;
+            }
+
+            public void setCapacity(double capacity)
+            {
+                sedimentCapacity = capacity;
+            }
+
+            public void setCarried(double carried)
+            {
+                sedimentCarried = carried;
+            }
+
+            public double calculateLoad()
+            {
+                double output = 0;
+
+                output = sedimentCarried - sedimentCapacity;
+                sedimentCarried = sedimentCapacity;
+
+                return output;
+            }
+        }
+
         // 2d array to hold the height information
         private double[,] terrain;
 
+        // 2d array to hold water information
+        private Stack<WaterParticle>[,] water;
+        private double[,] waterB;
+        private double[,] sediment;
+
+        // 2d array to hold erosion map - used in generating texture control maps 
+        private double[,] erosion;
+
         // Maximum altitude of the map, used in slope calculations
         private float maxAltitude;
+
+        // Depth of a single water particle
+        private float waterSize;
 
         // x and y size of terrain map
         private int xSize;
@@ -34,9 +87,21 @@ namespace TerrainGenerator
         public Terrain(int x, int y, float maxAlt)
         {
             maxAltitude = maxAlt;
+            waterSize = (1 / maxAltitude) / 10;
             xSize = x;
             ySize = y;
-            terrain = new double[x,y];
+            terrain = new double[x, y];
+            waterB = new double[x, y];
+            sediment = new double[x, y];
+            water = new Stack<WaterParticle>[x, y];
+            erosion = new double[x, y];
+            for (x = 0; x < xSize; x++)
+            {
+                for (y = 0; y < ySize; y++)
+                {
+                    water[x, y] = new Stack<WaterParticle>();
+                }
+            }
         }
 
         // get height from x, y
@@ -96,6 +161,8 @@ namespace TerrainGenerator
                     
                 }
             }
+
+            normalizeTerrain();
         }
 
         public void generateTerrain(Bitmap input, double weight, double xOffset, double yOffset, double frequency, int octaves, double persistance, double lacunarity, double mu)
@@ -161,11 +228,13 @@ namespace TerrainGenerator
                     terrain[i, j] = (generator.OctaveExpPerlin2d(i * scale, j * scale) * weight) + (baseHeight * (1 - weight));
                 }
             }
+
+            normalizeTerrain();
         }
 
         // Normalized the terrain, making the lowest point = 0 and the highest point = 1
         // This is useful to make the color map generation easier, as well as to use the full range of color resolution in the output heightmap
-        public void normalizeTerrain()
+        private void normalizeTerrain()
         {
             double min = 1;
             double max = 0;
@@ -189,47 +258,368 @@ namespace TerrainGenerator
             }
         }
 
+        private void normalizeErosion()
+        {
+            double min = 1;
+            double max = 0;
+            // loop through the array once and find the min/max values
+            for (int x = 0; x < xSize; x++)
+            {
+                for (int y = 0; y < ySize; y++)
+                {
+                    min = Math.Min(min, erosion[x, y]);
+                    max = Math.Max(max, erosion[x, y]);
+                }
+            }
+            double scale = 1 / (max - min);
+            // loop through the array again and normalize each value
+            for (int x = 0; x < xSize; x++)
+            {
+                for (int y = 0; y < ySize; y++)
+                {
+                    erosion[x, y] = (erosion[x, y] - min) * scale;
+                }
+            }
+        }
+
         public void thermalErosion(float talusAngle, int passes)
         {
             // maximum difference between neighboring locations
             double maxDiff = (Math.Tan(talusAngle * (Math.PI / 180))) / maxAltitude;
-            double hChange = maxDiff / 2;
+            // amount to move to the neighbor - higher values will lead to stairstepping in the output height map, but require less passes for the same effect
+            double hChange = maxDiff / 4;
+
             for (int i = 0; i < passes; i++)
             {
                 for (int x = 0; x < xSize; x++)
                 {
-                    for (int y = 0; y < ySize; y++)
+                    for (int y = 0; y < ySize; y ++)
                     {
-                        // find the minimum height neighbor
-                        int minx = 0, miny = 0;
-                        double minHeight = 1;
+                        // find the neighbors below the maxDiff
+                        bool[,] lowNeighbors = new bool[3, 3];
+                        int numNeighbors = 0;
                         for (int nx = -1; nx <= 1; nx++)
                         {
                             for (int ny = -1; ny <= 1; ny++)
                             {
                                 // make sure we don't go out of bounds
-                                if ( x + nx >= 0 && x + nx < xSize && y + ny >=0 && y + ny < ySize)
+                                if (x + nx >= 0 && x + nx < xSize && y + ny >= 0 && y + ny < ySize)
                                 {
-                                    if (terrain[x + nx, y + ny] < minHeight)
+                                    // if we are looking at the current cell, mark the lowNeighbor point as false
+                                    if (nx == 0 && ny == 0)
                                     {
-                                        minHeight = terrain[x + nx, y + ny];
-                                        minx = x + nx;
-                                        miny = y + ny;
+                                        lowNeighbors[nx + 1, ny + 1] = false;
+                                    }
+                                    // if the difference between the current square and the current neighbor is greater than maxDiff, we will move material there later
+                                    else if (terrain[x, y] - terrain[x + nx, y + ny] > maxDiff)
+                                    {
+                                        lowNeighbors[nx + 1, ny + 1] = true;
+                                        numNeighbors++;
+                                    }
+                                    // otherwise, we will ignore that neighbor
+                                    else
+                                    {
+                                        lowNeighbors[nx + 1, ny + 1] = false;
                                     }
                                 }
                             } // for neighboring y
                         }// for neighboring x
-                        // if any of the neighbors are lower than the max difference, swap the height change amount with the lowest neighbor
-                        // special case - if current location is the lowest, skip this step
-                        if (terrain[x, y] - minHeight > maxDiff && terrain[x,y] != terrain[minx, miny])
+                        double amountToMove = hChange / numNeighbors;
+
+                         // if any of the neighbors are lower than the max difference, swap the height change amount with the lowest neighbor
+                         // special case - if current location is the lowest, skip this step
+                        for (int nx = -1; nx <= 1; nx++)
                         {
-                            terrain[x, y] -= hChange;
-                            terrain[minx, miny] += hChange;
+                            for (int ny = -1; ny <= 1; ny++)
+                            {
+                                // make sure we don't go out of bounds
+                                if (x + nx >= 0 && x + nx < xSize && y + ny >= 0 && y + ny < ySize)
+                                {
+                                    // if we previously marked one of these squares as lower than maxDiff, we will now move material to it
+                                    if (lowNeighbors[nx +1, ny +1])
+                                    {
+                                        terrain[x, y] -= amountToMove;
+                                        terrain[x + nx, y + ny] += amountToMove;
+                                    }
+                                }
+                            }
                         }
                     }// for y
                 }// for x
             }// for passes
+            normalizeTerrain();
+            normalizeErosion();
+        }
 
+        public void hydraulicErosion(double solubility, double rainChance, double evapChance, int passes)
+        {
+            // random generator for rain, evap chances
+            Random rand = new Random();
+            Bitmap waterMap = getWaterMap(0);
+            Bitmap heightMap = getHeightBitmap();
+            var form = new Form1();
+            // solubility represents the fraction of the water particle size that can be filled with sediment
+            double maxCapacity = solubility * waterSize * 20;
+
+            form.Show();
+            form.pictureBox1.Image = waterMap;
+            form.pictureBox2.Image = heightMap;
+            form.Update();
+
+            for (int p = 0; p < passes; p++)
+            {
+                for (int x = 0; x < xSize; x++)
+                {
+                    for (int y = 0; y < ySize; y++)
+                    {
+                        // decide if we are going to rain on this square on this pass
+                        if (rand.NextDouble() < rainChance)
+                        {
+                            water[x, y].Push(new WaterParticle(0, 0));
+                            
+                        }
+                        
+                        //calculate the number of particles to remove via evaporation in this location
+                        int waterToRemove = 0;
+                        foreach (WaterParticle w in water[x, y])
+                        {
+                            if (rand.NextDouble() < evapChance)
+                            {
+                                waterToRemove++;
+                            }
+                        }
+
+                        //actually remove the particles, drop their sediment load in place
+                        for (int i = 0; i < waterToRemove; i++)
+                        {
+                            WaterParticle removed = water[x, y].Pop();
+                            terrain[x, y] += removed.getCarried();
+                        }
+
+                        //iterate through the stack, reduce the capacities of each, and drop some sediment. This means water
+                        //which hasn't moved for a while will lose capacity
+                        foreach (WaterParticle w in water[x,y])
+                        {
+                            w.setCapacity(w.getCapacity() * .3);
+                            double materialMoved = w.calculateLoad();
+                            terrain[x, y] += materialMoved;
+                            erosion[x, y] += Math.Abs(materialMoved);
+                        }
+
+                        //figure out if the top particle should drain to a neighbor
+                        bool cont = true;
+
+                        while (cont)
+                        {
+                            int minx = 0;
+                            int miny = 0;
+                            double minHeight = double.MaxValue;
+                            for (int nx = -1; nx <= 1; nx++)
+                            {
+                                for (int ny = -1; ny <= 1; ny++)
+                                {
+                                    // make sure we don't go out of bounds
+                                    if (x + nx >= 0 && x + nx < xSize && y + ny >= 0 && y + ny < ySize)
+                                    {
+                                        if (terrain[x + nx, y + ny] + water[x + nx, y + ny].Count * waterSize < minHeight)
+                                        {
+                                            minHeight = terrain[x + nx, y + ny] + water[x + nx, y + ny].Count * waterSize;
+                                            minx = x + nx;
+                                            miny = y + ny;
+                                        }
+                                    }
+                                }
+                            }
+                            if (!(x == minx && y == miny) && water[x, y].Count != 0 && terrain[x, y] + water[x, y].Count * waterSize - minHeight > waterSize)
+                            {
+                                // calculate the slope in radians
+                                double slope = Math.Atan(terrain[x, y] + water[x, y].Count * waterSize - minHeight);
+                                // capacity = slope / (Pi / 2) * maxCapacity
+                                double capacity = (slope / (Math.PI / 2)) * maxCapacity;
+                                // set the new capacity based on the move the particle is about to make
+                                water[x, y].Peek().setCapacity(capacity);
+                                // calculateLoad() returns the amount of material the particle is taking or leaving, and sets the new carried amount
+                                double materialMoved = water[x, y].Peek().calculateLoad();
+                                terrain[x, y] += materialMoved;
+                                erosion[x, y] += Math.Abs(materialMoved);
+                                // move the particle to its lowest neighbor
+                                water[minx, miny].Push(water[x, y].Pop());
+                            }
+                            else
+                            {
+                                cont = false;
+                            }
+                        }
+                    }
+                }
+                waterMap = getWaterMap(0);
+                form.textBox1.Text = p.ToString();
+                form.pictureBox1.Image = waterMap;
+                heightMap = getHeightBitmap();
+                form.pictureBox2.Image = heightMap;
+                form.Update();
+            }
+            //settleWater();
+            normalizeTerrain();
+            normalizeErosion();
+        }
+
+        public void altHydraulicErosion(double solubility, double rainChance, double evapChance, int passes)
+        {
+            // random generator for rain, evap chances
+            Random rand = new Random();
+            Bitmap waterMap = getWaterMapB();
+            Bitmap heightMap = getHeightBitmap();
+            var form = new Form1();
+
+            /*form.Show();
+            form.pictureBox1.Image = waterMap;
+            form.pictureBox2.Image = heightMap;
+            form.Update();*/
+
+            for (int p = 0; p < passes; p++)
+            {
+                for (int x = 0; x < xSize; x++)
+                {
+                    for (int y = 0; y < ySize; y++)
+                    {
+                        // add water to this square, based on rain amount
+                        waterB[x, y] += waterSize * rainChance;
+
+                        sediment[x, y] += waterB[x, y] * solubility;
+                        terrain[x, y] -= waterB[x, y] * solubility;
+
+                        //figure out if the top particle should drain to a neighbor
+
+                        bool[,] lowerNeighbors = new bool[3, 3];
+                        int lowNeighborCount = 0;
+                        double totalLowerNeighborHeight = 0;
+                        double totalDifference = 0;
+                        double totalNeighborhoodHeight = terrain[x, y] + waterB[x, y];
+
+                        for (int nx = -1; nx <= 1; nx++)
+                        {
+                            for (int ny = -1; ny <= 1; ny++)
+                            {
+                                // make sure we don't go out of bounds
+                                if (x + nx >= 0 && x + nx < xSize && y + ny >= 0 && y + ny < ySize)
+                                {
+                                    if (nx == 0 && ny == 0)
+                                    {
+                                        lowerNeighbors[nx + 1, ny + 1] = false;
+                                    }
+                                    else if ((terrain[x, y] + waterB[x, y]) - (terrain[x + nx, y + ny] + waterB[x + nx, y + ny]) > 0)
+                                    {
+                                        lowerNeighbors[nx + 1, ny + 1] = true;
+                                        lowNeighborCount++;
+                                        totalLowerNeighborHeight += terrain[x + nx, y + ny] + waterB[x + nx, y + ny];
+                                        totalDifference += (terrain[x, y] + waterB[x, y]) - (terrain[x + nx, y + ny] + waterB[x + nx, y + ny]);
+                                        totalNeighborhoodHeight += terrain[x + nx, y + ny] + waterB[x + nx, y + ny];
+                                    }
+                                    else
+                                    {
+                                        lowerNeighbors[nx + 1, ny + 1] = false;
+                                    }
+                                }
+                            }
+                        }
+                        double avgNeighborAlt = totalLowerNeighborHeight / lowNeighborCount;
+                        double avgAltitude = (totalLowerNeighborHeight + (terrain[x, y] + waterB[x, y])) / (lowNeighborCount + 1) ;
+                        double currentSediment = sediment[x, y];
+                        double totalWaterMoved = 0;
+                        for (int nx = -1; nx <= 1; nx++)
+                        {
+                            for (int ny = -1; ny <= 1; ny++)
+                            {
+                                // make sure we don't go out of bounds
+                                if (x + nx >= 0 && x + nx < xSize && y + ny >= 0 && y + ny < ySize)
+                                {
+                                    if (lowerNeighbors[nx + 1, ny + 1])
+                                    {
+                                        double difference = (waterB[x, y] + terrain[x, y]) - (waterB[x + nx, y + ny] + terrain[x + nx, y + ny]);
+                                        double waterMoved = Math.Min(waterB[x,y], terrain[x, y] + waterB[x, y] - avgAltitude) * (difference / totalDifference);
+                                        waterB[x + nx, y + ny] += waterMoved;
+                                        waterB[x, y] -= waterMoved;
+                                        sediment[x + nx, y + ny] += waterMoved * currentSediment;
+                                        totalWaterMoved += waterMoved;
+                                    }
+                                }
+                            }
+                        }
+                        sediment[x, y] -= totalWaterMoved * currentSediment;
+
+                        waterB[x, y] *= (1 - evapChance);
+
+                        double maxSediment = waterB[x, y] * solubility;
+
+                        if (sediment[x,y] > maxSediment)
+                        {
+                            terrain[x, y] += sediment[x, y] - maxSediment;
+                            sediment[x, y] -= sediment[x, y] - maxSediment; 
+                        }
+                    }
+                }
+                /*waterMap = getWaterMapB();
+                form.textBox1.Text = p.ToString();
+                form.pictureBox1.Image = waterMap;
+                heightMap = getHeightBitmap();
+                form.pictureBox2.Image = heightMap;
+                form.Update();*/
+            }
+            //normalizeTerrain();
+            //normalizeErosion();
+        }
+
+
+
+        private void settleWater()
+        {
+            int passes = 10;
+            
+            for (int p = 0; p < passes; p++)
+            {
+                int[] xOrder = generateRandomOrder(xSize);
+                int[] yOrder = generateRandomOrder(ySize);
+                foreach (int x in xOrder)
+                {
+                    foreach (int y in yOrder)
+                    {
+                        bool cont = true;
+
+                        while (cont)
+                        {
+                            int minx = 0;
+                            int miny = 0;
+                            double minHeight = double.MaxValue;
+                            for (int nx = -1; nx <= 1; nx++)
+                            {
+                                for (int ny = -1; ny <= 1; ny++)
+                                {
+                                    // make sure we don't go out of bounds
+                                    if (x + nx >= 0 && x + nx < xSize && y + ny >= 0 && y + ny < ySize)
+                                    {
+                                        if (terrain[x + nx, y + ny] + water[x + nx, y + ny].Count * waterSize < minHeight)
+                                        {
+                                            minHeight = terrain[x + nx, y + ny] + water[x + nx, y + ny].Count * waterSize;
+                                            minx = x + nx;
+                                            miny = y + ny;
+                                        }
+                                    }
+                                }
+                            }
+                            if (!(x == minx && y == miny) && water[x, y].Count != 0 && terrain[x, y] + water[x, y].Count * waterSize - minHeight > waterSize)
+                            {
+                                WaterParticle moved = water[x, y].Pop();
+                                water[minx, miny].Push(moved);
+                            }
+                            else
+                            {
+                                cont = false;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         // write a file to "filename", in unity compatible .raw heightmap format
@@ -248,7 +638,7 @@ namespace TerrainGenerator
                 {
                     for (int x = 0; x < xSize; x++)
                     {
-                        output16 = (ushort)(terrain[x, y] * 65536);
+                        output16 = (ushort)(terrain[x, y] * 65535);
                         writer.Write(output16);
                     }
                 }
@@ -306,6 +696,119 @@ namespace TerrainGenerator
                 }
             }
             return bmp;
+        }
+
+        public Bitmap getErosionMap()
+        {
+            Bitmap output = new Bitmap(xSize, ySize);
+            int output8;
+
+            for (int x = 0; x < xSize; x++)
+            {
+                for (int y = 0; y < ySize; y++)
+                {
+                    output8 = (int)(erosion[x, y] * 256);
+                    if (output8 < 0) output8 = 0;
+                    if (output8 > 255) output8 = 255;
+                    output.SetPixel(x, y, Color.FromArgb(255, output8, output8, output8));
+                }
+            }
+
+            return output;
+        }
+
+        // generate grayscale watermap
+        public Bitmap getWaterMap(int threshold)
+        {
+            Bitmap output = new Bitmap(xSize, ySize);
+            int output8;
+
+            /*
+            int max = 0;
+
+            for (int x = 0; x < xSize; x++)
+            {
+                for (int y = 0; y < ySize; y++)
+                {
+                    max = Math.Max(max, water[x, y].Count);
+                }
+            }
+            */
+
+            for (int x = 0; x < xSize; x++)
+            {
+                for (int y = 0; y < ySize; y++)
+                {
+                    if (water[x, y].Count > threshold)
+                    {
+                        output8 = (int)(water[x, y].Count * waterSize * 256 * 10);
+                        if (output8 < 0) output8 = 0;
+                        if (output8 > 255) output8 = 255;
+                        output.SetPixel(x, y, Color.FromArgb(255, output8, output8, output8));
+                    }
+                    else
+                    {
+                        output.SetPixel(x, y, Color.FromArgb(255, 0, 0, 0));
+                    }
+                }
+            }
+
+            return output;
+        }
+
+        public Bitmap getWaterMapB()
+        {
+            Bitmap bmp = new Bitmap(xSize, ySize);
+            // bmp channel values are 8 bits
+            int output8;
+
+            for (int x = 0; x < xSize; x++)
+            {
+                for (int y = 0; y < ySize; y++)
+                {
+                    output8 = (int)(waterB[x, y] * 256 * 30);
+                    if (output8 < 0) output8 = 0;
+                    if (output8 > 255) output8 = 255;
+                    bmp.SetPixel(x, y, Color.FromArgb(255, output8, output8, output8));
+                }
+            }
+            return bmp;
+        }
+
+        //save a copy of the terrain + water heightmap - this generates a second terrain to overlay and produce water
+        public void saveWaterRaw(string filename, int threshold)
+        {
+            if (xSize != ySize)
+            {
+                throw new IOException(".raw heightmap must be square");
+            }
+            using (BinaryWriter writer = new BinaryWriter(File.Open(filename, FileMode.Create)))
+            {
+                // two bytes for each x, y coordinate when outputing unity .raw heightmaps
+                UInt16 output16;
+
+                for (int y = ySize - 1; y >= 0; y--)
+                {
+                    for (int x = 0; x < xSize; x++)
+                    {
+                        if (water[x, y].Count > threshold)
+                        {
+                            double output = terrain[x, y] + (water[x, y].Count * waterSize);
+                            if (output > 1.0)
+                            {
+                                output = 1.0;
+                            }
+                            output16 = (ushort)(output * 65535);
+                            writer.Write(output16);
+                        }
+                        else
+                        {
+                            output16 = (ushort)(terrain[x, y] * 0.99 * 65535);
+                            writer.Write(output16);
+                        }
+                    }
+                }
+            }
         }
 
         // generate color texture bitmap

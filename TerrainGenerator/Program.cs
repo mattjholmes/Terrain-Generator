@@ -17,14 +17,18 @@ namespace TerrainGenerator
         //[STAThread]
         static void Main()
         {
+            /*Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Form1());*/
+
             int xSize = 2048;
             int ySize = xSize;
-            float maxAlt = 256;
-            int octaves = 5;
-            double frequency = 6;
+            float maxAlt = 512;
+            int octaves = 7;
+            double frequency = 4;
             double persistance = .45;
             double lacunarity = 1.95;
-            double mu = 1.00; // useful range - 1.0 - about 1.01
+            double mu = 1.01; // useful range - 1.0 - about 1.01
             double xOffset = 4;
             double yOffset = 9;
             
@@ -33,27 +37,32 @@ namespace TerrainGenerator
             string texFile = "texture.bmp";
             string tifFile = "terrain.tif";
             string inBmpFile = "input.bmp";
+            string erosionMap = "erosionmap.bmp";
+            string waterMap = "watermap.bmp";
+            string waterRaw = "water.raw";
             Bitmap inBmp = new Bitmap(inBmpFile);
             Bitmap bmp = new Bitmap(xSize, ySize);
             Terrain terrain = new Terrain(xSize, ySize, maxAlt);
 
-            terrain.generateTerrain(inBmp, 0.3, xOffset, yOffset, frequency, octaves, persistance, lacunarity, mu);
+            //terrain.generateTerrain(inBmp, 0.4, xOffset, yOffset, frequency, octaves, persistance, lacunarity, mu);
+            terrain.generateTerrain(xOffset, yOffset, frequency, octaves, persistance, lacunarity, mu);
             terrain.setTextureSample();
-            terrain.normalizeTerrain();
-            //bmp = terrain.getHeightBitmap();
-            //terrain.saveHeightRaw("beforeErosion.raw");
-            //bmp.Save("terrainBeforeErosion.bmp");
-            terrain.thermalErosion(40, 150);
+            bmp = terrain.getHeightBitmap();
+            terrain.saveHeightRaw("beforeErosion.raw");
+            bmp.Save("terrainBeforeErosion.bmp");
+            terrain.thermalErosion(45, 30);
+            terrain.altHydraulicErosion(.1, 10, .7, 400);
             terrain.saveHeightRaw(filename);
             terrain.saveTIFF(tifFile);
             bmp = terrain.getHeightBitmap();
             bmp.Save(bmpFile);
             bmp = terrain.getTexture();
             bmp.Save(texFile);
-                        
-            /*Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());*/
+            bmp = terrain.getErosionMap();
+            bmp.Save(erosionMap);
+            bmp = terrain.getWaterMapB();
+            bmp.Save(waterMap);
+            terrain.saveWaterRaw(waterRaw,5);
         }
     }
 }
