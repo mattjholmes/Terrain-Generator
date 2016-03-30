@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BitMiracle.LibTiff.Classic;
 using static TerrainGenerator.MathUtility;
+using System.Windows.Media.Media3D;
 
 namespace TerrainGenerator
 {
@@ -58,6 +59,9 @@ namespace TerrainGenerator
         // 2d array to hold the height information
         private double[,] terrain;
 
+        // 2d array of Vector3d to hold normal information
+        private Vector3D[,] normalMap;
+
         // 2d array to hold water information
         private Stack<WaterParticle>[,] water;
         private double[,] waterB;
@@ -98,6 +102,7 @@ namespace TerrainGenerator
             xActualSize = xMapSize;
             yActualSize = yMapSize;
             terrain = new double[x, y];
+            normalMap = new Vector3D[x, y];
             waterB = new double[x, y];
             sediment = new double[x, y];
             water = new Stack<WaterParticle>[x, y];
@@ -163,6 +168,8 @@ namespace TerrainGenerator
         {
             xSize = x;
             ySize = y;
+            terrain = new Double[x, y];
+            normalMap = new Vector3D[x, y];
         }
 
         public void setTextureSample()
@@ -204,6 +211,7 @@ namespace TerrainGenerator
             }
 
             normalizeTerrain();
+            calculateNormals();
         }
 
         public void generateTerrain(Bitmap input, double weight, double xOffset, double yOffset, double frequency, int octaves, double persistance, double lacunarity, double mu)
@@ -273,6 +281,7 @@ namespace TerrainGenerator
             }
 
             normalizeTerrain();
+            calculateNormals();
         }
 
         // Normalized the terrain, making the lowest point = 0 and the highest point = 1
@@ -390,7 +399,7 @@ namespace TerrainGenerator
                     }// for y
                 }// for x
             }// for passes
-            normalizeErosion();
+            calculateNormals();
         }
 
         public void hydraulicErosion(double solubility, double rainChance, double evapChance, int passes)
@@ -677,6 +686,82 @@ namespace TerrainGenerator
             }
         }
 
+        public void calculateNormals()
+        {
+            // copy the real terrain into a working version, give it a border that we will dump later
+            // this simplifies the normal calculation algorithm
+            double[,] workTerrain = new double[xSize + 2, ySize + 2];
+            // copy the top and bottom edges
+            for (int x = 1; x < xSize + 1; x++)
+            {
+                workTerrain[x, 0] = terrain[x - 1, 0];
+                workTerrain[x, ySize + 1] = terrain[x - 1, ySize-1];
+            }
+            // copy the left and right edges
+            for (int y = 1; y < ySize + 1; y++)
+            {
+                workTerrain[0, y] = terrain[0, y - 1];
+                workTerrain[xSize + 1, y] = terrain[xSize - 1, y - 1];
+            }
+            // copy the real terrain into the middle of the working terrain
+            for (int x = 1; x < xSize + 1; x++)
+            {
+                for (int y = 1; y < ySize + 1; y++)
+                {
+                    workTerrain[x, y] = terrain[x - 1, y - 1];
+                }
+            }
+            // handle the corners
+            workTerrain[0, 0] = workTerrain[1,1];
+            workTerrain[0, ySize + 1] = workTerrain[1, ySize];
+            workTerrain[xSize + 1, 0] = workTerrain[xSize, 1];
+            workTerrain[xSize + 1, ySize + 1] = workTerrain[xSize, ySize];
+
+            // calculate the normals for each real terrain location
+            for (int x = 1; x < xSize + 1; x++)
+            {
+                for (int y = 1; y < ySize + 1; y++)
+                {
+                    int i = 0;
+                    double[] sample = new double[9];
+                    // sample the 9 square grid centered on the working point
+                    for (int nx = -1; nx <= 1; nx++)
+                    {
+                        for (int ny = -1; ny <= 1; ny++)
+                        {
+                            sample[i] = workTerrain[x + nx, y + ny];
+                            i++;
+                        }
+                    }
+                    double scale = maxAltitude / Math.Min(xActualSize, yActualSize);
+                    Vector3D norm = new Vector3D();
+                    // calculate the normal using a sobel filter - scale determined by ratio of height/mapsize
+                    norm.X = scale * -(sample[6] - sample[0] + 2 * (sample[7] - sample[1]) + sample[8] - sample[2]);
+                    norm.Y = scale * (sample[2] - sample[0] + 2 * (sample[5] - sample[3]) + sample[8] - sample[6]);
+                    norm.Z = 1.0;
+                    norm.Normalize();
+                    // assign the resulting vector to the normal map - remember the working terrain is offset by 1, 1
+                    normalMap[x - 1, y - 1] = norm;
+                }
+            }
+
+            Bitmap bmp = new Bitmap(xSize + 2, ySize + 2);
+            // bmp channel values are 8 bits
+            int output8;
+
+            for (int x = 0; x < xSize + 2; x++)
+            {
+                for (int y = 0; y < ySize + 2; y++)
+                {
+                    output8 = (int)(workTerrain[x, y] * 255);
+                    if (output8 < 0) output8 = 0;
+                    if (output8 > 255) output8 = 255;
+                    bmp.SetPixel(x, y, Color.FromArgb(255, output8, output8, output8));
+                }
+            }
+            bmp.Save("normalWorkTerrain.bmp");
+        }
+
         // write a file to "filename", in unity compatible .raw heightmap format
         public void saveHeightRaw(string filename)
         {
@@ -744,13 +829,32 @@ namespace TerrainGenerator
                 {
                 for (int y = 0; y < ySize; y++)
                 {
-                    output8 = (int)(terrain[x, y] * 256);
+                    output8 = (int)(terrain[x, y] * 255);
                     if (output8 < 0) output8 = 0;
                     if (output8 > 255) output8 = 255;
                     bmp.SetPixel(x, y, Color.FromArgb(255, output8, output8, output8));
                 }
             }
             return bmp;
+        }
+
+        public Bitmap getNormalMap()
+        {
+            Bitmap output = new Bitmap(xSize, ySize);
+
+            int r, g, b;
+            for (int x = 0; x < xSize; x++)
+            {
+                for (int y = 0; y < ySize; y++)
+                {
+                    r = ((int)(normalMap[x, y].X * 255) / 2) + 127;
+                    g = ((int)(normalMap[x, y].Y * 255) / 2) + 127;
+                    b = ((int)(normalMap[x, y].Z * 255) / 2) + 127;
+                    output.SetPixel(x, y, Color.FromArgb(r, g, b));
+                }
+            }
+
+            return output;
         }
 
         public Bitmap getErosionMap()
@@ -762,7 +866,7 @@ namespace TerrainGenerator
             {
                 for (int y = 0; y < ySize; y++)
                 {
-                    output8 = (int)(erosion[x, y] * 256);
+                    output8 = (int)(erosion[x, y] * 255);
                     if (output8 < 0) output8 = 0;
                     if (output8 > 255) output8 = 255;
                     output.SetPixel(x, y, Color.FromArgb(255, output8, output8, output8));
@@ -796,7 +900,7 @@ namespace TerrainGenerator
                 {
                     if (water[x, y].Count > threshold)
                     {
-                        output8 = (int)(water[x, y].Count * waterSize * 256 * 10);
+                        output8 = (int)(water[x, y].Count * waterSize * 255 * 10);
                         if (output8 < 0) output8 = 0;
                         if (output8 > 255) output8 = 255;
                         output.SetPixel(x, y, Color.FromArgb(255, output8, output8, output8));
@@ -821,7 +925,7 @@ namespace TerrainGenerator
             {
                 for (int y = 0; y < ySize; y++)
                 {
-                    output8 = (int)(waterB[x, y] * 256 * 30);
+                    output8 = (int)(waterB[x, y] * 255 * 30);
                     if (output8 < 0) output8 = 0;
                     if (output8 > 255) output8 = 255;
                     bmp.SetPixel(x, y, Color.FromArgb(255, output8, output8, output8));
