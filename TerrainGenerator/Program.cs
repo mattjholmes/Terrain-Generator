@@ -38,7 +38,7 @@ namespace TerrainGenerator
             string bmpFile = "terrain.bmp";
             string texFile = "texture.bmp";
             string tifFile = "terrain.tif";
-            string inBmpFile = "input.bmp";
+            string inBmpFile = "texSample.bmp";
             string erosionMap = "erosionmap.bmp";
             string waterMap = "watermap.bmp";
             string waterRaw = "water.raw";
