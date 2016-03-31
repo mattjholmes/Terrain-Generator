@@ -66,6 +66,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\..\..\Desktop\WaterParticleSystem.cs">
+      <Link>WaterParticleSystem.cs</Link>
+    </Compile>
     <Compile Include="MathUtility.cs" />
     <Compile Include="Terrain.cs" />
     <Compile Include="Form1.cs">

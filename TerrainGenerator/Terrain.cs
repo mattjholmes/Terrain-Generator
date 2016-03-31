@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using BitMiracle.LibTiff.Classic;
 using static TerrainGenerator.MathUtility;
 using System.Windows.Media.Media3D;
+using System.Windows;
 
 namespace TerrainGenerator
 {
@@ -66,6 +67,7 @@ namespace TerrainGenerator
         private Stack<WaterParticle>[,] water;
         private double[,] waterB;
         private double[,] sediment;
+        private WaterParticleSystem waterp;
 
         // 2d array to hold erosion map - used in generating texture control maps 
         private double[,] erosion;
@@ -175,7 +177,7 @@ namespace TerrainGenerator
         public void setTextureSample()
         {
             Graphics g = Graphics.FromImage(texSample);
-            Rectangle targetRect = new Rectangle(new Point(0, 0), texSample.Size);
+            Rectangle targetRect = new Rectangle(new System.Drawing.Point(0, 0), texSample.Size);
             
             LinearGradientBrush grBrush = new LinearGradientBrush(targetRect, Color.Black, Color.Black, 0, false);
             ColorBlend cb = new ColorBlend();
@@ -400,6 +402,32 @@ namespace TerrainGenerator
                 }// for x
             }// for passes
             calculateNormals();
+        }
+
+        public void waterSystem(int numParticles)
+        {
+            Bitmap waterMap;
+            Bitmap heightMap;
+            var form = new Form1();
+            waterp = new WaterParticleSystem(numParticles);
+            Random rand = new Random();
+
+            form.Show();
+
+            for (int p = 0; p < numParticles; p++)
+            {
+                Vector pos = new Vector(rand.NextDouble() * xActualSize, rand.NextDouble() * yActualSize);
+                WaterParticleSystem.Particle particle = new WaterParticleSystem.Particle(pos);
+                waterp.addParticle(particle);
+                waterp.runStep(normalMap, xActualSize / xSize, yActualSize / ySize, xSize, ySize);
+
+                waterMap = getWaterParticleMap();
+                form.textBox1.Text = p.ToString();
+                form.pictureBox1.Image = waterMap;
+                heightMap = getHeightBitmap();
+                form.pictureBox2.Image = heightMap;
+                form.Update();
+            }
         }
 
         public void hydraulicErosion(double solubility, double rainChance, double evapChance, int passes)
@@ -968,6 +996,34 @@ namespace TerrainGenerator
                     }
                 }
             }
+        }
+
+        public Bitmap getWaterParticleMap()
+        {
+            Bitmap output = new Bitmap(xSize, ySize);
+
+            /*for (int x = 0; x < xSize; x++)
+            {
+                for (int y = 0; y < ySize; y++)
+                {
+                    output.SetPixel(x, y, Color.FromArgb(0, 0, 0, 0));
+                }
+            }*/
+
+            output = getHeightBitmap();
+
+            for (int i = 0; i < waterp.getNumParticles(); i++)
+            {
+                Vector position = waterp.getParticleAt(i).getPosition();
+                int xPos = (int)(position.X / (xActualSize / xSize));
+                int yPos = (int)(position.Y / (yActualSize / ySize));
+                if (xPos >= 0 && yPos >= 0 && xPos < xSize && yPos < ySize)
+                {
+                    output.SetPixel(xPos, yPos, Color.Red);
+                }
+            }
+
+            return output;
         }
 
         // generate color texture bitmap

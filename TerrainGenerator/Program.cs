@@ -21,9 +21,9 @@ namespace TerrainGenerator
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());*/
 
-            int xSize = 512;
+            int xSize = 256;
             int ySize = xSize;
-            float xMapSize = 20000;
+            float xMapSize = 10000;
             float yMapSize = xMapSize;
             float maxAlt = 5000;
             int octaves = 6;
@@ -49,6 +49,8 @@ namespace TerrainGenerator
 
             //terrain.generateTerrain(inBmp, 0.4, xOffset, yOffset, frequency, octaves, persistance, lacunarity, mu);
             terrain.generateTerrain(xOffset, yOffset, frequency, octaves, persistance, lacunarity, mu);
+            terrain.thermalErosion(45, 50);
+            terrain.waterSystem(1000);
             terrain.setTextureSample();
             bmp = terrain.getHeightBitmap();
             terrain.saveHeightRaw("beforeErosion.raw");

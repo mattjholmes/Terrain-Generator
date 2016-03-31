@@ -40,7 +40,7 @@ namespace TerrainGenerator
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(2, 2);
+            this.pictureBox1.Location = new System.Drawing.Point(369, 2);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(366, 368);
             this.pictureBox1.TabIndex = 0;
@@ -55,7 +55,7 @@ namespace TerrainGenerator
             // 
             // pictureBox2
             // 
-            this.pictureBox2.Location = new System.Drawing.Point(374, 2);
+            this.pictureBox2.Location = new System.Drawing.Point(2, 2);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(361, 368);
             this.pictureBox2.TabIndex = 2;
