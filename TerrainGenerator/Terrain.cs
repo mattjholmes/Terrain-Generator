@@ -286,6 +286,84 @@ namespace TerrainGenerator
             calculateNormals();
         }
 
+        public void generateTerrain(String path, double weight, double xOffset, double yOffset, double frequency, int octaves, double persistance, double lacunarity, double mu)
+        {
+            // weight input is expected to be a percentage, IE 0.0...1.0
+            if (weight > 1.0 || weight < 0.0)
+            {
+                throw new ArgumentOutOfRangeException("Weight must be less than 1.0, greater than or equal to 0.0");
+            }
+
+            double[,] inTerrain;
+            int height, width;
+
+            using (Tiff tif = Tiff.Open(path, "r"))
+            {
+                FieldValue[] res = tif.GetField(TiffTag.IMAGELENGTH);
+                height = res[0].ToInt();
+
+                res = tif.GetField(TiffTag.IMAGEWIDTH);
+                width = res[0].ToInt();
+
+                inTerrain = new double[width, height];
+
+                res = tif.GetField(TiffTag.BITSPERSAMPLE);
+                short bpp = res[0].ToShort();
+
+                res = tif.GetField(TiffTag.SAMPLESPERPIXEL);
+                short spp = res[0].ToShort();
+
+                res = tif.GetField(TiffTag.PHOTOMETRIC);
+                Photometric photo = (Photometric)res[0].ToInt();
+
+                int stride = tif.ScanlineSize();
+                byte[] scanline = new byte[stride];
+                ushort[] scanline16bit = new ushort[stride / 2];
+
+                for (int i = 0; i < height; i++)
+                {
+                    tif.ReadScanline(scanline, i);
+                    Buffer.BlockCopy(scanline, 0, scanline16bit, 0, scanline.Length);
+                    for (int j = 0; j < width; j++)
+                    {
+                        inTerrain[i, j] = (double)scanline16bit[j] / ushort.MaxValue;
+                    }
+
+                }
+            }
+
+            generator.setXOffset(xOffset);
+            generator.setYOffset(yOffset);
+            generator.setFrequency(frequency / 10000);
+            generator.setLacunarity(lacunarity);
+            generator.setMu(mu);
+            generator.setOctaves(octaves);
+            generator.setPersistance(persistance);
+
+            double xScale = xActualSize / xSize;
+            double yScale = yActualSize / ySize;
+            
+            for (int i = 0; i < xSize; i++)
+            {
+                for (int j = 0; j < ySize; j++)
+                {
+                    double baseHeight = 0;
+                    if (i < width && j < height)
+                    {
+                        baseHeight = inTerrain[i, j];
+                    }
+                    else
+                    {
+                        Console.WriteLine("Input bitmap too small");
+                    }
+                    terrain[i, j] = (generator.OctaveExpPerlin2d(i * xScale, j * yScale) * weight) + (baseHeight * (1 - weight));
+                }
+            }
+
+            normalizeTerrain();
+            calculateNormals();
+        }
+
         // Normalized the terrain, making the lowest point = 0 and the highest point = 1
         // This is useful to make the color map generation easier, as well as to use the full range of color resolution in the output heightmap
         private void normalizeTerrain()
@@ -341,7 +419,7 @@ namespace TerrainGenerator
             // maximum difference between neighboring locations
             double maxDiff = ((xActualSize / xSize) * Math.Tan(talusAngle * (Math.PI / 180))) / maxAltitude;
             // amount to move to the neighbor - higher values will lead to stairstepping in the output height map, but require less passes for the same effect
-            double hChange = maxDiff / 4;
+            double hChange = maxDiff / 8;
 
             for (int i = 0; i < passes; i++)
             {

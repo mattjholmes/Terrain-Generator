@@ -21,16 +21,16 @@ namespace TerrainGenerator
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());*/
 
-            int xSize = 512;
+            int xSize = 2048;
             int ySize = xSize;
-            float xMapSize = 10000;
+            float xMapSize = 100000;
             float yMapSize = xMapSize;
-            float maxAlt = 5000;
-            int octaves = 6;
+            float maxAlt = 10000;
+            int octaves = 5;
             double frequency = 1;
             double persistance = .45;
             double lacunarity = 1.95;
-            double mu = 1.01; // useful range - 1.0 - about 1.01
+            double mu = 1.003; // useful range - 1.0 - about 1.01
             double xOffset = 4;
             double yOffset = 9;
             
@@ -44,18 +44,20 @@ namespace TerrainGenerator
             string waterRaw = "water.raw";
             string normalMap = "normalmap.bmp";
             string slopeMap = "slope.bmp";
+            string inTif = "input.tif";
             Bitmap inBmp = new Bitmap(inBmpFile);
             Bitmap bmp = new Bitmap(xSize, ySize);
             Terrain terrain = new Terrain(xSize, ySize, xMapSize, yMapSize, maxAlt);
 
             //terrain.generateTerrain(inBmp, 0, xOffset, yOffset, frequency, octaves, persistance, lacunarity, mu);
-            terrain.generateTerrain(xOffset, yOffset, frequency, octaves, persistance, lacunarity, mu);
+            //terrain.generateTerrain(xOffset, yOffset, frequency, octaves, persistance, lacunarity, mu);
+            terrain.generateTerrain(inTif, 0.4, xOffset, yOffset, frequency, octaves, persistance, lacunarity, mu);
             terrain.setTextureSample();
             bmp = terrain.getHeightBitmap();
             terrain.saveHeightRaw("beforeErosion.raw");
             bmp.Save("terrainBeforeErosion.bmp");
             terrain.thermalErosion(35, 60);
-            terrain.waterSystem(1000);
+            //terrain.waterSystem(1000);
             //terrain.altHydraulicErosion(15, 20, .95, 350);
             terrain.saveHeightRaw(filename);
             terrain.saveTIFF(tifFile);
