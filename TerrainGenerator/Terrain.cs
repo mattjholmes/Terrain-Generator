@@ -419,6 +419,10 @@ namespace TerrainGenerator
                 Vector pos = new Vector(rand.NextDouble() * xActualSize, rand.NextDouble() * yActualSize);
                 WaterParticleSystem.Particle particle = new WaterParticleSystem.Particle(pos);
                 waterp.addParticle(particle);
+            }
+            for (int p = 0; p < 500; p++)
+            {
+                
                 waterp.runStep(normalMap, xActualSize / xSize, yActualSize / ySize, xSize, ySize);
 
                 waterMap = getWaterParticleMap();
@@ -761,12 +765,12 @@ namespace TerrainGenerator
                             i++;
                         }
                     }
-                    double scale = maxAltitude / Math.Min(xActualSize, yActualSize);
+                    double scale = 32 * maxAltitude / Math.Min(xActualSize, yActualSize);
                     Vector3D norm = new Vector3D();
                     // calculate the normal using a sobel filter - scale determined by ratio of height/mapsize
-                    norm.X = scale * -(sample[6] - sample[0] + 2 * (sample[7] - sample[1]) + sample[8] - sample[2]);
-                    norm.Y = scale * (sample[2] - sample[0] + 2 * (sample[5] - sample[3]) + sample[8] - sample[6]);
-                    norm.Z = 1.0;
+                    norm.X = -(sample[6] - sample[0] + 2 * (sample[7] - sample[1]) + sample[8] - sample[2]);
+                    norm.Y = (sample[2] - sample[0] + 2 * (sample[5] - sample[3]) + sample[8] - sample[6]);
+                    norm.Z = 1.0 / scale;
                     norm.Normalize();
                     // assign the resulting vector to the normal map - remember the working terrain is offset by 1, 1
                     normalMap[x - 1, y - 1] = norm;
@@ -1026,8 +1030,7 @@ namespace TerrainGenerator
             return output;
         }
 
-        // generate color texture bitmap
-        public Bitmap getTexture()
+        public Bitmap getSlopeMap()
         {
             Bitmap output = new Bitmap(xSize, ySize);
 
@@ -1035,10 +1038,44 @@ namespace TerrainGenerator
             {
                 for (int y = 0; y < ySize; y++)
                 {
+                    double slope;
+                    // calculate the slope in radians
+                    slope = Math.Asin(new Vector(normalMap[x, y].X, normalMap[x, y].Y).Length);
+                    // reduce the range back to 0..1
+                    slope /= Math.PI / 2;
+                    int val = (int)((slope) * 255);
+                    Color color = Color.FromArgb(val, val, val);
+                    output.SetPixel(x, y, color);
+                }
+            }
+
+            return output;
+        }
+
+        // generate color texture bitmap
+        public Bitmap getTexture()
+        {
+            Bitmap output = new Bitmap(xSize, ySize);
+            Color slopeColor = Color.FromArgb(100, 100, 89);
+            //Color slopeColor = Color.Red;
+            double slope;
+
+            for (int x = 0; x < xSize; x++)
+            {
+                for (int y = 0; y < ySize; y++)
+                {
+                    // calculate the slope in radians
+                    slope = Math.Asin( new Vector(normalMap[x, y].X, normalMap[x, y].Y).Length);
+                    // reduce the range back to 0..1
+                    slope /= Math.PI / 2;
+                    
+                    slope = Fade(slope);
+                    
                     int altitude = (int)(terrain[x, y] * texSample.Width);
                     if (altitude < 0) altitude = 0;
                     if (altitude >= texSample.Width) altitude = texSample.Width - 1;
                     Color color = texSample.GetPixel(altitude, 0);
+                    color = color.Blend(slopeColor, 1 - slope);
                     output.SetPixel(x, y, color);
                 }
             }

@@ -21,7 +21,7 @@ namespace TerrainGenerator
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());*/
 
-            int xSize = 256;
+            int xSize = 512;
             int ySize = xSize;
             float xMapSize = 10000;
             float yMapSize = xMapSize;
@@ -38,24 +38,24 @@ namespace TerrainGenerator
             string bmpFile = "terrain.bmp";
             string texFile = "texture.bmp";
             string tifFile = "terrain.tif";
-            string inBmpFile = "texSample.bmp";
+            string inBmpFile = "input.bmp";
             string erosionMap = "erosionmap.bmp";
             string waterMap = "watermap.bmp";
             string waterRaw = "water.raw";
             string normalMap = "normalmap.bmp";
+            string slopeMap = "slope.bmp";
             Bitmap inBmp = new Bitmap(inBmpFile);
             Bitmap bmp = new Bitmap(xSize, ySize);
             Terrain terrain = new Terrain(xSize, ySize, xMapSize, yMapSize, maxAlt);
 
-            //terrain.generateTerrain(inBmp, 0.4, xOffset, yOffset, frequency, octaves, persistance, lacunarity, mu);
+            //terrain.generateTerrain(inBmp, 0, xOffset, yOffset, frequency, octaves, persistance, lacunarity, mu);
             terrain.generateTerrain(xOffset, yOffset, frequency, octaves, persistance, lacunarity, mu);
-            terrain.thermalErosion(45, 50);
-            terrain.waterSystem(1000);
             terrain.setTextureSample();
             bmp = terrain.getHeightBitmap();
             terrain.saveHeightRaw("beforeErosion.raw");
             bmp.Save("terrainBeforeErosion.bmp");
-            terrain.thermalErosion(45, 50);
+            terrain.thermalErosion(35, 60);
+            terrain.waterSystem(1000);
             //terrain.altHydraulicErosion(15, 20, .95, 350);
             terrain.saveHeightRaw(filename);
             terrain.saveTIFF(tifFile);
@@ -70,6 +70,8 @@ namespace TerrainGenerator
             bmp = terrain.getWaterMapB();
             bmp.Save(waterMap);
             terrain.saveWaterRaw(waterRaw,5);
+            bmp = terrain.getSlopeMap();
+            bmp.Save(slopeMap);
         }
     }
 }
