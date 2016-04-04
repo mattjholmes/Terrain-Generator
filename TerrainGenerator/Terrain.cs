@@ -326,9 +326,8 @@ namespace TerrainGenerator
                     Buffer.BlockCopy(scanline, 0, scanline16bit, 0, scanline.Length);
                     for (int j = 0; j < width; j++)
                     {
-                        inTerrain[i, j] = (double)scanline16bit[j] / ushort.MaxValue;
+                        inTerrain[j, i] = (double)scanline16bit[j] / ushort.MaxValue;
                     }
-
                 }
             }
 
