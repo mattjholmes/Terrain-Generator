@@ -56,6 +56,13 @@ namespace TerrainGenerator
                 return output;
             }
         }
+        private class OutflowFlux
+        {
+            public double left = 0;
+            public double right = 0;
+            public double up = 0;
+            public double down = 0;
+        }
 
         // 2d array to hold the height information
         private double[,] terrain;
@@ -66,11 +73,15 @@ namespace TerrainGenerator
         // 2d array to hold water information
         private Stack<WaterParticle>[,] water;
         private double[,] waterB;
+        private double[,] waterMap;
         private double[,] sediment;
+        private OutflowFlux[,] oFlux;
+        private Vector[,] waterVel;
         private WaterParticleSystem waterp;
 
         // 2d array to hold erosion map - used in generating texture control maps 
         private double[,] erosion;
+        private double[,] deposition;
 
         // Maximum altitude of the map, used in slope calculations
         private float maxAltitude;
@@ -85,6 +96,11 @@ namespace TerrainGenerator
         // x and y size of terrain map
         private int xSize;
         private int ySize;
+
+        // object variables for water calculations
+        double grav;
+        double pipeArea;
+        double pipeLength;
 
         // gradient sample map for generating terrain texture
         Bitmap texSample = new Bitmap(1024, 1024);
@@ -109,6 +125,18 @@ namespace TerrainGenerator
             sediment = new double[x, y];
             water = new Stack<WaterParticle>[x, y];
             erosion = new double[x, y];
+            deposition = new double[x, y];
+            waterMap = new double[x, y];
+            waterVel = new Vector[x, y];
+            oFlux = new OutflowFlux[x, y];
+            for (int i = 0; i < xSize; i++)
+            {
+                for (int j = 0; j < ySize; j++)
+                {
+                    waterVel[i, j] = new Vector(0, 0);
+                    oFlux[i, j] = new OutflowFlux();
+                }
+            }
             for (x = 0; x < xSize; x++)
             {
                 for (y = 0; y < ySize; y++)
@@ -413,6 +441,30 @@ namespace TerrainGenerator
             }
         }
 
+        private void normalizeDeposition()
+        {
+            double min = 1;
+            double max = 0;
+            // loop through the array once and find the min/max values
+            for (int x = 0; x < xSize; x++)
+            {
+                for (int y = 0; y < ySize; y++)
+                {
+                    min = Math.Min(min, deposition[x, y]);
+                    max = Math.Max(max, deposition[x, y]);
+                }
+            }
+            double scale = 1 / (max - min);
+            // loop through the array again and normalize each value
+            for (int x = 0; x < xSize; x++)
+            {
+                for (int y = 0; y < ySize; y++)
+                {
+                    deposition[x, y] = (deposition[x, y] - min) * scale;
+                }
+            }
+        }
+
         public void thermalErosion(float talusAngle, int passes)
         {
             // maximum difference between neighboring locations
@@ -467,10 +519,13 @@ namespace TerrainGenerator
                                 if (x + nx >= 0 && x + nx < xSize && y + ny >= 0 && y + ny < ySize)
                                 {
                                     // if we previously marked one of these squares as lower than maxDiff, we will now move material to it
+                                    // also add the amount removed to the erosion map, and the amount added to neighbors to the deposition map
                                     if (lowNeighbors[nx +1, ny +1])
                                     {
                                         terrain[x, y] -= amountToMove;
                                         terrain[x + nx, y + ny] += amountToMove;
+                                        erosion[x, y] += amountToMove;
+                                        deposition[x + nx, y + ny] += amountToMove;
                                     }
                                 }
                             }
@@ -515,7 +570,7 @@ namespace TerrainGenerator
         {
             // random generator for rain, evap chances
             Random rand = new Random();
-            Bitmap waterMap = getWaterMap(0);
+            Bitmap waterMap = getWaterMap();
             Bitmap heightMap = getHeightBitmap();
             var form = new Form1();
             // solubility represents the fraction of the water particle size that can be filled with sediment
@@ -612,7 +667,7 @@ namespace TerrainGenerator
                         }
                     }
                 }
-                waterMap = getWaterMap(0);
+                waterMap = getWaterMap();
                 form.textBox1.Text = p.ToString();
                 form.pictureBox1.Image = waterMap;
                 heightMap = getHeightBitmap();
@@ -743,7 +798,222 @@ namespace TerrainGenerator
             }
         }
 
+        // Hydraulic Erosion based on velocity field, derived from the normal map
+        // input parameters, solubility: 0..1 represents the solubility of the soil as a percentage of carrying water, IE 1 solubility means 1 meter of water can dissolve 1 meter of soil in 1 timestep
+        // water capacity: 0..1 represents the maximum amount of sediment the water can carry, this drops off as water velocity drops. 1 means 1 meter of water can carry 1 meter of soil
+        // rainChance: 0..1 the chance per square that a "rain drop" will fall, rainAmount: the max depth in meters of the "rain drop"
+        // evapConstant: 0..1 the percentage of water that will evaporate after each time step
+        // timeStep: time to calculate for each step, in seconds, steps: total number of steps to calculate
+        public void vFieldHydroErosion(double sol, double depRate, double wCap, double rainChance, double rainAmount, double evapConstant, double timeStep, int steps)
+        {
+            double solubility = sol / maxAltitude;
+            double depositRate = depRate / maxAltitude;
+            double waterCapacity = wCap / maxAltitude; 
+            Random rand = new Random();
 
+            /*Bitmap waterBmp = getWaterMap();
+            Bitmap heightMap = getHeightBitmap();
+            var form = new Form1();*/
+
+            grav = 9.8;
+            pipeLength = Math.Min(xActualSize / xSize, yActualSize / ySize);
+            pipeArea = Math.PI * Math.Pow(pipeLength / 2, 2);
+            double k;
+
+            /*form.Show();
+            form.pictureBox1.Image = waterBmp;
+            form.pictureBox2.Image = heightMap;
+            form.Update();*/
+
+            // iterate through all 5 steps for the number of steps specified
+            for (int n = 0; n < steps; n++)
+            {
+                // first step - add new water to waterMap based on rain chance, rain amount, rain size
+                for (int x = 0; x < xSize; x++)
+                {
+                    for (int y = 0; y < ySize; y++)
+                    {
+                        if (rand.NextDouble() < rainChance)
+                        {
+                            waterMap[x, y] += rainAmount / maxAltitude;
+                        }
+                    }
+                }
+
+                // second step - simulate flow, update waterMap and waterVel
+
+                // update the outflowFlux map
+                for (int x = 0; x < xSize; x++)
+                {
+                    for (int y = 0; y < ySize; y++)
+                    {
+                        // calculate the flow in each direction, edge cases = 0
+                        if (x - 1 >= 0)
+                        {
+                            oFlux[x, y].left = Math.Max(0, oFlux[x,y].left + timeStep * pipeArea * (( grav * (terrain[x,y] + waterMap[x,y] - terrain[x-1, y] + waterMap[x - 1, y]) ) / pipeLength));
+                        }
+                        else
+                        {
+                            oFlux[x, y].left = 0;
+                        }
+
+                        if (x + 1 < xSize)
+                        {
+                            oFlux[x, y].right = Math.Max(0, oFlux[x, y].right + timeStep * pipeArea * ((grav * (terrain[x, y] + waterMap[x,y] - terrain[x + 1, y] + waterMap[x + 1, y])) / pipeLength));
+                        }
+                        else
+                        {
+                            oFlux[x, y].right = 0;
+                        }
+
+                        if (y - 1 >= 0)
+                        {
+                            oFlux[x, y].up = Math.Max(0, oFlux[x, y].up + timeStep * pipeArea * ((grav * (terrain[x, y] + waterMap[x,y] - terrain[x, y - 1] + waterMap[x, y - 1])) / pipeLength));
+                        }
+                        else
+                        {
+                            oFlux[x, y].up = 0;
+                        }
+
+                        if (y + 1 < ySize)
+                        {
+                            oFlux[x, y].down = Math.Max(0, oFlux[x, y].down + timeStep * pipeArea * ((grav * (terrain[x, y] + waterMap[x, y] - terrain[x, y + 1] + waterMap[x, y + 1])) / pipeLength));
+                        }
+                        else
+                        {
+                            oFlux[x, y].down = 0;
+                        }
+
+                        // k scales the flow down if the depth of the water in the square is less than the total outflow
+                        k = Math.Min(1, (waterMap[x, y] * pipeLength * pipeLength) / ((oFlux[x, y].left + oFlux[x, y].right + oFlux[x, y].up + oFlux[x, y].down) * timeStep));
+                        // make sure K hasn't become NaN due to floating point errors with tiny numbers
+                        if (double.IsNaN(k))
+                            k = 0;
+                        oFlux[x, y].left *= k;
+                        oFlux[x, y].right *= k;
+                        oFlux[x, y].up *= k;
+                        oFlux[x, y].down *= k;
+                    }
+                }
+
+                // actually move the water based on the outflow we just calculated, and update the velocity field
+                for (int x = 0; x < xSize; x++)
+                {
+                    for (int y = 0; y < ySize; y++)
+                    {
+                        double sumIn = 0;
+                        double sumOut = 0;
+                        double deltaWater = 0;
+                        double waterVelX = 0;
+                        double waterVelY = 0;
+                        double waterBefore, waterAfter, averageWater;
+                        double u, v;
+
+                        // calculate how much water to move to/from this square based on the flux map
+                        if (x - 1 >= 0)
+                            sumIn += oFlux[x - 1, y].right;
+                        if (x + 1 <= xSize - 1)
+                            sumIn += oFlux[x + 1, y].left;
+                        if (y - 1 >= 0)
+                            sumIn += oFlux[x, y - 1].down;
+                        if (y + 1 <= ySize - 1)
+                            sumIn += oFlux[x, y + 1].up;
+
+                        sumOut = oFlux[x, y].left + oFlux[x, y].right + oFlux[x, y].up + oFlux[x, y].down;
+
+                        deltaWater = timeStep * (sumIn - sumOut);
+
+                        // move the water in or out of the square
+                        waterBefore = waterMap[x, y];
+                        waterMap[x, y] = waterMap[x, y] + (deltaWater / (pipeLength * pipeLength));
+                        waterAfter = waterMap[x, y];
+
+                        // calculate the average water velocity in the x and y directions
+                        if (x - 1 >= 0)
+                            waterVelX += oFlux[x - 1, y].right - oFlux[x, y].left;
+                        else
+                            waterVelX -= oFlux[x, y].left;
+                        if (x + 1 <= xSize - 1)
+                            waterVelX += oFlux[x, y].right - oFlux[x + 1, y].left;
+                        else
+                            waterVelX += oFlux[x, y].right;
+                        if (y - 1 >= 0)
+                            waterVelY += oFlux[x, y - 1].down - oFlux[x, y].up;
+                        else
+                            waterVelY -= oFlux[x,y].up;
+                        if (y + 1 <= ySize - 1)
+                            waterVelY += oFlux[x, y].down - oFlux[x, y + 1].up;
+                        else
+                            waterVelY += oFlux[x, y].down;
+                        waterVelX /= 2;
+                        waterVelY /= 2;
+
+                        averageWater = (waterBefore + waterAfter) / 2;
+
+                        // create the u, v vector directions for updating the water vector field - careful to look out for NaN fp errors
+                        u = waterVelX / (pipeLength * averageWater);
+                        if (double.IsNaN(u))
+                            u = 0;
+                        v = waterVelY / (pipeLength * averageWater);
+                        if (double.IsNaN(v))
+                            v = 0;
+
+                        waterVel[x, y].X = u;
+                        waterVel[x, y].Y = v;
+                    }
+                }
+
+                // third step - calculate erosion and deposition
+                for (int x = 0; x < xSize; x++)
+                {
+                    for (int y = 0; y < ySize; y++)
+                    {
+                        // calculate the slope in radians from the normal map
+                        double slope = Math.Asin(new Vector(normalMap[x, y].X, normalMap[x, y].Y).Length);
+                        // calculate the sediment capacity of this cell
+                        double sedCap = waterCapacity * Math.Sin(slope) * Math.Abs(waterVel[x, y].Length);
+
+                        if (sedCap > sediment[x,y] && terrain[x,y] - solubility * (sedCap - sediment[x,y]) > 0)
+                        {
+                            terrain[x, y] -= solubility * (sedCap - sediment[x, y]);
+                            sediment[x, y] += solubility * (sedCap - sediment[x, y]);
+                        }
+                        else if (sedCap <= sediment[x,y])
+                        {
+                            terrain[x, y] += depositRate * (sediment[x, y] - sedCap);
+                            sediment[x, y] -= depositRate * (sediment[x, y] - sedCap);
+                        }
+                    }
+                }
+                // fourth step - transport suspended sediment - calculate from waterVel
+                for (int x = 0; x < xSize; x++)
+                {
+                    for (int y = 0; y < ySize; y++)
+                    {
+                        int xSource, ySource;
+                        xSource = x - (int)(waterVel[x, y].X * timeStep);
+                        ySource = y - (int)(waterVel[x, y].Y * timeStep);
+                        if (xSource >= 0 && xSource < xSize && ySource >= 0 && ySource < ySize)
+                        sediment[x, y] = sediment[xSource, ySource];
+                    }
+                }
+                // last step - remove water from waterMap via evaporation
+                for (int x = 0; x < xSize; x++)
+                {
+                    for (int y = 0; y < ySize; y++)
+                    {
+                        waterMap[x, y] *= 1 - evapConstant * timeStep;
+                    }
+                }
+
+                /*waterBmp = getWaterMap();
+                form.textBox1.Text = n.ToString();
+                form.pictureBox1.Image = waterBmp;
+                heightMap = getHeightBitmap();
+                form.pictureBox2.Image = heightMap;
+                form.Update();*/
+            }
+        }
 
         private void settleWater()
         {
@@ -971,6 +1241,8 @@ namespace TerrainGenerator
             Bitmap output = new Bitmap(xSize, ySize);
             int output8;
 
+            normalizeErosion();
+
             for (int x = 0; x < xSize; x++)
             {
                 for (int y = 0; y < ySize; y++)
@@ -985,8 +1257,29 @@ namespace TerrainGenerator
             return output;
         }
 
+        public Bitmap getDepositionMap()
+        {
+            Bitmap output = new Bitmap(xSize, ySize);
+            int output8;
+
+            normalizeDeposition();
+
+            for (int x = 0; x < xSize; x++)
+            {
+                for (int y = 0; y < ySize; y++)
+                {
+                    output8 = (int)(deposition[x, y] * 255);
+                    if (output8 < 0) output8 = 0;
+                    if (output8 > 255) output8 = 255;
+                    output.SetPixel(x, y, Color.FromArgb(255, output8, output8, output8));
+                }
+            }
+
+            return output;
+        }
+
         // generate grayscale watermap
-        public Bitmap getWaterMap(int threshold)
+        public Bitmap getWaterParticleMap(int threshold)
         {
             Bitmap output = new Bitmap(xSize, ySize);
             int output8;
@@ -1035,6 +1328,25 @@ namespace TerrainGenerator
                 for (int y = 0; y < ySize; y++)
                 {
                     output8 = (int)(waterB[x, y] * 255 * 30);
+                    if (output8 < 0) output8 = 0;
+                    if (output8 > 255) output8 = 255;
+                    bmp.SetPixel(x, y, Color.FromArgb(255, output8, output8, output8));
+                }
+            }
+            return bmp;
+        }
+
+        public Bitmap getWaterMap()
+        {
+            Bitmap bmp = new Bitmap(xSize, ySize);
+            // bmp channel values are 8 bits
+            int output8;
+
+            for (int x = 0; x < xSize; x++)
+            {
+                for (int y = 0; y < ySize; y++)
+                {
+                    output8 = (int)(waterMap[x, y] * 255 *20);
                     if (output8 < 0) output8 = 0;
                     if (output8 > 255) output8 = 255;
                     bmp.SetPixel(x, y, Color.FromArgb(255, output8, output8, output8));
@@ -1142,12 +1454,12 @@ namespace TerrainGenerator
                 for (int y = 0; y < ySize; y++)
                 {
                     // calculate the slope in radians
-                    slope = Math.Asin( new Vector(normalMap[x, y].X, normalMap[x, y].Y).Length);
+                    slope = Math.Asin(new Vector(normalMap[x, y].X, normalMap[x, y].Y).Length);
                     // reduce the range back to 0..1
                     slope /= Math.PI / 2;
-                    
+
                     slope = Fade(slope);
-                    
+
                     int altitude = (int)(terrain[x, y] * texSample.Width);
                     if (altitude < 0) altitude = 0;
                     if (altitude >= texSample.Width) altitude = texSample.Width - 1;

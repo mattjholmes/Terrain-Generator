@@ -252,7 +252,7 @@ namespace TerrainGenerator
         }
 
         public double ExpPerlin2dNoise(double x, double y)
-        {            
+        {
             if (repeat > 0)
             {
                 x %= repeat;
@@ -309,7 +309,7 @@ namespace TerrainGenerator
             double maxValue = 0;
             for (int i = 0; i < octaves; i++)
             {
-                total += Perlin2dNoise((x + xOffset) * freq, (y + yOffset) * freq) * amplitude;
+                total += Perlin2dNoise(x * freq + xOffset, y * freq + yOffset) * amplitude;
                 maxValue += amplitude;
                 amplitude *= persistance;
                 freq *= lacunarity;
@@ -326,7 +326,7 @@ namespace TerrainGenerator
             double maxValue = 0;
             for (int i = 0; i < octaves; i++)
             {
-                total += ExpPerlin2dNoise((x + xOffset) * freq, (y + yOffset) * freq) * amplitude;
+                total += ExpPerlin2dNoise(x * freq + xOffset, y * freq + yOffset) * amplitude;
                 maxValue += amplitude;
                 amplitude *= persistance;
                 freq *= lacunarity;

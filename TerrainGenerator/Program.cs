@@ -21,18 +21,18 @@ namespace TerrainGenerator
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());*/
 
-            int xSize = 2048;
+            int xSize = 512;
             int ySize = xSize;
-            float xMapSize = 10000;
+            float xMapSize = 20000;
             float yMapSize = xMapSize;
             float maxAlt = 5000;
-            int octaves = 2;
+            int octaves = 8;
             double frequency = 1;
             double persistance = .45;
             double lacunarity = 1.95;
             double mu = 1.003; // useful range - 1.0 - about 1.01
-            double xOffset = 4;
-            double yOffset = 9;
+            double xOffset = -5.1;
+            double yOffset = 3.4;
             
             string filename = "terrain.raw";
             string bmpFile = "terrain.bmp";
@@ -40,6 +40,7 @@ namespace TerrainGenerator
             string tifFile = "terrain.tif";
             string inBmpFile = "input.bmp";
             string erosionMap = "erosionmap.bmp";
+            string depositionMap = "depositionMap.bmp";
             string waterMap = "watermap.bmp";
             string waterRaw = "water.raw";
             string normalMap = "normalmap.bmp";
@@ -50,13 +51,14 @@ namespace TerrainGenerator
             Terrain terrain = new Terrain(xSize, ySize, xMapSize, yMapSize, maxAlt);
 
             //terrain.generateTerrain(inBmp, 0, xOffset, yOffset, frequency, octaves, persistance, lacunarity, mu);
-            //terrain.generateTerrain(xOffset, yOffset, frequency, octaves, persistance, lacunarity, mu);
-            terrain.generateTerrain(inTif, 0, xOffset, yOffset, frequency, octaves, persistance, lacunarity, mu);
+            terrain.generateTerrain(xOffset, yOffset, frequency, octaves, persistance, lacunarity, mu);
+            //terrain.generateTerrain(inTif, 0, xOffset, yOffset, frequency, octaves, persistance, lacunarity, mu);
             terrain.setTextureSample();
             bmp = terrain.getHeightBitmap();
             terrain.saveHeightRaw("beforeErosion.raw");
             bmp.Save("terrainBeforeErosion.bmp");
-            //terrain.thermalErosion(35, 60);
+            terrain.thermalErosion(45, 100);
+            terrain.vFieldHydroErosion(.05, .1, .5, .4, 1, .1, .5, 200);
             //terrain.waterSystem(1000);
             //terrain.altHydraulicErosion(15, 20, .95, 350);
             terrain.saveHeightRaw(filename);
@@ -69,6 +71,8 @@ namespace TerrainGenerator
             bmp.Save(texFile);
             bmp = terrain.getErosionMap();
             bmp.Save(erosionMap);
+            bmp = terrain.getDepositionMap();
+            bmp.Save(depositionMap);
             bmp = terrain.getWaterMapB();
             bmp.Save(waterMap);
             terrain.saveWaterRaw(waterRaw,5);
