@@ -1502,6 +1502,75 @@ namespace TerrainGenerator
             return output;
         }
 
+        // generate a splat map (control texture) based on slope, altitude, and optional noise
+        public Bitmap getSplatMap(double minAlt, double maxAlt, double altFuzz, double minSlope, double maxSlope, double slopeFuzz, double noiseAmount)
+        {
+            Bitmap output = new Bitmap(xSize, ySize);
+            double xScale = xActualSize / xSize;
+            double yScale = yActualSize / ySize;
+            generator.setFrequency(1.0/2000);
+            generator.setLacunarity(2.1);
+            generator.setMu(1);
+            generator.setOctaves(5);
+            generator.setPersistance(.5);
+
+            for (int x = 0; x < xSize; x++)
+            {
+                for (int y = 0; y < ySize; y++)
+                {
+                    double value = 1;
+                    int value8 = 0;
+                    // calculate slope in radians
+                    double slope = Math.Asin(new Vector(normalMap[x, y].X, normalMap[x, y].Y).Length);
+                    // convert to degrees
+                    slope *= 180 / Math.PI;
+                    // get altitude
+                    double altitude = terrain[x, y] * maxAltitude;
+                    
+                    if (altitude >= minAlt && altitude <= minAlt + altFuzz)
+                    {
+                        value = value * ((altitude - minAlt) / altFuzz);
+                    }
+                    if (altitude <= maxAlt && altitude >= maxAlt - altFuzz)
+                    {
+                        value = value * (1 - ((altitude - (maxAlt - altFuzz)) / altFuzz));
+                    }
+                    if ( slope >= minSlope && slope <= minSlope + slopeFuzz)
+                    {
+                        value = value * ((slope - minSlope) / slopeFuzz);
+                    }
+                    if (slope <= maxSlope && slope >= maxSlope - slopeFuzz)
+                    {
+                        value = value * (1 -((slope - (maxSlope - slopeFuzz)) / slopeFuzz));
+                    }
+                    if (altitude < minAlt)
+                    {
+                        value = 0;
+                    }
+                    if (altitude > maxAlt)
+                    {
+                        value = 0;
+                    }
+                    if (slope > maxSlope)
+                    {
+                        value = 0;
+                    }
+                    if (slope < minSlope)
+                    {
+                        value = 0;
+                    }
+                    double noise = generator.OctaveExpPerlin2d(x * xScale, y * yScale);
+                    value =  value * (noise * noiseAmount + (1 - noiseAmount));
+                    value8 = (byte)(value * byte.MaxValue);
+                    value8 = Math.Min(byte.MaxValue, value8);
+                    value8 = Math.Max(0, value8);
+                    output.SetPixel(x, y, Color.FromArgb(value8, value8, value8));
+                }
+            }
+
+            return output;
+        }
+
         // generate color texture bitmap
         public Bitmap getTexture()
         {
