@@ -470,7 +470,7 @@ namespace TerrainGenerator
             // maximum difference between neighboring locations
             double maxDiff = ((xActualSize / xSize) * Math.Tan(talusAngle * (Math.PI / 180))) / maxAltitude;
             // amount to move to the neighbor - higher values will lead to stairstepping in the output height map, but require less passes for the same effect
-            double hChange = maxDiff / 8;
+            double hChange = maxDiff / 16;
 
             for (int i = 0; i < passes; i++)
             {
@@ -804,15 +804,20 @@ namespace TerrainGenerator
         // rainChance: 0..1 the chance per square that a "rain drop" will fall, rainAmount: the max depth in meters of the "rain drop"
         // evapConstant: 0..1 the percentage of water that will evaporate after each time step
         // timeStep: time to calculate for each step, in seconds, steps: total number of steps to calculate
-        public void vFieldHydroErosion(double sol, double depRate, double wCap, double rainChance, double rainAmount, double evapConstant, double timeStep, int steps)
+        public void vFieldHydroErosion(double sol, double depRate, double wCap, double rainChance, double rainAmt, double evapConstant, double timeStep, int steps)
         {
-            double solubility = sol / maxAltitude;
-            double depositRate = depRate / maxAltitude;
-            double waterCapacity = wCap / maxAltitude; 
+            double solubility = sol;
+            double depositRate = depRate;
+            double waterCapacity = wCap;
+            double rainAmount = rainAmt / maxAltitude;
+            double scale = xActualSize / xSize;
             Random rand = new Random();
+            double[,] waterNew = new double[xSize, ySize];
+            double[,] sedimentNew = new double[xSize, ySize];
 
             /*Bitmap waterBmp = getWaterMap();
             Bitmap heightMap = getHeightBitmap();
+            Bitmap sedimentMap = getSedimentmap();
             var form = new Form1();*/
 
             grav = 9.8;
@@ -823,6 +828,7 @@ namespace TerrainGenerator
             /*form.Show();
             form.pictureBox1.Image = waterBmp;
             form.pictureBox2.Image = heightMap;
+            form.pictureBox3.Image = sedimentMap;
             form.Update();*/
 
             // iterate through all 5 steps for the number of steps specified
@@ -835,10 +841,11 @@ namespace TerrainGenerator
                     {
                         if (rand.NextDouble() < rainChance)
                         {
-                            waterMap[x, y] += rainAmount / maxAltitude;
+                            waterMap[x, y] += rainAmount * timeStep;
                         }
                     }
                 }
+                //waterMap[xSize / 2, ySize / 2] += (1/maxAltitude) * timeStep;
 
                 // second step - simulate flow, update waterMap and waterVel
 
@@ -850,7 +857,7 @@ namespace TerrainGenerator
                         // calculate the flow in each direction, edge cases = 0
                         if (x - 1 >= 0)
                         {
-                            oFlux[x, y].left = Math.Max(0, oFlux[x,y].left + timeStep * pipeArea * (( grav * (terrain[x,y] + waterMap[x,y] - terrain[x-1, y] + waterMap[x - 1, y]) ) / pipeLength));
+                            oFlux[x, y].left = Math.Max(0, oFlux[x, y].left + timeStep * pipeArea * ((grav * (terrain[x, y] + waterMap[x, y] - terrain[x - 1, y] + waterMap[x - 1, y])) / pipeLength));
                         }
                         else
                         {
@@ -886,7 +893,7 @@ namespace TerrainGenerator
 
                         // k scales the flow down if the depth of the water in the square is less than the total outflow
                         k = Math.Min(1, (waterMap[x, y] * pipeLength * pipeLength) / ((oFlux[x, y].left + oFlux[x, y].right + oFlux[x, y].up + oFlux[x, y].down) * timeStep));
-                        // make sure K hasn't become NaN due to floating point errors with tiny numbers
+                        // make sure K hasn't become NaN due to divide by zero
                         if (double.IsNaN(k))
                             k = 0;
                         oFlux[x, y].left *= k;
@@ -925,9 +932,11 @@ namespace TerrainGenerator
 
                         // move the water in or out of the square
                         waterBefore = waterMap[x, y];
-                        waterMap[x, y] = waterMap[x, y] + (deltaWater / (pipeLength * pipeLength));
-                        waterAfter = waterMap[x, y];
-
+                        waterNew[x, y] = waterMap[x, y] + (deltaWater / (pipeLength * pipeLength));
+                        if (waterNew[x, y] < 0)
+                            waterNew[x, y] = 0;
+                        waterAfter = waterNew[x, y];
+                        
                         // calculate the average water velocity in the x and y directions
                         if (x - 1 >= 0)
                             waterVelX += oFlux[x - 1, y].right - oFlux[x, y].left;
@@ -962,6 +971,7 @@ namespace TerrainGenerator
                         waterVel[x, y].Y = v;
                     }
                 }
+                waterMap = waterNew;
 
                 // third step - calculate erosion and deposition
                 for (int x = 0; x < xSize; x++)
@@ -971,46 +981,77 @@ namespace TerrainGenerator
                         // calculate the slope in radians from the normal map
                         double slope = Math.Asin(new Vector(normalMap[x, y].X, normalMap[x, y].Y).Length);
                         // calculate the sediment capacity of this cell
-                        double sedCap = waterCapacity * Math.Sin(slope) * Math.Abs(waterVel[x, y].Length);
+                        double sedCap = waterMap[x,y] * timeStep * waterCapacity * Math.Sin(slope) * Math.Abs(waterVel[x, y].Length);
+                        //double sedCap = waterCapacity * waterVel[x, y].Length * waterVel[x, y].Length;
 
                         if (sedCap > sediment[x,y] && terrain[x,y] - solubility * (sedCap - sediment[x,y]) > 0)
                         {
                             terrain[x, y] -= solubility * (sedCap - sediment[x, y]);
                             sediment[x, y] += solubility * (sedCap - sediment[x, y]);
+                            erosion[x, y] += solubility * (sedCap - sediment[x, y]);
                         }
                         else if (sedCap <= sediment[x,y])
                         {
                             terrain[x, y] += depositRate * (sediment[x, y] - sedCap);
                             sediment[x, y] -= depositRate * (sediment[x, y] - sedCap);
+                            deposition[x, y] += depositRate * (sediment[x, y] - sedCap);
                         }
                     }
                 }
                 // fourth step - transport suspended sediment - calculate from waterVel
+                
                 for (int x = 0; x < xSize; x++)
                 {
                     for (int y = 0; y < ySize; y++)
                     {
+                        
                         int xSource, ySource;
-                        xSource = x - (int)(waterVel[x, y].X * timeStep);
-                        ySource = y - (int)(waterVel[x, y].Y * timeStep);
+                        xSource = x - (int)(waterVel[x, y].X * scale * timeStep);
+                        ySource = y - (int)(waterVel[x, y].Y * scale * timeStep);
                         if (xSource >= 0 && xSource < xSize && ySource >= 0 && ySource < ySize)
-                        sediment[x, y] = sediment[xSource, ySource];
+                        {
+                            sedimentNew[x, y] = sediment[xSource, ySource];
+                            if (double.IsNaN(sedimentNew[x, y]))
+                                sedimentNew[x, y] = 0;
+                        }
+                        else if (x - 1 >= 0 && x + 1 < xSize && y - 1 >= 0 && y + 1 < ySize )
+                        {
+                            sedimentNew[x, y] = (sediment[x + 1, y] + sediment[x - 1, y] + sediment[x, y + 1] + sediment[x, y - 1]) / 4;
+                        }
                     }
                 }
+                sediment = sedimentNew;
+
                 // last step - remove water from waterMap via evaporation
                 for (int x = 0; x < xSize; x++)
                 {
                     for (int y = 0; y < ySize; y++)
                     {
                         waterMap[x, y] *= 1 - evapConstant * timeStep;
+                        if (double.IsNaN(waterMap[x, y]))
+                            waterMap[x, y] = 0;
                     }
                 }
+
+                // drop all remaining sediment back on the terrain, and remove the water
+                /*for (int x = 0; x < xSize; x++)
+                {
+                    for (int y = 0; y < ySize; y++)
+                    {
+                        waterMap[x, y] = 0;
+                        terrain[x, y] += sediment[x, y];
+                        deposition[x, y] += sediment[x, y];
+                        sediment[x, y] = 0;
+                    }
+                }*/
 
                 /*waterBmp = getWaterMap();
                 form.textBox1.Text = n.ToString();
                 form.pictureBox1.Image = waterBmp;
                 heightMap = getHeightBitmap();
                 form.pictureBox2.Image = heightMap;
+                sedimentMap = getSedimentmap();
+                form.pictureBox3.Image = sedimentMap;
                 form.Update();*/
             }
         }
@@ -1346,7 +1387,26 @@ namespace TerrainGenerator
             {
                 for (int y = 0; y < ySize; y++)
                 {
-                    output8 = (int)(waterMap[x, y] * 255 *20);
+                    output8 = (int)(waterMap[x, y] * 255 *4000);
+                    if (output8 < 0) output8 = 0;
+                    if (output8 > 255) output8 = 255;
+                    bmp.SetPixel(x, y, Color.FromArgb(255, output8, output8, output8));
+                }
+            }
+            return bmp;
+        }
+
+        public Bitmap getSedimentmap()
+        {
+            Bitmap bmp = new Bitmap(xSize, ySize);
+            // bmp channel values are 8 bits
+            int output8;
+
+            for (int x = 0; x < xSize; x++)
+            {
+                for (int y = 0; y < ySize; y++)
+                {
+                    output8 = (int)(sediment[x, y] * 255 * 1000);
                     if (output8 < 0) output8 = 0;
                     if (output8 > 255) output8 = 255;
                     bmp.SetPixel(x, y, Color.FromArgb(255, output8, output8, output8));
@@ -1356,8 +1416,9 @@ namespace TerrainGenerator
         }
 
         //save a copy of the terrain + water heightmap - this generates a second terrain to overlay and produce water
-        public void saveWaterRaw(string filename, int threshold)
+        public void saveWaterRaw(string filename, double thresh)
         {
+            double threshold = thresh / maxAltitude;
             if (xSize != ySize)
             {
                 throw new IOException(".raw heightmap must be square");
@@ -1371,9 +1432,9 @@ namespace TerrainGenerator
                 {
                     for (int x = 0; x < xSize; x++)
                     {
-                        if (water[x, y].Count > threshold)
+                        if (waterMap[x, y] > threshold)
                         {
-                            double output = terrain[x, y] + (water[x, y].Count * waterSize);
+                            double output = terrain[x, y] + waterMap[x, y];
                             if (output > 1.0)
                             {
                                 output = 1.0;
@@ -1464,7 +1525,7 @@ namespace TerrainGenerator
                     if (altitude < 0) altitude = 0;
                     if (altitude >= texSample.Width) altitude = texSample.Width - 1;
                     Color color = texSample.GetPixel(altitude, 0);
-                    color = color.Blend(slopeColor, 1 - slope);
+                    //color = color.Blend(slopeColor, 1 - slope);
                     output.SetPixel(x, y, color);
                 }
             }
