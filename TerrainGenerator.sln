@@ -5,6 +5,11 @@ VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TerrainGenerator", "TerrainGenerator\TerrainGenerator.csproj", "{CB8DF398-4D0E-4C29-90F1-13DFC769235A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DB218BA4-4D01-4BE9-B8BB-77338DD7328A}"
+	ProjectSection(SolutionItems) = preProject
+		RemovedCode.txt = RemovedCode.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

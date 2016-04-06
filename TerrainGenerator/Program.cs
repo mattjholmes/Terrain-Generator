@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows;
 
 namespace TerrainGenerator
@@ -49,21 +50,23 @@ namespace TerrainGenerator
             Bitmap inBmp = new Bitmap(inBmpFile);
             Bitmap bmp = new Bitmap(xSize, ySize);
             Terrain terrain = new Terrain(xSize, ySize, xMapSize, yMapSize, maxAlt);
+            ColorBlend cb = new ColorBlend();
+            cb.Positions = new[] { 0, 1 / 3f, 1 / 2f, 3 / 4f, 7 / 8f, 1 };
+            cb.Colors = new[] { Color.FromArgb(61, 84, 51), Color.FromArgb(35, 50, 32), Color.FromArgb(35, 50, 32), Color.FromArgb(160, 153, 147), Color.FromArgb(247, 247, 251), Color.FromArgb(247, 247, 251) };
 
-            //terrain.generateTerrain(inBmp, 0, xOffset, yOffset, frequency, octaves, persistance, lacunarity, mu);
+            //terrain.terrainFromBmp(inBmp);
+            //terrain.terrainFromTIFF(inTif);
+            //terrain.addTerrainNoise(0.5, xOffset, yOffset, frequency, octaves, persistance, lacunarity, mu);
             terrain.generateTerrain(xOffset, yOffset, frequency, octaves, persistance, lacunarity, mu);
-            //terrain.generateTerrain(inTif, 0.7, xOffset, yOffset, frequency, octaves, persistance, lacunarity, mu);
-            terrain.setTextureSample();
+            terrain.setTextureSample(cb);
             bmp = terrain.getHeightBitmap();
             terrain.saveHeightRaw("beforeErosion.raw");
             bmp.Save("terrainBeforeErosion.bmp");
-            terrain.thermalErosion(45, 75);
-            terrain.vFieldHydroErosion(.05, .1, .5, .005, .1, .001, 1, 400);
-            terrain.thermalErosion(45, 10);
-            terrain.vFieldHydroErosion(.05, .1, .5, .005, .1, .001, 1, 200);
-            terrain.thermalErosion(45, 10);
-            //terrain.waterSystem(1000);
-            //terrain.altHydraulicErosion(15, 20, .95, 350);
+            terrain.thermalErosion(45, 25);
+            terrain.vFieldHydroErosion(.1, .5, .01, .5, .1, .025, 1, 400);
+            terrain.thermalErosion(45, 5);
+            terrain.vFieldHydroErosion(.1, .5, .01, .5, .1, .025, 1, 200);
+            terrain.thermalErosion(45, 5);
             terrain.saveHeightRaw(filename);
             terrain.saveTIFF(tifFile);
             bmp = terrain.getNormalMap();
@@ -76,16 +79,20 @@ namespace TerrainGenerator
             bmp.Save(erosionMap);
             bmp = terrain.getDepositionMap();
             bmp.Save(depositionMap);
+            bmp = terrain.getThermalErosionMap();
+            bmp.Save("thermalErosion.bmp");
+            bmp = terrain.getTalusMap();
+            bmp.Save("talus.bmp");
             bmp = terrain.getWaterMap();
             bmp.Save(waterMap);
             terrain.saveWaterRaw(waterRaw,5);
             bmp = terrain.getSlopeMap();
             bmp.Save(slopeMap);
-            bmp = terrain.getSplatMap(1000, 5500, 500, -20, 40, 15, .1);
+            bmp = terrain.getSplatMap(1000, 5000, 500, 0, 0, 40, 0, 15, .1);
             bmp.Save("snow.bmp");
-            bmp = terrain.getSplatMap(-1000, 1500, 1000, -20, 45, 20, .3);
+            bmp = terrain.getSplatMap(0, 1500, 0, 1000, 0, 45, 0, 20, .3);
             bmp.Save("trees.bmp");
-            bmp = terrain.getSplatMap(-1000, 1500, 1000, -20, 65, 20, .4);
+            bmp = terrain.getSplatMap(0, 1500, 0, 1000, 0, 65, 0, 20, .4);
             bmp.Save("grass.bmp");
         }
     }

@@ -1,0 +1,450 @@
+class WaterParticle
+        {
+            private double sedimentCapacity;
+            private double sedimentCarried;
+            public WaterParticle(double sedimentCapacity, double sedimentCarried)
+            {
+                this.sedimentCapacity = sedimentCapacity;
+                this.sedimentCarried = sedimentCarried;
+            }
+
+            public double getCapacity()
+            {
+                return sedimentCapacity;
+            }
+
+            public double getCarried()
+            {
+                return sedimentCarried;
+            }
+
+            public void setCapacity(double capacity)
+            {
+                sedimentCapacity = capacity;
+            }
+
+            public void setCarried(double carried)
+            {
+                sedimentCarried = carried;
+            }
+
+            public double calculateLoad()
+            {
+                double output = 0;
+
+                output = sedimentCarried - sedimentCapacity;
+                sedimentCarried = sedimentCapacity;
+
+                return output;
+            }
+        }
+
+		
+        private Stack<WaterParticle>[,] water;
+		
+        private double[,] waterB;
+		
+        private WaterParticleSystem waterp;
+		
+        // Depth of a single water particle
+        private double waterSize;
+
+		private void settleWater()
+        {
+            int passes = 10;
+            
+            for (int p = 0; p < passes; p++)
+            {
+                int[] xOrder = generateRandomOrder(xSize);
+                int[] yOrder = generateRandomOrder(ySize);
+                foreach (int x in xOrder)
+                {
+                    foreach (int y in yOrder)
+                    {
+                        bool cont = true;
+
+                        while (cont)
+                        {
+                            int minx = 0;
+                            int miny = 0;
+                            double minHeight = double.MaxValue;
+                            for (int nx = -1; nx <= 1; nx++)
+                            {
+                                for (int ny = -1; ny <= 1; ny++)
+                                {
+                                    // make sure we don't go out of bounds
+                                    if (x + nx >= 0 && x + nx < xSize && y + ny >= 0 && y + ny < ySize)
+                                    {
+                                        if (terrain[x + nx, y + ny] + water[x + nx, y + ny].Count * waterSize < minHeight)
+                                        {
+                                            minHeight = terrain[x + nx, y + ny] + water[x + nx, y + ny].Count * waterSize;
+                                            minx = x + nx;
+                                            miny = y + ny;
+                                        }
+                                    }
+                                }
+                            }
+                            if (!(x == minx && y == miny) && water[x, y].Count != 0 && terrain[x, y] + water[x, y].Count * waterSize - minHeight > waterSize)
+                            {
+                                WaterParticle moved = water[x, y].Pop();
+                                water[minx, miny].Push(moved);
+                            }
+                            else
+                            {
+                                cont = false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+		
+        public void waterSystem(int numParticles)
+        {
+            Bitmap waterMap;
+            Bitmap heightMap;
+            var form = new Form1();
+            waterp = new WaterParticleSystem(numParticles);
+            Random rand = new Random();
+
+            form.Show();
+
+            for (int p = 0; p < numParticles; p++)
+            {
+                Vector pos = new Vector(rand.NextDouble() * xActualSize, rand.NextDouble() * yActualSize);
+                WaterParticleSystem.Particle particle = new WaterParticleSystem.Particle(pos);
+                waterp.addParticle(particle);
+            }
+            for (int p = 0; p < 500; p++)
+            {
+                
+                waterp.runStep(normalMap, xActualSize / xSize, yActualSize / ySize, xSize, ySize);
+
+                waterMap = getWaterParticleMap();
+                form.textBox1.Text = p.ToString();
+                form.pictureBox1.Image = waterMap;
+                heightMap = getHeightBitmap();
+                form.pictureBox2.Image = heightMap;
+                form.Update();
+            }
+        }
+
+        public void hydraulicErosion(double solubility, double rainChance, double evapChance, int passes)
+        {
+            // random generator for rain, evap chances
+            Random rand = new Random();
+            Bitmap waterMap = getWaterMap();
+            Bitmap heightMap = getHeightBitmap();
+            var form = new Form1();
+            // solubility represents the fraction of the water particle size that can be filled with sediment
+            double maxCapacity = solubility * waterSize * 20;
+
+            form.Show();
+            form.pictureBox1.Image = waterMap;
+            form.pictureBox2.Image = heightMap;
+            form.Update();
+
+            for (int p = 0; p < passes; p++)
+            {
+                for (int x = 0; x < xSize; x++)
+                {
+                    for (int y = 0; y < ySize; y++)
+                    {
+                        // decide if we are going to rain on this square on this pass
+                        if (rand.NextDouble() < rainChance)
+                        {
+                            water[x, y].Push(new WaterParticle(0, 0));
+                            
+                        }
+                        
+                        //calculate the number of particles to remove via evaporation in this location
+                        int waterToRemove = 0;
+                        foreach (WaterParticle w in water[x, y])
+                        {
+                            if (rand.NextDouble() < evapChance)
+                            {
+                                waterToRemove++;
+                            }
+                        }
+
+                        //actually remove the particles, drop their sediment load in place
+                        for (int i = 0; i < waterToRemove; i++)
+                        {
+                            WaterParticle removed = water[x, y].Pop();
+                            terrain[x, y] += removed.getCarried();
+                        }
+
+                        //iterate through the stack, reduce the capacities of each, and drop some sediment. This means water
+                        //which hasn't moved for a while will lose capacity
+                        foreach (WaterParticle w in water[x,y])
+                        {
+                            w.setCapacity(w.getCapacity() * .3);
+                            double materialMoved = w.calculateLoad();
+                            terrain[x, y] += materialMoved;
+                            erosion[x, y] += Math.Abs(materialMoved);
+                        }
+
+                        //figure out if the top particle should drain to a neighbor
+                        bool cont = true;
+
+                        while (cont)
+                        {
+                            int minx = 0;
+                            int miny = 0;
+                            double minHeight = double.MaxValue;
+                            for (int nx = -1; nx <= 1; nx++)
+                            {
+                                for (int ny = -1; ny <= 1; ny++)
+                                {
+                                    // make sure we don't go out of bounds
+                                    if (x + nx >= 0 && x + nx < xSize && y + ny >= 0 && y + ny < ySize)
+                                    {
+                                        if (terrain[x + nx, y + ny] + water[x + nx, y + ny].Count * waterSize < minHeight)
+                                        {
+                                            minHeight = terrain[x + nx, y + ny] + water[x + nx, y + ny].Count * waterSize;
+                                            minx = x + nx;
+                                            miny = y + ny;
+                                        }
+                                    }
+                                }
+                            }
+                            if (!(x == minx && y == miny) && water[x, y].Count != 0 && terrain[x, y] + water[x, y].Count * waterSize - minHeight > waterSize)
+                            {
+                                // calculate the slope in radians
+                                double slope = Math.Atan(terrain[x, y] + water[x, y].Count * waterSize - minHeight);
+                                // capacity = slope / (Pi / 2) * maxCapacity
+                                double capacity = (slope / (Math.PI / 2)) * maxCapacity;
+                                // set the new capacity based on the move the particle is about to make
+                                water[x, y].Peek().setCapacity(capacity);
+                                // calculateLoad() returns the amount of material the particle is taking or leaving, and sets the new carried amount
+                                double materialMoved = water[x, y].Peek().calculateLoad();
+                                terrain[x, y] += materialMoved;
+                                erosion[x, y] += Math.Abs(materialMoved);
+                                // move the particle to its lowest neighbor
+                                water[minx, miny].Push(water[x, y].Pop());
+                            }
+                            else
+                            {
+                                cont = false;
+                            }
+                        }
+                    }
+                }
+                waterMap = getWaterMap();
+                form.textBox1.Text = p.ToString();
+                form.pictureBox1.Image = waterMap;
+                heightMap = getHeightBitmap();
+                form.pictureBox2.Image = heightMap;
+                form.Update();
+            }
+            //settleWater();
+            normalizeTerrain();
+            normalizeErosion();
+        }
+
+        public void altHydraulicErosion(double solubility, double rainChance, double evapChance, int passes)
+        {
+            // random generator for rain, evap chances
+            Random rand = new Random();
+            Bitmap waterMap = getWaterMapB();
+            Bitmap heightMap = getHeightBitmap();
+            var form = new Form1();
+
+            form.Show();
+            form.pictureBox1.Image = waterMap;
+            form.pictureBox2.Image = heightMap;
+            form.Update();
+
+            for (int p = 0; p < passes; p++)
+            {
+                for (int x = 0; x < xSize; x++)
+                {
+                    for (int y = 0; y < ySize; y++)
+                    {
+                        // add water to this square, based on rain amount
+                        waterB[x, y] += waterSize * rainChance;
+
+                        //figure out where the current cell's water should flow
+                        bool[,] lowerNeighbors = new bool[3, 3];
+                        int lowNeighborCount = 0;
+                        double totalLowerNeighborHeight = 0;
+                        double totalDifference = 0;
+                        double totalNeighborhoodHeight = terrain[x, y] + waterB[x, y];
+
+                        for (int nx = -1; nx <= 1; nx++)
+                        {
+                            for (int ny = -1; ny <= 1; ny++)
+                            {
+                                // make sure we don't go out of bounds
+                                if (x + nx >= 0 && x + nx < xSize && y + ny >= 0 && y + ny < ySize)
+                                {
+                                    if (nx == 0 && ny == 0)
+                                    {
+                                        lowerNeighbors[nx + 1, ny + 1] = false;
+                                    }
+                                    else if ((terrain[x, y] + waterB[x, y]) - (terrain[x + nx, y + ny] + waterB[x + nx, y + ny]) > 0)
+                                    {
+                                        lowerNeighbors[nx + 1, ny + 1] = true;
+                                        lowNeighborCount++;
+                                        totalLowerNeighborHeight += terrain[x + nx, y + ny] + waterB[x + nx, y + ny];
+                                        totalDifference += (terrain[x, y] + waterB[x, y]) - (terrain[x + nx, y + ny] + waterB[x + nx, y + ny]);
+                                        totalNeighborhoodHeight += terrain[x + nx, y + ny] + waterB[x + nx, y + ny];
+                                    }
+                                    else
+                                    {
+                                        lowerNeighbors[nx + 1, ny + 1] = false;
+                                    }
+                                }
+                            }
+                        }
+
+                        double avgNeighborAlt = totalLowerNeighborHeight / lowNeighborCount;
+                        double avgAltitude = (totalLowerNeighborHeight + (terrain[x, y] + waterB[x, y])) / (lowNeighborCount + 1) ;
+                        
+                        double totalWaterMoved = 0;
+
+                        if ((terrain[x, y] + waterB[x, y]) - avgNeighborAlt > 0.00001)
+                        {
+                            sediment[x, y] += waterB[x, y] * solubility * Math.Min(0.1, ((terrain[x, y] + waterB[x, y]) - avgNeighborAlt));
+                            terrain[x, y] -= waterB[x, y] * solubility * Math.Min(0.1, ((terrain[x, y] + waterB[x, y]) - avgNeighborAlt));
+                        }
+
+                        double currentSediment = sediment[x, y];
+                        for (int nx = -1; nx <= 1; nx++)
+                        {
+                            for (int ny = -1; ny <= 1; ny++)
+                            {
+                                // make sure we don't go out of bounds
+                                if (x + nx >= 0 && x + nx < xSize + 1 && y + ny >= 0 && y + ny < ySize + 1)
+                                {
+                                    if (lowerNeighbors[nx + 1, ny + 1])
+                                    {
+                                        double difference = (waterB[x, y] + terrain[x, y]) - (waterB[x + nx, y + ny] + terrain[x + nx, y + ny]);
+                                        double waterMoved = Math.Min(waterB[x,y], terrain[x, y] + waterB[x, y] - avgAltitude) * (difference / totalDifference);
+                                        waterB[x + nx, y + ny] += waterMoved;
+                                        waterB[x, y] -= waterMoved;
+                                        sediment[x + nx, y + ny] += waterMoved * currentSediment;
+                                        totalWaterMoved += waterMoved;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        sediment[x, y] -= totalWaterMoved * currentSediment;
+
+                        waterB[x, y] *= (1 - evapChance);
+
+                        double maxSediment = waterB[x, y] * solubility * .0001;
+
+                        if (sediment[x,y] > maxSediment)
+                        {
+                            terrain[x, y] += sediment[x, y] - maxSediment;
+                            sediment[x, y] -= sediment[x, y] - maxSediment; 
+                        }
+                    }
+                }
+                waterMap = getWaterMapB();
+                form.textBox1.Text = p.ToString();
+                form.pictureBox1.Image = waterMap;
+                heightMap = getHeightBitmap();
+                form.pictureBox2.Image = heightMap;
+                form.Update();
+            }
+            //normalizeTerrain();
+            //normalizeErosion();
+            for (int x = 0; x < xSize; x++)
+            {
+                for (int y = 0; y < ySize; y++)
+                {
+                    terrain[x, y] += sediment[x, y];
+                }
+            }
+        }
+		        // generate grayscale watermap
+        public Bitmap getWaterParticleMap(int threshold)
+        {
+            Bitmap output = new Bitmap(xSize, ySize);
+            int output8;
+
+            /*
+            int max = 0;
+
+            for (int x = 0; x < xSize; x++)
+            {
+                for (int y = 0; y < ySize; y++)
+                {
+                    max = Math.Max(max, water[x, y].Count);
+                }
+            }
+            */
+
+            for (int x = 0; x < xSize; x++)
+            {
+                for (int y = 0; y < ySize; y++)
+                {
+                    if (water[x, y].Count > threshold)
+                    {
+                        output8 = (int)(water[x, y].Count * waterSize * 255 * 10);
+                        if (output8 < 0) output8 = 0;
+                        if (output8 > 255) output8 = 255;
+                        output.SetPixel(x, y, Color.FromArgb(255, output8, output8, output8));
+                    }
+                    else
+                    {
+                        output.SetPixel(x, y, Color.FromArgb(255, 0, 0, 0));
+                    }
+                }
+            }
+
+            return output;
+        }
+
+		
+
+
+        public Bitmap getWaterMapB()
+        {
+            Bitmap bmp = new Bitmap(xSize, ySize);
+            // bmp channel values are 8 bits
+            int output8;
+
+            for (int x = 0; x < xSize; x++)
+            {
+                for (int y = 0; y < ySize; y++)
+                {
+                    output8 = (int)(waterB[x, y] * 255 * 30);
+                    if (output8 < 0) output8 = 0;
+                    if (output8 > 255) output8 = 255;
+                    bmp.SetPixel(x, y, Color.FromArgb(255, output8, output8, output8));
+                }
+            }
+            return bmp;
+        }
+		
+        public Bitmap getWaterParticleMap()
+        {
+            Bitmap output = new Bitmap(xSize, ySize);
+
+            /*for (int x = 0; x < xSize; x++)
+            {
+                for (int y = 0; y < ySize; y++)
+                {
+                    output.SetPixel(x, y, Color.FromArgb(0, 0, 0, 0));
+                }
+            }*/
+
+            output = getHeightBitmap();
+
+            for (int i = 0; i < waterp.getNumParticles(); i++)
+            {
+                Vector position = waterp.getParticleAt(i).getPosition();
+                int xPos = (int)(position.X / (xActualSize / xSize));
+                int yPos = (int)(position.Y / (yActualSize / ySize));
+                if (xPos >= 0 && yPos >= 0 && xPos < xSize && yPos < ySize)
+                {
+                    output.SetPixel(xPos, yPos, Color.Red);
+                }
+            }
+
+            return output;
+        }
