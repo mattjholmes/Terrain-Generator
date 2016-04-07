@@ -515,21 +515,21 @@ namespace TerrainGenerator
             double[,] waterNew = new double[xSize, ySize];
             double[,] sedimentNew = new double[xSize, ySize];
 
-            /*Bitmap waterBmp = getWaterMap();
+            Bitmap waterBmp = getWaterMap();
             Bitmap heightMap = getHeightBitmap();
             Bitmap sedimentMap = getSedimentmap();
-            var form = new Form1();*/
+            var form = new Form1();
 
             grav = 9.8;
             pipeLength = Math.Min(xActualSize / xSize, yActualSize / ySize);
             pipeArea = Math.PI * Math.Pow(pipeLength / 2, 2);
             double k;
 
-            /*form.Show();
+            form.Show();
             form.pictureBox1.Image = waterBmp;
             form.pictureBox2.Image = heightMap;
             form.pictureBox3.Image = sedimentMap;
-            form.Update();*/
+            form.Update();
 
             // iterate through all 5 steps for the number of steps specified
             for (int n = 0; n < steps; n++)
@@ -557,7 +557,7 @@ namespace TerrainGenerator
                         // calculate the flow in each direction, edge cases = 0
                         if (x - 1 >= 0)
                         {
-                            oFlux[x, y].left = Math.Max(0, oFlux[x, y].left + timeStep * pipeArea * ((grav * (terrain[x, y] + waterMap[x, y] - terrain[x - 1, y] + waterMap[x - 1, y])) / pipeLength));
+                            oFlux[x, y].left = Math.Max(0, oFlux[x, y].left + timeStep * pipeArea * ((grav * maxAltitude * (terrain[x, y] + waterMap[x, y] - terrain[x - 1, y] + waterMap[x - 1, y])) / pipeLength));
                         }
                         else
                         {
@@ -566,7 +566,7 @@ namespace TerrainGenerator
 
                         if (x + 1 < xSize)
                         {
-                            oFlux[x, y].right = Math.Max(0, oFlux[x, y].right + timeStep * pipeArea * ((grav * (terrain[x, y] + waterMap[x,y] - terrain[x + 1, y] + waterMap[x + 1, y])) / pipeLength));
+                            oFlux[x, y].right = Math.Max(0, oFlux[x, y].right + timeStep * pipeArea * ((grav * maxAltitude * (terrain[x, y] + waterMap[x,y] - terrain[x + 1, y] + waterMap[x + 1, y])) / pipeLength));
                         }
                         else
                         {
@@ -575,7 +575,7 @@ namespace TerrainGenerator
 
                         if (y - 1 >= 0)
                         {
-                            oFlux[x, y].up = Math.Max(0, oFlux[x, y].up + timeStep * pipeArea * ((grav * (terrain[x, y] + waterMap[x,y] - terrain[x, y - 1] + waterMap[x, y - 1])) / pipeLength));
+                            oFlux[x, y].up = Math.Max(0, oFlux[x, y].up + timeStep * pipeArea * ((grav * maxAltitude * (terrain[x, y] + waterMap[x,y] - terrain[x, y - 1] + waterMap[x, y - 1])) / pipeLength));
                         }
                         else
                         {
@@ -584,7 +584,7 @@ namespace TerrainGenerator
 
                         if (y + 1 < ySize)
                         {
-                            oFlux[x, y].down = Math.Max(0, oFlux[x, y].down + timeStep * pipeArea * ((grav * (terrain[x, y] + waterMap[x, y] - terrain[x, y + 1] + waterMap[x, y + 1])) / pipeLength));
+                            oFlux[x, y].down = Math.Max(0, oFlux[x, y].down + timeStep * pipeArea * ((grav * maxAltitude * (terrain[x, y] + waterMap[x, y] - terrain[x, y + 1] + waterMap[x, y + 1])) / pipeLength));
                         }
                         else
                         {
@@ -733,14 +733,14 @@ namespace TerrainGenerator
                     }
                 }
 
-                /*waterBmp = getWaterMap();
+                waterBmp = getWaterMap();
                 form.textBox1.Text = n.ToString();
                 form.pictureBox1.Image = waterBmp;
                 heightMap = getHeightBitmap();
                 form.pictureBox2.Image = heightMap;
                 sedimentMap = getSedimentmap();
                 form.pictureBox3.Image = sedimentMap;
-                form.Update();*/
+                form.Update();
 
                 // we need to update the normals on each pass, we depend on them for some of the erosion equations
                 calculateNormals();
