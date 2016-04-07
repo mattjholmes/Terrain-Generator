@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TerrainGenerator")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Procedural Terrain Generator")]
+[assembly: AssemblyDescription("This application was developed as a Capstone Project for Western Governors University.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("TerrainGenerator")]
+[assembly: AssemblyCompany("Matthew Holmes")]
+[assembly: AssemblyProduct("Procedural Terrain Generator")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

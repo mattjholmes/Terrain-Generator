@@ -29,7 +29,7 @@ namespace TerrainGenerator
         // Octaves are the number of iterations of noise to layer
         private int octaves = 5;
         // Persistence is the amplitude multiplier in each successive octave of noise
-        private double persistance = .5;
+        private double persistence = .5;
         // Lacunarity is the frequency multiplier in each successive octave of noise
         private double lacunarity = 2;
         // Mu is the exponential decay rate for the noise distribution table
@@ -50,7 +50,7 @@ namespace TerrainGenerator
 
         public void setPersistance(double pers)
         {
-            persistance = pers;
+            persistence = pers;
         }
 
         public void setLacunarity(double lac)
@@ -84,9 +84,9 @@ namespace TerrainGenerator
             return octaves;
         }
 
-        public double getPersistance()
+        public double getPersistence()
         {
-            return persistance;
+            return persistence;
         }
 
         public double getLacunarity()
@@ -311,7 +311,7 @@ namespace TerrainGenerator
             {
                 total += Perlin2dNoise(x * freq + xOffset, y * freq + yOffset) * amplitude;
                 maxValue += amplitude;
-                amplitude *= persistance;
+                amplitude *= persistence;
                 freq *= lacunarity;
             }
             return total / maxValue;
@@ -328,7 +328,7 @@ namespace TerrainGenerator
             {
                 total += ExpPerlin2dNoise(x * freq + xOffset, y * freq + yOffset) * amplitude;
                 maxValue += amplitude;
-                amplitude *= persistance;
+                amplitude *= persistence;
                 freq *= lacunarity;
             }
             return total / maxValue;

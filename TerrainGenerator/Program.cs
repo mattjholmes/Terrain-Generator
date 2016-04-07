@@ -15,25 +15,25 @@ namespace TerrainGenerator
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
-        //[STAThread]
+        [STAThread]
         static void Main()
         {
-            /*Application.EnableVisualStyles();
+            Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());*/
+            Application.Run(new TerrainGeneratorMainForm());
 
-            int xSize = 512;
+            /*int xSize = 512;
             int ySize = xSize;
             float xMapSize = 10000;
             float yMapSize = xMapSize;
-            float maxAlt = 2500;
-            int octaves = 7;
-            double frequency = 3;
+            float maxAlt = 1000;
+            int octaves = 8;
+            double frequency = 1;
             double persistance = .45;
             double lacunarity = 1.95;
-            double mu = 1.015; // useful range - 1.0 - about 1.01
-            double xOffset = 8.4;
-            double yOffset = 9.3;
+            double mu = 1.02; // useful range - 1.0 - about 1.01
+            double xOffset = 8.9;
+            double yOffset = 12.2;
             
             string filename = "terrain.raw";
             string bmpFile = "terrain.bmp";
@@ -63,9 +63,10 @@ namespace TerrainGenerator
             terrain.saveHeightRaw("beforeErosion.raw");
             bmp.Save("terrainBeforeErosion.bmp");
             terrain.thermalErosion(45, 25);
-            terrain.vFieldHydroErosion(.1, .5, .01, .5, .1, .025, 1, 400);
+            terrain.vFieldHydroErosion(.1, .5, .01, .005, 5, 0, 1, 800);
+            terrain.vFieldHydroErosion(.1, .5, .01, 0, 0, 0, 1, 200);
             terrain.thermalErosion(45, 5);
-            terrain.vFieldHydroErosion(.1, .5, .01, .5, .1, .025, 1, 200);
+            //terrain.vFieldHydroErosion(.1, .5, .01, .5, .1, .025, 1, 200);
             terrain.thermalErosion(45, 5);
             terrain.saveHeightRaw(filename);
             terrain.saveTIFF(tifFile);
@@ -93,7 +94,7 @@ namespace TerrainGenerator
             bmp = terrain.getSplatMap(0, 1500, 0, 1000, 0, 45, 0, 20, .3);
             bmp.Save("trees.bmp");
             bmp = terrain.getSplatMap(0, 1500, 0, 1000, 0, 65, 0, 20, .4);
-            bmp.Save("grass.bmp");
+            bmp.Save("grass.bmp");*/
         }
     }
 }

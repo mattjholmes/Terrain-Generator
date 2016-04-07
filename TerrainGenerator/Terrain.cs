@@ -155,7 +155,7 @@ namespace TerrainGenerator
         // generate pseudorandom terrain - frequency is the initial size of the noise, octaves sets the number of layers of noise,
         // persistance is the amplitude of each successive noise layer, lacunarity is the frequency multiplier per layer
         // mu is the exponential noise distribution decay amount
-        public void generateTerrain(double xOffset, double yOffset, double frequency, int octaves, double persistance, double lacunarity, double mu)
+        public void generateTerrain(double xOffset, double yOffset, double frequency, int octaves, double persistence, double lacunarity, double mu)
         {
             generator.setXOffset(xOffset);
             generator.setYOffset(yOffset);
@@ -164,7 +164,7 @@ namespace TerrainGenerator
             generator.setLacunarity(lacunarity);
             generator.setMu(mu);
             generator.setOctaves(octaves);
-            generator.setPersistance(persistance);
+            generator.setPersistance(persistence);
             double xScale = xActualSize / xSize;
             double yScale = yActualSize / ySize;
             for (int i = 0; i < xSize; i++)
@@ -181,7 +181,7 @@ namespace TerrainGenerator
         }
 
         // adds noise to an existing terrain - intended to be used with input maps
-        public void addTerrainNoise(double weight, double xOffset, double yOffset, double frequency, int octaves, double persistance, double lacunarity, double mu)
+        public void addTerrainNoise(double weight, double xOffset, double yOffset, double frequency, int octaves, double persistence, double lacunarity, double mu)
         {
             // weight input is expected to be a percentage, IE 0.0...1.0
             if (weight > 1.0 || weight < 0.0)
@@ -195,7 +195,7 @@ namespace TerrainGenerator
             generator.setLacunarity(lacunarity);
             generator.setMu(mu);
             generator.setOctaves(octaves);
-            generator.setPersistance(persistance);
+            generator.setPersistance(persistence);
 
             double xScale = xActualSize / xSize;
             double yScale = yActualSize / ySize;
@@ -217,6 +217,29 @@ namespace TerrainGenerator
         public void terrainFromBmp(Bitmap input)
         {
             Random rand = new Random();
+            xSize = input.Width;
+            ySize = input.Height;
+            terrain = new double[xSize, ySize];
+            normalMap = new Vector3D[xSize, ySize];
+            sediment = new double[xSize, ySize];
+            erosion = new double[xSize, ySize];
+            deposition = new double[xSize, ySize];
+            waterMap = new double[xSize, ySize];
+            waterVel = new Vector[xSize, ySize];
+            oFlux = new OutflowFlux[xSize, ySize];
+            tErosion = new double[xSize, ySize];
+            talus = new double[xSize, ySize];
+
+            // initialize the components of the water velocity and flux arrays
+            for (int i = 0; i < xSize; i++)
+            {
+                for (int j = 0; j < ySize; j++)
+                {
+                    waterVel[i, j] = new Vector(0, 0);
+                    oFlux[i, j] = new OutflowFlux();
+                }
+            }
+
             double[,] inTerrain = new double[input.Width,input.Height];
             
             // read the input image into an array for modification, add a little noise, this will help with smoothing the limited input height resolution (255 levels for an 8-bit grayscale bmp)
@@ -275,6 +298,11 @@ namespace TerrainGenerator
                 res = tif.GetField(TiffTag.SAMPLESPERPIXEL);
                 short spp = res[0].ToShort();
 
+                if (bpp != 16 || spp != 1)
+                {
+                    throw new IOException("This is not a 16-bit grayscale tiff");
+                }
+
                 res = tif.GetField(TiffTag.PHOTOMETRIC);
                 Photometric photo = (Photometric)res[0].ToInt();
 
@@ -292,6 +320,19 @@ namespace TerrainGenerator
                     }
                 }
             }
+
+            xSize = width;
+            ySize = height;
+            terrain = new double[xSize, ySize];
+            normalMap = new Vector3D[xSize, ySize];
+            sediment = new double[xSize, ySize];
+            erosion = new double[xSize, ySize];
+            deposition = new double[xSize, ySize];
+            waterMap = new double[xSize, ySize];
+            waterVel = new Vector[xSize, ySize];
+            oFlux = new OutflowFlux[xSize, ySize];
+            tErosion = new double[xSize, ySize];
+            talus = new double[xSize, ySize];
 
             terrain = inTerrain;
             normalizeTerrain();
