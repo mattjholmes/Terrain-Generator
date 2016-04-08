@@ -54,40 +54,68 @@
             this.customMap2Picture = new System.Windows.Forms.PictureBox();
             this.toolTabs = new System.Windows.Forms.TabControl();
             this.generateTab = new System.Windows.Forms.TabPage();
-            this.xOffsetTextBox = new System.Windows.Forms.TextBox();
-            this.yOffsetLabel = new System.Windows.Forms.Label();
+            this.noisePropBox = new System.Windows.Forms.GroupBox();
+            this.yOffsetNum = new System.Windows.Forms.NumericUpDown();
+            this.xOffsetNum = new System.Windows.Forms.NumericUpDown();
+            this.octavesNum = new System.Windows.Forms.NumericUpDown();
+            this.noiseWeightNum = new System.Windows.Forms.NumericUpDown();
+            this.muNum = new System.Windows.Forms.NumericUpDown();
+            this.persistenceNum = new System.Windows.Forms.NumericUpDown();
+            this.lacunarityNum = new System.Windows.Forms.NumericUpDown();
+            this.frequencyNum = new System.Windows.Forms.NumericUpDown();
             this.xOffsetLabel = new System.Windows.Forms.Label();
+            this.persistenceLabel = new System.Windows.Forms.Label();
+            this.yOffsetLabel = new System.Windows.Forms.Label();
+            this.slopeDistributionLabel = new System.Windows.Forms.Label();
+            this.lacunarityLabel = new System.Windows.Forms.Label();
+            this.noiseWeightLabel = new System.Windows.Forms.Label();
+            this.octaveLabel = new System.Windows.Forms.Label();
+            this.frequencyLabel = new System.Windows.Forms.Label();
+            this.mapPropertiesBox = new System.Windows.Forms.GroupBox();
+            this.maxAltNum = new System.Windows.Forms.NumericUpDown();
+            this.ySizeNum = new System.Windows.Forms.NumericUpDown();
+            this.xSizeNum = new System.Windows.Forms.NumericUpDown();
+            this.yMapSizeNum = new System.Windows.Forms.NumericUpDown();
+            this.xMapSizeNum = new System.Windows.Forms.NumericUpDown();
+            this.maxAltLabel = new System.Windows.Forms.Label();
+            this.xActualSizeLabel = new System.Windows.Forms.Label();
+            this.yActualSizeLabel = new System.Windows.Forms.Label();
+            this.xSizeLabel = new System.Windows.Forms.Label();
+            this.ySizeLabel = new System.Windows.Forms.Label();
             this.addNoiseButton = new System.Windows.Forms.Button();
             this.importMapButton = new System.Windows.Forms.Button();
             this.erosionTab = new System.Windows.Forms.TabPage();
+            this.hydroErosionGroup = new System.Windows.Forms.GroupBox();
+            this.hydroErodeRunButton = new System.Windows.Forms.Button();
+            this.hydroPassesLabel = new System.Windows.Forms.Label();
+            this.timeStepLabel = new System.Windows.Forms.Label();
+            this.evapConstLabel = new System.Windows.Forms.Label();
+            this.rainAmountLabel = new System.Windows.Forms.Label();
+            this.rainChanceLabel = new System.Windows.Forms.Label();
+            this.waterCapLabel = new System.Windows.Forms.Label();
+            this.depRateLabel = new System.Windows.Forms.Label();
+            this.solubilityLabel = new System.Windows.Forms.Label();
+            this.hydroPassesNum = new System.Windows.Forms.NumericUpDown();
+            this.timeStepNum = new System.Windows.Forms.NumericUpDown();
+            this.evapConstNum = new System.Windows.Forms.NumericUpDown();
+            this.rainAmountNum = new System.Windows.Forms.NumericUpDown();
+            this.rainChanceNum = new System.Windows.Forms.NumericUpDown();
+            this.waterCapNum = new System.Windows.Forms.NumericUpDown();
+            this.depRateNum = new System.Windows.Forms.NumericUpDown();
+            this.solubilityNum = new System.Windows.Forms.NumericUpDown();
+            this.thermalErosionGroup = new System.Windows.Forms.GroupBox();
+            this.tErodeRunButton = new System.Windows.Forms.Button();
+            this.tErodePassLabel = new System.Windows.Forms.Label();
+            this.talusAngleLabel = new System.Windows.Forms.Label();
+            this.tErodePassNum = new System.Windows.Forms.NumericUpDown();
+            this.talusAngleNum = new System.Windows.Forms.NumericUpDown();
             this.textureMapTab = new System.Windows.Forms.TabPage();
             this.importMapDialog = new System.Windows.Forms.OpenFileDialog();
-            this.yOffsetTextBox = new System.Windows.Forms.TextBox();
-            this.frequencyLabel = new System.Windows.Forms.Label();
-            this.octaveLabel = new System.Windows.Forms.Label();
-            this.lacunarityLabel = new System.Windows.Forms.Label();
-            this.persistenceLabel = new System.Windows.Forms.Label();
-            this.slopeDistributionLabel = new System.Windows.Forms.Label();
-            this.noiseWeightLabel = new System.Windows.Forms.Label();
-            this.frequencyTextBox = new System.Windows.Forms.TextBox();
-            this.octavesTextBox = new System.Windows.Forms.TextBox();
-            this.lacunarityTextBox = new System.Windows.Forms.TextBox();
-            this.persistTextBox = new System.Windows.Forms.TextBox();
-            this.muTextBox = new System.Windows.Forms.TextBox();
-            this.noiseWeightTextBox = new System.Windows.Forms.TextBox();
-            this.ySizeTextBox = new System.Windows.Forms.TextBox();
-            this.xSizeTextBox = new System.Windows.Forms.TextBox();
-            this.ySizeLabel = new System.Windows.Forms.Label();
-            this.xSizeLabel = new System.Windows.Forms.Label();
-            this.mapPropertiesBox = new System.Windows.Forms.GroupBox();
-            this.xActualSizeLabel = new System.Windows.Forms.Label();
-            this.yActualSizeTextBox = new System.Windows.Forms.TextBox();
-            this.xActualSizeTextBox = new System.Windows.Forms.TextBox();
-            this.yActualSizeLabel = new System.Windows.Forms.Label();
-            this.maxAltLabel = new System.Windows.Forms.Label();
-            this.maxAltTextBox = new System.Windows.Forms.TextBox();
-            this.noisePropBox = new System.Windows.Forms.GroupBox();
             this.generalTooltip = new System.Windows.Forms.ToolTip(this.components);
+            this.texSamplePicture = new System.Windows.Forms.PictureBox();
+            this.colorMapGroup = new System.Windows.Forms.GroupBox();
+            this.importTexSample = new System.Windows.Forms.Button();
+            this.importTexSampleDialog = new System.Windows.Forms.OpenFileDialog();
             this.menuStrip1.SuspendLayout();
             this.heightMapPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.heightMapPicture)).BeginInit();
@@ -107,8 +135,37 @@
             ((System.ComponentModel.ISupportInitialize)(this.customMap2Picture)).BeginInit();
             this.toolTabs.SuspendLayout();
             this.generateTab.SuspendLayout();
-            this.mapPropertiesBox.SuspendLayout();
             this.noisePropBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.yOffsetNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.xOffsetNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.octavesNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.noiseWeightNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.muNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.persistenceNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lacunarityNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.frequencyNum)).BeginInit();
+            this.mapPropertiesBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.maxAltNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ySizeNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.xSizeNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.yMapSizeNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.xMapSizeNum)).BeginInit();
+            this.erosionTab.SuspendLayout();
+            this.hydroErosionGroup.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.hydroPassesNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.timeStepNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.evapConstNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rainAmountNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rainChanceNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.waterCapNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.depRateNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.solubilityNum)).BeginInit();
+            this.thermalErosionGroup.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tErodePassNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.talusAngleNum)).BeginInit();
+            this.textureMapTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.texSamplePicture)).BeginInit();
+            this.colorMapGroup.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -184,6 +241,7 @@
             this.generateTerrainButton.Size = new System.Drawing.Size(103, 23);
             this.generateTerrainButton.TabIndex = 0;
             this.generateTerrainButton.Text = "Generate Terrain";
+            this.generalTooltip.SetToolTip(this.generateTerrainButton, "Generate new terrain, overwriting any existing terrain.");
             this.generateTerrainButton.UseVisualStyleBackColor = true;
             this.generateTerrainButton.Click += new System.EventHandler(this.generateTerrainButton_Click);
             // 
@@ -282,7 +340,6 @@
             this.customMap1Tab.TabIndex = 3;
             this.customMap1Tab.Text = "Custom 1";
             this.customMap1Tab.UseVisualStyleBackColor = true;
-            this.customMap1Tab.Click += new System.EventHandler(this.customMap1Tab_Click);
             // 
             // customMap1Panel
             // 
@@ -363,25 +420,235 @@
             this.generateTab.Text = "Generate";
             this.generateTab.UseVisualStyleBackColor = true;
             // 
-            // xOffsetTextBox
+            // noisePropBox
             // 
-            this.xOffsetTextBox.Location = new System.Drawing.Point(9, 32);
-            this.xOffsetTextBox.Name = "xOffsetTextBox";
-            this.xOffsetTextBox.Size = new System.Drawing.Size(56, 20);
-            this.xOffsetTextBox.TabIndex = 5;
-            this.xOffsetTextBox.Text = "0.0";
-            this.generalTooltip.SetToolTip(this.xOffsetTextBox, "X & Y Offset act as the seed for the random noise generation.");
-            this.xOffsetTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxFilterNonNumeric);
+            this.noisePropBox.Controls.Add(this.yOffsetNum);
+            this.noisePropBox.Controls.Add(this.xOffsetNum);
+            this.noisePropBox.Controls.Add(this.octavesNum);
+            this.noisePropBox.Controls.Add(this.noiseWeightNum);
+            this.noisePropBox.Controls.Add(this.muNum);
+            this.noisePropBox.Controls.Add(this.persistenceNum);
+            this.noisePropBox.Controls.Add(this.lacunarityNum);
+            this.noisePropBox.Controls.Add(this.frequencyNum);
+            this.noisePropBox.Controls.Add(this.xOffsetLabel);
+            this.noisePropBox.Controls.Add(this.persistenceLabel);
+            this.noisePropBox.Controls.Add(this.yOffsetLabel);
+            this.noisePropBox.Controls.Add(this.slopeDistributionLabel);
+            this.noisePropBox.Controls.Add(this.lacunarityLabel);
+            this.noisePropBox.Controls.Add(this.noiseWeightLabel);
+            this.noisePropBox.Controls.Add(this.octaveLabel);
+            this.noisePropBox.Controls.Add(this.frequencyLabel);
+            this.noisePropBox.Location = new System.Drawing.Point(6, 144);
+            this.noisePropBox.Name = "noisePropBox";
+            this.noisePropBox.Size = new System.Drawing.Size(168, 228);
+            this.noisePropBox.TabIndex = 24;
+            this.noisePropBox.TabStop = false;
+            this.noisePropBox.Text = "Noise Generator Properties";
             // 
-            // yOffsetLabel
+            // yOffsetNum
             // 
-            this.yOffsetLabel.AutoSize = true;
-            this.yOffsetLabel.Location = new System.Drawing.Point(97, 16);
-            this.yOffsetLabel.Name = "yOffsetLabel";
-            this.yOffsetLabel.Size = new System.Drawing.Size(45, 13);
-            this.yOffsetLabel.TabIndex = 4;
-            this.yOffsetLabel.Text = "Y Offset";
-            this.generalTooltip.SetToolTip(this.yOffsetLabel, "X & Y Offset act as the seed for the random noise generation.");
+            this.yOffsetNum.DecimalPlaces = 2;
+            this.yOffsetNum.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+            this.yOffsetNum.Location = new System.Drawing.Point(89, 32);
+            this.yOffsetNum.Maximum = new decimal(new int[] {
+            999999,
+            0,
+            0,
+            131072});
+            this.yOffsetNum.Minimum = new decimal(new int[] {
+            999999,
+            0,
+            0,
+            -2147352576});
+            this.yOffsetNum.Name = "yOffsetNum";
+            this.yOffsetNum.Size = new System.Drawing.Size(74, 20);
+            this.yOffsetNum.TabIndex = 38;
+            this.yOffsetNum.ThousandsSeparator = true;
+            // 
+            // xOffsetNum
+            // 
+            this.xOffsetNum.DecimalPlaces = 2;
+            this.xOffsetNum.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+            this.xOffsetNum.Location = new System.Drawing.Point(9, 32);
+            this.xOffsetNum.Maximum = new decimal(new int[] {
+            999999,
+            0,
+            0,
+            131072});
+            this.xOffsetNum.Minimum = new decimal(new int[] {
+            999999,
+            0,
+            0,
+            -2147352576});
+            this.xOffsetNum.Name = "xOffsetNum";
+            this.xOffsetNum.Size = new System.Drawing.Size(74, 20);
+            this.xOffsetNum.TabIndex = 37;
+            this.xOffsetNum.ThousandsSeparator = true;
+            // 
+            // octavesNum
+            // 
+            this.octavesNum.Location = new System.Drawing.Point(88, 92);
+            this.octavesNum.Maximum = new decimal(new int[] {
+            25,
+            0,
+            0,
+            0});
+            this.octavesNum.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.octavesNum.Name = "octavesNum";
+            this.octavesNum.Size = new System.Drawing.Size(74, 20);
+            this.octavesNum.TabIndex = 32;
+            this.octavesNum.Value = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
+            // 
+            // noiseWeightNum
+            // 
+            this.noiseWeightNum.DecimalPlaces = 3;
+            this.noiseWeightNum.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.noiseWeightNum.Location = new System.Drawing.Point(88, 196);
+            this.noiseWeightNum.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.noiseWeightNum.Name = "noiseWeightNum";
+            this.noiseWeightNum.Size = new System.Drawing.Size(74, 20);
+            this.noiseWeightNum.TabIndex = 36;
+            this.noiseWeightNum.ThousandsSeparator = true;
+            this.noiseWeightNum.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+            // 
+            // muNum
+            // 
+            this.muNum.DecimalPlaces = 4;
+            this.muNum.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            196608});
+            this.muNum.Location = new System.Drawing.Point(88, 170);
+            this.muNum.Maximum = new decimal(new int[] {
+            12,
+            0,
+            0,
+            65536});
+            this.muNum.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.muNum.Name = "muNum";
+            this.muNum.Size = new System.Drawing.Size(74, 20);
+            this.muNum.TabIndex = 35;
+            this.muNum.ThousandsSeparator = true;
+            this.muNum.Value = new decimal(new int[] {
+            1005,
+            0,
+            0,
+            196608});
+            // 
+            // persistenceNum
+            // 
+            this.persistenceNum.DecimalPlaces = 3;
+            this.persistenceNum.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.persistenceNum.Location = new System.Drawing.Point(89, 144);
+            this.persistenceNum.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.persistenceNum.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            196608});
+            this.persistenceNum.Name = "persistenceNum";
+            this.persistenceNum.Size = new System.Drawing.Size(74, 20);
+            this.persistenceNum.TabIndex = 34;
+            this.persistenceNum.ThousandsSeparator = true;
+            this.persistenceNum.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+            // 
+            // lacunarityNum
+            // 
+            this.lacunarityNum.DecimalPlaces = 2;
+            this.lacunarityNum.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.lacunarityNum.Location = new System.Drawing.Point(88, 118);
+            this.lacunarityNum.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.lacunarityNum.Minimum = new decimal(new int[] {
+            101,
+            0,
+            0,
+            131072});
+            this.lacunarityNum.Name = "lacunarityNum";
+            this.lacunarityNum.Size = new System.Drawing.Size(74, 20);
+            this.lacunarityNum.TabIndex = 33;
+            this.lacunarityNum.ThousandsSeparator = true;
+            this.lacunarityNum.Value = new decimal(new int[] {
+            19,
+            0,
+            0,
+            65536});
+            // 
+            // frequencyNum
+            // 
+            this.frequencyNum.DecimalPlaces = 2;
+            this.frequencyNum.Location = new System.Drawing.Point(88, 66);
+            this.frequencyNum.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.frequencyNum.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.frequencyNum.Name = "frequencyNum";
+            this.frequencyNum.Size = new System.Drawing.Size(74, 20);
+            this.frequencyNum.TabIndex = 32;
+            this.frequencyNum.ThousandsSeparator = true;
+            this.frequencyNum.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // xOffsetLabel
             // 
@@ -392,94 +659,6 @@
             this.xOffsetLabel.TabIndex = 3;
             this.xOffsetLabel.Text = "X Offset";
             this.generalTooltip.SetToolTip(this.xOffsetLabel, "X & Y Offset act as the seed for the random noise generation.");
-            // 
-            // addNoiseButton
-            // 
-            this.addNoiseButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.addNoiseButton.Location = new System.Drawing.Point(37, 516);
-            this.addNoiseButton.Name = "addNoiseButton";
-            this.addNoiseButton.Size = new System.Drawing.Size(103, 23);
-            this.addNoiseButton.TabIndex = 2;
-            this.addNoiseButton.Text = "Add Noise";
-            this.addNoiseButton.UseVisualStyleBackColor = true;
-            // 
-            // importMapButton
-            // 
-            this.importMapButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.importMapButton.Location = new System.Drawing.Point(37, 458);
-            this.importMapButton.Name = "importMapButton";
-            this.importMapButton.Size = new System.Drawing.Size(103, 23);
-            this.importMapButton.TabIndex = 1;
-            this.importMapButton.Text = "Import Map";
-            this.importMapButton.UseVisualStyleBackColor = true;
-            this.importMapButton.Click += new System.EventHandler(this.importMapButton_Click);
-            // 
-            // erosionTab
-            // 
-            this.erosionTab.Location = new System.Drawing.Point(4, 22);
-            this.erosionTab.Name = "erosionTab";
-            this.erosionTab.Padding = new System.Windows.Forms.Padding(3);
-            this.erosionTab.Size = new System.Drawing.Size(180, 545);
-            this.erosionTab.TabIndex = 1;
-            this.erosionTab.Text = "Erosion";
-            this.erosionTab.UseVisualStyleBackColor = true;
-            // 
-            // textureMapTab
-            // 
-            this.textureMapTab.Location = new System.Drawing.Point(4, 22);
-            this.textureMapTab.Name = "textureMapTab";
-            this.textureMapTab.Size = new System.Drawing.Size(180, 545);
-            this.textureMapTab.TabIndex = 2;
-            this.textureMapTab.Text = "Maps";
-            this.textureMapTab.UseVisualStyleBackColor = true;
-            // 
-            // importMapDialog
-            // 
-            this.importMapDialog.Filter = "Windows Bitmap|*.bmp|TIFF Images|*.tif";
-            this.importMapDialog.FilterIndex = 2;
-            // 
-            // yOffsetTextBox
-            // 
-            this.yOffsetTextBox.Location = new System.Drawing.Point(100, 32);
-            this.yOffsetTextBox.Name = "yOffsetTextBox";
-            this.yOffsetTextBox.Size = new System.Drawing.Size(56, 20);
-            this.yOffsetTextBox.TabIndex = 6;
-            this.yOffsetTextBox.Text = "0.0";
-            this.generalTooltip.SetToolTip(this.yOffsetTextBox, "X & Y Offset act as the seed for the random noise generation.");
-            this.yOffsetTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxFilterNonNumeric);
-            // 
-            // frequencyLabel
-            // 
-            this.frequencyLabel.AutoSize = true;
-            this.frequencyLabel.Location = new System.Drawing.Point(6, 68);
-            this.frequencyLabel.Margin = new System.Windows.Forms.Padding(3);
-            this.frequencyLabel.Name = "frequencyLabel";
-            this.frequencyLabel.Size = new System.Drawing.Size(57, 13);
-            this.frequencyLabel.TabIndex = 7;
-            this.frequencyLabel.Text = "Frequency";
-            this.generalTooltip.SetToolTip(this.frequencyLabel, resources.GetString("frequencyLabel.ToolTip"));
-            // 
-            // octaveLabel
-            // 
-            this.octaveLabel.AutoSize = true;
-            this.octaveLabel.Location = new System.Drawing.Point(6, 94);
-            this.octaveLabel.Margin = new System.Windows.Forms.Padding(3);
-            this.octaveLabel.Name = "octaveLabel";
-            this.octaveLabel.Size = new System.Drawing.Size(47, 13);
-            this.octaveLabel.TabIndex = 8;
-            this.octaveLabel.Text = "Octaves";
-            this.generalTooltip.SetToolTip(this.octaveLabel, "Octaves are the number of noise passes to layer when generating terrain.");
-            // 
-            // lacunarityLabel
-            // 
-            this.lacunarityLabel.AutoSize = true;
-            this.lacunarityLabel.Location = new System.Drawing.Point(6, 120);
-            this.lacunarityLabel.Margin = new System.Windows.Forms.Padding(3);
-            this.lacunarityLabel.Name = "lacunarityLabel";
-            this.lacunarityLabel.Size = new System.Drawing.Size(56, 13);
-            this.lacunarityLabel.TabIndex = 9;
-            this.lacunarityLabel.Text = "Lacunarity";
-            this.generalTooltip.SetToolTip(this.lacunarityLabel, "Lacunarity multiplies the frequency of each successive octave of noise.");
             // 
             // persistenceLabel
             // 
@@ -492,18 +671,39 @@
             this.persistenceLabel.Text = "Persistence";
             this.generalTooltip.SetToolTip(this.persistenceLabel, "Persistence multiplies the amplitude of each successive octave of noise.");
             // 
+            // yOffsetLabel
+            // 
+            this.yOffsetLabel.AutoSize = true;
+            this.yOffsetLabel.Location = new System.Drawing.Point(97, 16);
+            this.yOffsetLabel.Name = "yOffsetLabel";
+            this.yOffsetLabel.Size = new System.Drawing.Size(45, 13);
+            this.yOffsetLabel.TabIndex = 4;
+            this.yOffsetLabel.Text = "Y Offset";
+            this.generalTooltip.SetToolTip(this.yOffsetLabel, "X & Y Offset act as the seed for the random noise generation.");
+            // 
             // slopeDistributionLabel
             // 
             this.slopeDistributionLabel.AutoSize = true;
             this.slopeDistributionLabel.Location = new System.Drawing.Point(6, 172);
             this.slopeDistributionLabel.Margin = new System.Windows.Forms.Padding(3);
             this.slopeDistributionLabel.Name = "slopeDistributionLabel";
-            this.slopeDistributionLabel.Size = new System.Drawing.Size(89, 13);
+            this.slopeDistributionLabel.Size = new System.Drawing.Size(78, 13);
             this.slopeDistributionLabel.TabIndex = 11;
-            this.slopeDistributionLabel.Text = "Slope Distribution";
+            this.slopeDistributionLabel.Text = "Slope Variation";
             this.generalTooltip.SetToolTip(this.slopeDistributionLabel, "Slope distribution determines the variation in the landscape. 1.0 is an even dist" +
         "ribution, higher numbers result in more varied landscape. Values higher than ~ 1" +
         ".015 result in odd terrains.");
+            // 
+            // lacunarityLabel
+            // 
+            this.lacunarityLabel.AutoSize = true;
+            this.lacunarityLabel.Location = new System.Drawing.Point(6, 120);
+            this.lacunarityLabel.Margin = new System.Windows.Forms.Padding(3);
+            this.lacunarityLabel.Name = "lacunarityLabel";
+            this.lacunarityLabel.Size = new System.Drawing.Size(56, 13);
+            this.lacunarityLabel.TabIndex = 9;
+            this.lacunarityLabel.Text = "Lacunarity";
+            this.generalTooltip.SetToolTip(this.lacunarityLabel, "Lacunarity multiplies the frequency of each successive octave of noise.");
             // 
             // noiseWeightLabel
             // 
@@ -516,119 +716,39 @@
             this.noiseWeightLabel.Text = "Noise Weight";
             this.generalTooltip.SetToolTip(this.noiseWeightLabel, "Noise weight determines the amount of noise applied by the Add Noise command.");
             // 
-            // frequencyTextBox
+            // octaveLabel
             // 
-            this.frequencyTextBox.Location = new System.Drawing.Point(100, 65);
-            this.frequencyTextBox.Name = "frequencyTextBox";
-            this.frequencyTextBox.Size = new System.Drawing.Size(56, 20);
-            this.frequencyTextBox.TabIndex = 13;
-            this.frequencyTextBox.Text = "1.0";
-            this.generalTooltip.SetToolTip(this.frequencyTextBox, resources.GetString("frequencyTextBox.ToolTip"));
-            this.frequencyTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxFilterNonNumeric);
+            this.octaveLabel.AutoSize = true;
+            this.octaveLabel.Location = new System.Drawing.Point(6, 94);
+            this.octaveLabel.Margin = new System.Windows.Forms.Padding(3);
+            this.octaveLabel.Name = "octaveLabel";
+            this.octaveLabel.Size = new System.Drawing.Size(47, 13);
+            this.octaveLabel.TabIndex = 8;
+            this.octaveLabel.Text = "Octaves";
+            this.generalTooltip.SetToolTip(this.octaveLabel, "Octaves are the number of noise passes to layer when generating terrain.");
             // 
-            // octavesTextBox
+            // frequencyLabel
             // 
-            this.octavesTextBox.Location = new System.Drawing.Point(100, 91);
-            this.octavesTextBox.Name = "octavesTextBox";
-            this.octavesTextBox.Size = new System.Drawing.Size(56, 20);
-            this.octavesTextBox.TabIndex = 14;
-            this.octavesTextBox.Text = "6";
-            this.generalTooltip.SetToolTip(this.octavesTextBox, "Octaves are the number of noise passes to layer when generating terrain.");
-            this.octavesTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxFilterNonInteger);
-            // 
-            // lacunarityTextBox
-            // 
-            this.lacunarityTextBox.Location = new System.Drawing.Point(100, 117);
-            this.lacunarityTextBox.Name = "lacunarityTextBox";
-            this.lacunarityTextBox.Size = new System.Drawing.Size(56, 20);
-            this.lacunarityTextBox.TabIndex = 15;
-            this.lacunarityTextBox.Text = "2.0";
-            this.generalTooltip.SetToolTip(this.lacunarityTextBox, "Lacunarity multiplies the frequency of each successive octave of noise.");
-            this.lacunarityTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxFilterNonNumeric);
-            // 
-            // persistTextBox
-            // 
-            this.persistTextBox.Location = new System.Drawing.Point(100, 143);
-            this.persistTextBox.Name = "persistTextBox";
-            this.persistTextBox.Size = new System.Drawing.Size(56, 20);
-            this.persistTextBox.TabIndex = 16;
-            this.persistTextBox.Text = "0.5";
-            this.generalTooltip.SetToolTip(this.persistTextBox, "Persistence multiplies the amplitude of each successive octave of noise.");
-            this.persistTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxFilterNonNumeric);
-            // 
-            // muTextBox
-            // 
-            this.muTextBox.Location = new System.Drawing.Point(100, 169);
-            this.muTextBox.Name = "muTextBox";
-            this.muTextBox.Size = new System.Drawing.Size(56, 20);
-            this.muTextBox.TabIndex = 17;
-            this.muTextBox.Text = "1.0";
-            this.generalTooltip.SetToolTip(this.muTextBox, "Slope distribution determines the variation in the landscape. 1.0 is an even dist" +
-        "ribution, higher numbers result in more varied landscape. Values higher than ~ 1" +
-        ".015 result in odd terrains.");
-            this.muTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxFilterNonNumeric);
-            // 
-            // noiseWeightTextBox
-            // 
-            this.noiseWeightTextBox.Location = new System.Drawing.Point(100, 195);
-            this.noiseWeightTextBox.Name = "noiseWeightTextBox";
-            this.noiseWeightTextBox.Size = new System.Drawing.Size(56, 20);
-            this.noiseWeightTextBox.TabIndex = 18;
-            this.noiseWeightTextBox.Text = "0.5";
-            this.generalTooltip.SetToolTip(this.noiseWeightTextBox, "Noise weight determines the amount of noise applied by the Add Noise command.");
-            this.noiseWeightTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxFilterNonNumeric);
-            // 
-            // ySizeTextBox
-            // 
-            this.ySizeTextBox.Location = new System.Drawing.Point(100, 32);
-            this.ySizeTextBox.Name = "ySizeTextBox";
-            this.ySizeTextBox.Size = new System.Drawing.Size(56, 20);
-            this.ySizeTextBox.TabIndex = 22;
-            this.ySizeTextBox.Text = "512";
-            this.generalTooltip.SetToolTip(this.ySizeTextBox, "X & Y Resolution determine the size, in pixels, of the generated heightmap.");
-            this.ySizeTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxFilterNonInteger);
-            // 
-            // xSizeTextBox
-            // 
-            this.xSizeTextBox.Location = new System.Drawing.Point(9, 32);
-            this.xSizeTextBox.Name = "xSizeTextBox";
-            this.xSizeTextBox.Size = new System.Drawing.Size(56, 20);
-            this.xSizeTextBox.TabIndex = 21;
-            this.xSizeTextBox.Text = "512";
-            this.generalTooltip.SetToolTip(this.xSizeTextBox, "X & Y Resolution determine the size, in pixels, of the generated heightmap.");
-            this.xSizeTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxFilterNonInteger);
-            // 
-            // ySizeLabel
-            // 
-            this.ySizeLabel.AutoSize = true;
-            this.ySizeLabel.Location = new System.Drawing.Point(97, 16);
-            this.ySizeLabel.Name = "ySizeLabel";
-            this.ySizeLabel.Size = new System.Drawing.Size(67, 13);
-            this.ySizeLabel.TabIndex = 20;
-            this.ySizeLabel.Text = "Y Resolution";
-            this.generalTooltip.SetToolTip(this.ySizeLabel, "X & Y Resolution determine the size, in pixels, of the generated heightmap.");
-            // 
-            // xSizeLabel
-            // 
-            this.xSizeLabel.AutoSize = true;
-            this.xSizeLabel.Location = new System.Drawing.Point(6, 16);
-            this.xSizeLabel.Name = "xSizeLabel";
-            this.xSizeLabel.Size = new System.Drawing.Size(67, 13);
-            this.xSizeLabel.TabIndex = 19;
-            this.xSizeLabel.Text = "X Resolution";
-            this.generalTooltip.SetToolTip(this.xSizeLabel, "X & Y Resolution determine the size, in pixels, of the generated heightmap.");
+            this.frequencyLabel.AutoSize = true;
+            this.frequencyLabel.Location = new System.Drawing.Point(6, 68);
+            this.frequencyLabel.Margin = new System.Windows.Forms.Padding(3);
+            this.frequencyLabel.Name = "frequencyLabel";
+            this.frequencyLabel.Size = new System.Drawing.Size(57, 13);
+            this.frequencyLabel.TabIndex = 7;
+            this.frequencyLabel.Text = "Frequency";
+            this.generalTooltip.SetToolTip(this.frequencyLabel, resources.GetString("frequencyLabel.ToolTip"));
             // 
             // mapPropertiesBox
             // 
-            this.mapPropertiesBox.Controls.Add(this.maxAltTextBox);
+            this.mapPropertiesBox.Controls.Add(this.maxAltNum);
+            this.mapPropertiesBox.Controls.Add(this.ySizeNum);
+            this.mapPropertiesBox.Controls.Add(this.xSizeNum);
+            this.mapPropertiesBox.Controls.Add(this.yMapSizeNum);
+            this.mapPropertiesBox.Controls.Add(this.xMapSizeNum);
             this.mapPropertiesBox.Controls.Add(this.maxAltLabel);
             this.mapPropertiesBox.Controls.Add(this.xActualSizeLabel);
-            this.mapPropertiesBox.Controls.Add(this.yActualSizeTextBox);
-            this.mapPropertiesBox.Controls.Add(this.xActualSizeTextBox);
             this.mapPropertiesBox.Controls.Add(this.yActualSizeLabel);
             this.mapPropertiesBox.Controls.Add(this.xSizeLabel);
-            this.mapPropertiesBox.Controls.Add(this.ySizeTextBox);
-            this.mapPropertiesBox.Controls.Add(this.xSizeTextBox);
             this.mapPropertiesBox.Controls.Add(this.ySizeLabel);
             this.mapPropertiesBox.Location = new System.Drawing.Point(6, 6);
             this.mapPropertiesBox.Name = "mapPropertiesBox";
@@ -636,6 +756,148 @@
             this.mapPropertiesBox.TabIndex = 23;
             this.mapPropertiesBox.TabStop = false;
             this.mapPropertiesBox.Text = "Map Properties";
+            // 
+            // maxAltNum
+            // 
+            this.maxAltNum.DecimalPlaces = 2;
+            this.maxAltNum.Increment = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            this.maxAltNum.Location = new System.Drawing.Point(88, 100);
+            this.maxAltNum.Maximum = new decimal(new int[] {
+            9999999,
+            0,
+            0,
+            131072});
+            this.maxAltNum.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.maxAltNum.Name = "maxAltNum";
+            this.maxAltNum.Size = new System.Drawing.Size(74, 20);
+            this.maxAltNum.TabIndex = 31;
+            this.maxAltNum.ThousandsSeparator = true;
+            this.maxAltNum.Value = new decimal(new int[] {
+            5000,
+            0,
+            0,
+            0});
+            // 
+            // ySizeNum
+            // 
+            this.ySizeNum.Location = new System.Drawing.Point(89, 32);
+            this.ySizeNum.Maximum = new decimal(new int[] {
+            4096,
+            0,
+            0,
+            0});
+            this.ySizeNum.Minimum = new decimal(new int[] {
+            32,
+            0,
+            0,
+            0});
+            this.ySizeNum.Name = "ySizeNum";
+            this.ySizeNum.Size = new System.Drawing.Size(74, 20);
+            this.ySizeNum.TabIndex = 30;
+            this.ySizeNum.Value = new decimal(new int[] {
+            256,
+            0,
+            0,
+            0});
+            // 
+            // xSizeNum
+            // 
+            this.xSizeNum.Location = new System.Drawing.Point(9, 32);
+            this.xSizeNum.Maximum = new decimal(new int[] {
+            4096,
+            0,
+            0,
+            0});
+            this.xSizeNum.Minimum = new decimal(new int[] {
+            32,
+            0,
+            0,
+            0});
+            this.xSizeNum.Name = "xSizeNum";
+            this.xSizeNum.Size = new System.Drawing.Size(74, 20);
+            this.xSizeNum.TabIndex = 29;
+            this.xSizeNum.Value = new decimal(new int[] {
+            256,
+            0,
+            0,
+            0});
+            // 
+            // yMapSizeNum
+            // 
+            this.yMapSizeNum.DecimalPlaces = 2;
+            this.yMapSizeNum.Increment = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.yMapSizeNum.Location = new System.Drawing.Point(89, 71);
+            this.yMapSizeNum.Maximum = new decimal(new int[] {
+            9999999,
+            0,
+            0,
+            131072});
+            this.yMapSizeNum.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.yMapSizeNum.Name = "yMapSizeNum";
+            this.yMapSizeNum.Size = new System.Drawing.Size(74, 20);
+            this.yMapSizeNum.TabIndex = 28;
+            this.yMapSizeNum.ThousandsSeparator = true;
+            this.yMapSizeNum.Value = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            // 
+            // xMapSizeNum
+            // 
+            this.xMapSizeNum.DecimalPlaces = 2;
+            this.xMapSizeNum.Increment = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.xMapSizeNum.Location = new System.Drawing.Point(9, 71);
+            this.xMapSizeNum.Maximum = new decimal(new int[] {
+            9999999,
+            0,
+            0,
+            131072});
+            this.xMapSizeNum.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.xMapSizeNum.Name = "xMapSizeNum";
+            this.xMapSizeNum.Size = new System.Drawing.Size(74, 20);
+            this.xMapSizeNum.TabIndex = 25;
+            this.xMapSizeNum.ThousandsSeparator = true;
+            this.xMapSizeNum.Value = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            // 
+            // maxAltLabel
+            // 
+            this.maxAltLabel.AutoSize = true;
+            this.maxAltLabel.Location = new System.Drawing.Point(8, 102);
+            this.maxAltLabel.Name = "maxAltLabel";
+            this.maxAltLabel.Size = new System.Drawing.Size(65, 13);
+            this.maxAltLabel.TabIndex = 27;
+            this.maxAltLabel.Text = "Max Altitude";
+            this.generalTooltip.SetToolTip(this.maxAltLabel, "Max Altitude determines the maximum altitude, in meters, of the generated heightm" +
+        "ap.");
             // 
             // xActualSizeLabel
             // 
@@ -647,82 +909,508 @@
             this.xActualSizeLabel.Text = "X Map Size";
             this.generalTooltip.SetToolTip(this.xActualSizeLabel, "X & Y map size determine the real world size of the generated map, in meters.");
             // 
-            // yActualSizeTextBox
-            // 
-            this.yActualSizeTextBox.Location = new System.Drawing.Point(100, 71);
-            this.yActualSizeTextBox.Name = "yActualSizeTextBox";
-            this.yActualSizeTextBox.Size = new System.Drawing.Size(56, 20);
-            this.yActualSizeTextBox.TabIndex = 26;
-            this.yActualSizeTextBox.Text = "10000";
-            this.generalTooltip.SetToolTip(this.yActualSizeTextBox, "X & Y map size determine the real world size of the generated map, in meters.");
-            this.yActualSizeTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxFilterNonNumeric);
-            // 
-            // xActualSizeTextBox
-            // 
-            this.xActualSizeTextBox.Location = new System.Drawing.Point(9, 71);
-            this.xActualSizeTextBox.Name = "xActualSizeTextBox";
-            this.xActualSizeTextBox.Size = new System.Drawing.Size(56, 20);
-            this.xActualSizeTextBox.TabIndex = 25;
-            this.xActualSizeTextBox.Text = "10000";
-            this.generalTooltip.SetToolTip(this.xActualSizeTextBox, "X & Y map size determine the real world size of the generated map, in meters.");
-            this.xActualSizeTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxFilterNonNumeric);
-            // 
             // yActualSizeLabel
             // 
             this.yActualSizeLabel.AutoSize = true;
-            this.yActualSizeLabel.Location = new System.Drawing.Point(97, 55);
+            this.yActualSizeLabel.Location = new System.Drawing.Point(86, 55);
             this.yActualSizeLabel.Name = "yActualSizeLabel";
             this.yActualSizeLabel.Size = new System.Drawing.Size(61, 13);
             this.yActualSizeLabel.TabIndex = 24;
             this.yActualSizeLabel.Text = "Y Map Size";
             this.generalTooltip.SetToolTip(this.yActualSizeLabel, "X & Y map size determine the real world size of the generated map, in meters.");
             // 
-            // maxAltLabel
+            // xSizeLabel
             // 
-            this.maxAltLabel.AutoSize = true;
-            this.maxAltLabel.Location = new System.Drawing.Point(6, 105);
-            this.maxAltLabel.Name = "maxAltLabel";
-            this.maxAltLabel.Size = new System.Drawing.Size(65, 13);
-            this.maxAltLabel.TabIndex = 27;
-            this.maxAltLabel.Text = "Max Altitude";
-            this.generalTooltip.SetToolTip(this.maxAltLabel, "Max Altitude determines the maximum altitude, in meters, of the generated heightm" +
-        "ap.");
+            this.xSizeLabel.AutoSize = true;
+            this.xSizeLabel.Location = new System.Drawing.Point(6, 16);
+            this.xSizeLabel.Name = "xSizeLabel";
+            this.xSizeLabel.Size = new System.Drawing.Size(67, 13);
+            this.xSizeLabel.TabIndex = 19;
+            this.xSizeLabel.Text = "X Resolution";
+            this.generalTooltip.SetToolTip(this.xSizeLabel, "X & Y Resolution determine the size, in pixels, of the generated heightmap.");
             // 
-            // maxAltTextBox
+            // ySizeLabel
             // 
-            this.maxAltTextBox.Location = new System.Drawing.Point(100, 102);
-            this.maxAltTextBox.Name = "maxAltTextBox";
-            this.maxAltTextBox.Size = new System.Drawing.Size(56, 20);
-            this.maxAltTextBox.TabIndex = 28;
-            this.maxAltTextBox.Text = "2500";
-            this.generalTooltip.SetToolTip(this.maxAltTextBox, "Max Altitude determines the maximum altitude, in meters, of the generated heightm" +
-        "ap.");
-            this.maxAltTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxFilterNonNumeric);
+            this.ySizeLabel.AutoSize = true;
+            this.ySizeLabel.Location = new System.Drawing.Point(86, 16);
+            this.ySizeLabel.Name = "ySizeLabel";
+            this.ySizeLabel.Size = new System.Drawing.Size(67, 13);
+            this.ySizeLabel.TabIndex = 20;
+            this.ySizeLabel.Text = "Y Resolution";
+            this.generalTooltip.SetToolTip(this.ySizeLabel, "X & Y Resolution determine the size, in pixels, of the generated heightmap.");
             // 
-            // noisePropBox
+            // addNoiseButton
             // 
-            this.noisePropBox.Controls.Add(this.xOffsetLabel);
-            this.noisePropBox.Controls.Add(this.noiseWeightTextBox);
-            this.noisePropBox.Controls.Add(this.persistenceLabel);
-            this.noisePropBox.Controls.Add(this.yOffsetLabel);
-            this.noisePropBox.Controls.Add(this.muTextBox);
-            this.noisePropBox.Controls.Add(this.slopeDistributionLabel);
-            this.noisePropBox.Controls.Add(this.persistTextBox);
-            this.noisePropBox.Controls.Add(this.lacunarityLabel);
-            this.noisePropBox.Controls.Add(this.lacunarityTextBox);
-            this.noisePropBox.Controls.Add(this.noiseWeightLabel);
-            this.noisePropBox.Controls.Add(this.yOffsetTextBox);
-            this.noisePropBox.Controls.Add(this.octaveLabel);
-            this.noisePropBox.Controls.Add(this.octavesTextBox);
-            this.noisePropBox.Controls.Add(this.xOffsetTextBox);
-            this.noisePropBox.Controls.Add(this.frequencyTextBox);
-            this.noisePropBox.Controls.Add(this.frequencyLabel);
-            this.noisePropBox.Location = new System.Drawing.Point(6, 144);
-            this.noisePropBox.Name = "noisePropBox";
-            this.noisePropBox.Size = new System.Drawing.Size(168, 228);
-            this.noisePropBox.TabIndex = 24;
-            this.noisePropBox.TabStop = false;
-            this.noisePropBox.Text = "Noise Generator Properties";
+            this.addNoiseButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.addNoiseButton.Location = new System.Drawing.Point(37, 516);
+            this.addNoiseButton.Name = "addNoiseButton";
+            this.addNoiseButton.Size = new System.Drawing.Size(103, 23);
+            this.addNoiseButton.TabIndex = 2;
+            this.addNoiseButton.Text = "Add Noise";
+            this.generalTooltip.SetToolTip(this.addNoiseButton, "Add noise, mixed with the existing terrain.");
+            this.addNoiseButton.UseVisualStyleBackColor = true;
+            this.addNoiseButton.Click += new System.EventHandler(this.addNoiseButton_Click);
+            // 
+            // importMapButton
+            // 
+            this.importMapButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.importMapButton.Location = new System.Drawing.Point(37, 458);
+            this.importMapButton.Name = "importMapButton";
+            this.importMapButton.Size = new System.Drawing.Size(103, 23);
+            this.importMapButton.TabIndex = 1;
+            this.importMapButton.Text = "Import Map";
+            this.generalTooltip.SetToolTip(this.importMapButton, "Import a BMP or 16-bit grayscale TIFF.\r\n");
+            this.importMapButton.UseVisualStyleBackColor = true;
+            this.importMapButton.Click += new System.EventHandler(this.importMapButton_Click);
+            // 
+            // erosionTab
+            // 
+            this.erosionTab.Controls.Add(this.hydroErosionGroup);
+            this.erosionTab.Controls.Add(this.thermalErosionGroup);
+            this.erosionTab.Location = new System.Drawing.Point(4, 22);
+            this.erosionTab.Name = "erosionTab";
+            this.erosionTab.Padding = new System.Windows.Forms.Padding(3);
+            this.erosionTab.Size = new System.Drawing.Size(180, 545);
+            this.erosionTab.TabIndex = 1;
+            this.erosionTab.Text = "Erosion";
+            this.erosionTab.UseVisualStyleBackColor = true;
+            // 
+            // hydroErosionGroup
+            // 
+            this.hydroErosionGroup.Controls.Add(this.hydroErodeRunButton);
+            this.hydroErosionGroup.Controls.Add(this.hydroPassesLabel);
+            this.hydroErosionGroup.Controls.Add(this.timeStepLabel);
+            this.hydroErosionGroup.Controls.Add(this.evapConstLabel);
+            this.hydroErosionGroup.Controls.Add(this.rainAmountLabel);
+            this.hydroErosionGroup.Controls.Add(this.rainChanceLabel);
+            this.hydroErosionGroup.Controls.Add(this.waterCapLabel);
+            this.hydroErosionGroup.Controls.Add(this.depRateLabel);
+            this.hydroErosionGroup.Controls.Add(this.solubilityLabel);
+            this.hydroErosionGroup.Controls.Add(this.hydroPassesNum);
+            this.hydroErosionGroup.Controls.Add(this.timeStepNum);
+            this.hydroErosionGroup.Controls.Add(this.evapConstNum);
+            this.hydroErosionGroup.Controls.Add(this.rainAmountNum);
+            this.hydroErosionGroup.Controls.Add(this.rainChanceNum);
+            this.hydroErosionGroup.Controls.Add(this.waterCapNum);
+            this.hydroErosionGroup.Controls.Add(this.depRateNum);
+            this.hydroErosionGroup.Controls.Add(this.solubilityNum);
+            this.hydroErosionGroup.Location = new System.Drawing.Point(6, 124);
+            this.hydroErosionGroup.Name = "hydroErosionGroup";
+            this.hydroErosionGroup.Size = new System.Drawing.Size(168, 270);
+            this.hydroErosionGroup.TabIndex = 1;
+            this.hydroErosionGroup.TabStop = false;
+            this.hydroErosionGroup.Text = "Hydraulic Erosion";
+            // 
+            // hydroErodeRunButton
+            // 
+            this.hydroErodeRunButton.Location = new System.Drawing.Point(45, 231);
+            this.hydroErodeRunButton.Name = "hydroErodeRunButton";
+            this.hydroErodeRunButton.Size = new System.Drawing.Size(75, 23);
+            this.hydroErodeRunButton.TabIndex = 38;
+            this.hydroErodeRunButton.Text = "Run";
+            this.hydroErodeRunButton.UseVisualStyleBackColor = true;
+            this.hydroErodeRunButton.Click += new System.EventHandler(this.hydroErodeRunButton_Click);
+            // 
+            // hydroPassesLabel
+            // 
+            this.hydroPassesLabel.AutoSize = true;
+            this.hydroPassesLabel.Location = new System.Drawing.Point(6, 203);
+            this.hydroPassesLabel.Name = "hydroPassesLabel";
+            this.hydroPassesLabel.Size = new System.Drawing.Size(41, 13);
+            this.hydroPassesLabel.TabIndex = 48;
+            this.hydroPassesLabel.Text = "Passes";
+            // 
+            // timeStepLabel
+            // 
+            this.timeStepLabel.AutoSize = true;
+            this.timeStepLabel.Location = new System.Drawing.Point(6, 177);
+            this.timeStepLabel.Name = "timeStepLabel";
+            this.timeStepLabel.Size = new System.Drawing.Size(55, 13);
+            this.timeStepLabel.TabIndex = 47;
+            this.timeStepLabel.Text = "Time Step";
+            // 
+            // evapConstLabel
+            // 
+            this.evapConstLabel.AutoSize = true;
+            this.evapConstLabel.Location = new System.Drawing.Point(6, 151);
+            this.evapConstLabel.Name = "evapConstLabel";
+            this.evapConstLabel.Size = new System.Drawing.Size(64, 13);
+            this.evapConstLabel.TabIndex = 46;
+            this.evapConstLabel.Text = "Evaporation";
+            // 
+            // rainAmountLabel
+            // 
+            this.rainAmountLabel.AutoSize = true;
+            this.rainAmountLabel.Location = new System.Drawing.Point(6, 125);
+            this.rainAmountLabel.Name = "rainAmountLabel";
+            this.rainAmountLabel.Size = new System.Drawing.Size(68, 13);
+            this.rainAmountLabel.TabIndex = 45;
+            this.rainAmountLabel.Text = "Rain Amount";
+            // 
+            // rainChanceLabel
+            // 
+            this.rainChanceLabel.AutoSize = true;
+            this.rainChanceLabel.Location = new System.Drawing.Point(6, 99);
+            this.rainChanceLabel.Name = "rainChanceLabel";
+            this.rainChanceLabel.Size = new System.Drawing.Size(69, 13);
+            this.rainChanceLabel.TabIndex = 44;
+            this.rainChanceLabel.Text = "Rain Chance";
+            // 
+            // waterCapLabel
+            // 
+            this.waterCapLabel.AutoSize = true;
+            this.waterCapLabel.Location = new System.Drawing.Point(6, 73);
+            this.waterCapLabel.Name = "waterCapLabel";
+            this.waterCapLabel.Size = new System.Drawing.Size(80, 13);
+            this.waterCapLabel.TabIndex = 43;
+            this.waterCapLabel.Text = "Water Capacity";
+            // 
+            // depRateLabel
+            // 
+            this.depRateLabel.AutoSize = true;
+            this.depRateLabel.Location = new System.Drawing.Point(6, 47);
+            this.depRateLabel.Name = "depRateLabel";
+            this.depRateLabel.Size = new System.Drawing.Size(69, 13);
+            this.depRateLabel.TabIndex = 42;
+            this.depRateLabel.Text = "Deposit Rate";
+            // 
+            // solubilityLabel
+            // 
+            this.solubilityLabel.AutoSize = true;
+            this.solubilityLabel.Location = new System.Drawing.Point(6, 21);
+            this.solubilityLabel.Name = "solubilityLabel";
+            this.solubilityLabel.Size = new System.Drawing.Size(48, 13);
+            this.solubilityLabel.TabIndex = 38;
+            this.solubilityLabel.Text = "Solubility";
+            // 
+            // hydroPassesNum
+            // 
+            this.hydroPassesNum.Location = new System.Drawing.Point(88, 201);
+            this.hydroPassesNum.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.hydroPassesNum.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.hydroPassesNum.Name = "hydroPassesNum";
+            this.hydroPassesNum.Size = new System.Drawing.Size(74, 20);
+            this.hydroPassesNum.TabIndex = 41;
+            this.hydroPassesNum.ThousandsSeparator = true;
+            this.hydroPassesNum.Value = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            // 
+            // timeStepNum
+            // 
+            this.timeStepNum.DecimalPlaces = 2;
+            this.timeStepNum.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.timeStepNum.Location = new System.Drawing.Point(88, 175);
+            this.timeStepNum.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.timeStepNum.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.timeStepNum.Name = "timeStepNum";
+            this.timeStepNum.Size = new System.Drawing.Size(74, 20);
+            this.timeStepNum.TabIndex = 40;
+            this.timeStepNum.ThousandsSeparator = true;
+            this.timeStepNum.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // evapConstNum
+            // 
+            this.evapConstNum.DecimalPlaces = 5;
+            this.evapConstNum.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            327680});
+            this.evapConstNum.Location = new System.Drawing.Point(88, 149);
+            this.evapConstNum.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.evapConstNum.Name = "evapConstNum";
+            this.evapConstNum.Size = new System.Drawing.Size(74, 20);
+            this.evapConstNum.TabIndex = 39;
+            this.evapConstNum.ThousandsSeparator = true;
+            this.evapConstNum.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            327680});
+            // 
+            // rainAmountNum
+            // 
+            this.rainAmountNum.DecimalPlaces = 2;
+            this.rainAmountNum.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+            this.rainAmountNum.Location = new System.Drawing.Point(88, 123);
+            this.rainAmountNum.Maximum = new decimal(new int[] {
+            90,
+            0,
+            0,
+            0});
+            this.rainAmountNum.Name = "rainAmountNum";
+            this.rainAmountNum.Size = new System.Drawing.Size(74, 20);
+            this.rainAmountNum.TabIndex = 38;
+            this.rainAmountNum.ThousandsSeparator = true;
+            this.rainAmountNum.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // rainChanceNum
+            // 
+            this.rainChanceNum.DecimalPlaces = 4;
+            this.rainChanceNum.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            196608});
+            this.rainChanceNum.Location = new System.Drawing.Point(88, 97);
+            this.rainChanceNum.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.rainChanceNum.Name = "rainChanceNum";
+            this.rainChanceNum.Size = new System.Drawing.Size(74, 20);
+            this.rainChanceNum.TabIndex = 37;
+            this.rainChanceNum.ThousandsSeparator = true;
+            this.rainChanceNum.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            196608});
+            // 
+            // waterCapNum
+            // 
+            this.waterCapNum.DecimalPlaces = 4;
+            this.waterCapNum.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.waterCapNum.Location = new System.Drawing.Point(88, 71);
+            this.waterCapNum.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.waterCapNum.Name = "waterCapNum";
+            this.waterCapNum.Size = new System.Drawing.Size(74, 20);
+            this.waterCapNum.TabIndex = 36;
+            this.waterCapNum.ThousandsSeparator = true;
+            this.waterCapNum.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            // 
+            // depRateNum
+            // 
+            this.depRateNum.DecimalPlaces = 4;
+            this.depRateNum.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.depRateNum.Location = new System.Drawing.Point(88, 45);
+            this.depRateNum.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.depRateNum.Name = "depRateNum";
+            this.depRateNum.Size = new System.Drawing.Size(74, 20);
+            this.depRateNum.TabIndex = 35;
+            this.depRateNum.ThousandsSeparator = true;
+            this.depRateNum.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            // 
+            // solubilityNum
+            // 
+            this.solubilityNum.DecimalPlaces = 4;
+            this.solubilityNum.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.solubilityNum.Location = new System.Drawing.Point(88, 19);
+            this.solubilityNum.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.solubilityNum.Name = "solubilityNum";
+            this.solubilityNum.Size = new System.Drawing.Size(74, 20);
+            this.solubilityNum.TabIndex = 34;
+            this.solubilityNum.ThousandsSeparator = true;
+            this.solubilityNum.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            // 
+            // thermalErosionGroup
+            // 
+            this.thermalErosionGroup.Controls.Add(this.tErodeRunButton);
+            this.thermalErosionGroup.Controls.Add(this.tErodePassLabel);
+            this.thermalErosionGroup.Controls.Add(this.talusAngleLabel);
+            this.thermalErosionGroup.Controls.Add(this.tErodePassNum);
+            this.thermalErosionGroup.Controls.Add(this.talusAngleNum);
+            this.thermalErosionGroup.Location = new System.Drawing.Point(6, 6);
+            this.thermalErosionGroup.Name = "thermalErosionGroup";
+            this.thermalErosionGroup.Size = new System.Drawing.Size(168, 112);
+            this.thermalErosionGroup.TabIndex = 0;
+            this.thermalErosionGroup.TabStop = false;
+            this.thermalErosionGroup.Text = "Thermal Erosion";
+            // 
+            // tErodeRunButton
+            // 
+            this.tErodeRunButton.Location = new System.Drawing.Point(45, 76);
+            this.tErodeRunButton.Name = "tErodeRunButton";
+            this.tErodeRunButton.Size = new System.Drawing.Size(75, 23);
+            this.tErodeRunButton.TabIndex = 37;
+            this.tErodeRunButton.Text = "Run";
+            this.tErodeRunButton.UseVisualStyleBackColor = true;
+            this.tErodeRunButton.Click += new System.EventHandler(this.tErodeRunButton_Click);
+            // 
+            // tErodePassLabel
+            // 
+            this.tErodePassLabel.AutoSize = true;
+            this.tErodePassLabel.Location = new System.Drawing.Point(6, 47);
+            this.tErodePassLabel.Name = "tErodePassLabel";
+            this.tErodePassLabel.Size = new System.Drawing.Size(41, 13);
+            this.tErodePassLabel.TabIndex = 36;
+            this.tErodePassLabel.Text = "Passes";
+            // 
+            // talusAngleLabel
+            // 
+            this.talusAngleLabel.AutoSize = true;
+            this.talusAngleLabel.Location = new System.Drawing.Point(6, 21);
+            this.talusAngleLabel.Name = "talusAngleLabel";
+            this.talusAngleLabel.Size = new System.Drawing.Size(63, 13);
+            this.talusAngleLabel.TabIndex = 35;
+            this.talusAngleLabel.Text = "Talus Angle";
+            // 
+            // tErodePassNum
+            // 
+            this.tErodePassNum.Location = new System.Drawing.Point(88, 45);
+            this.tErodePassNum.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.tErodePassNum.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.tErodePassNum.Name = "tErodePassNum";
+            this.tErodePassNum.Size = new System.Drawing.Size(74, 20);
+            this.tErodePassNum.TabIndex = 34;
+            this.tErodePassNum.ThousandsSeparator = true;
+            this.tErodePassNum.Value = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            // 
+            // talusAngleNum
+            // 
+            this.talusAngleNum.DecimalPlaces = 2;
+            this.talusAngleNum.Location = new System.Drawing.Point(88, 19);
+            this.talusAngleNum.Maximum = new decimal(new int[] {
+            90,
+            0,
+            0,
+            0});
+            this.talusAngleNum.Name = "talusAngleNum";
+            this.talusAngleNum.Size = new System.Drawing.Size(74, 20);
+            this.talusAngleNum.TabIndex = 33;
+            this.talusAngleNum.ThousandsSeparator = true;
+            this.talusAngleNum.Value = new decimal(new int[] {
+            30,
+            0,
+            0,
+            0});
+            // 
+            // textureMapTab
+            // 
+            this.textureMapTab.Controls.Add(this.colorMapGroup);
+            this.textureMapTab.Location = new System.Drawing.Point(4, 22);
+            this.textureMapTab.Name = "textureMapTab";
+            this.textureMapTab.Size = new System.Drawing.Size(180, 545);
+            this.textureMapTab.TabIndex = 2;
+            this.textureMapTab.Text = "Maps";
+            this.textureMapTab.UseVisualStyleBackColor = true;
+            // 
+            // importMapDialog
+            // 
+            this.importMapDialog.Filter = "Windows Bitmap|*.bmp|TIFF Images|*.tif";
+            this.importMapDialog.FilterIndex = 2;
+            // 
+            // texSamplePicture
+            // 
+            this.texSamplePicture.Location = new System.Drawing.Point(41, 19);
+            this.texSamplePicture.Name = "texSamplePicture";
+            this.texSamplePicture.Size = new System.Drawing.Size(80, 80);
+            this.texSamplePicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.texSamplePicture.TabIndex = 0;
+            this.texSamplePicture.TabStop = false;
+            // 
+            // colorMapGroup
+            // 
+            this.colorMapGroup.Controls.Add(this.importTexSample);
+            this.colorMapGroup.Controls.Add(this.texSamplePicture);
+            this.colorMapGroup.Location = new System.Drawing.Point(6, 6);
+            this.colorMapGroup.Name = "colorMapGroup";
+            this.colorMapGroup.Size = new System.Drawing.Size(168, 142);
+            this.colorMapGroup.TabIndex = 1;
+            this.colorMapGroup.TabStop = false;
+            this.colorMapGroup.Text = "Color Map";
+            // 
+            // importTexSample
+            // 
+            this.importTexSample.Location = new System.Drawing.Point(34, 108);
+            this.importTexSample.Name = "importTexSample";
+            this.importTexSample.Size = new System.Drawing.Size(92, 23);
+            this.importTexSample.TabIndex = 1;
+            this.importTexSample.Text = "Import Sample";
+            this.importTexSample.UseVisualStyleBackColor = true;
+            this.importTexSample.Click += new System.EventHandler(this.importTexSample_Click);
+            // 
+            // importTexSampleDialog
+            // 
+            this.importTexSampleDialog.Filter = "Windows Bitmap|*.bmp";
             // 
             // TerrainGeneratorMainForm
             // 
@@ -762,10 +1450,41 @@
             ((System.ComponentModel.ISupportInitialize)(this.customMap2Picture)).EndInit();
             this.toolTabs.ResumeLayout(false);
             this.generateTab.ResumeLayout(false);
-            this.mapPropertiesBox.ResumeLayout(false);
-            this.mapPropertiesBox.PerformLayout();
             this.noisePropBox.ResumeLayout(false);
             this.noisePropBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.yOffsetNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.xOffsetNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.octavesNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.noiseWeightNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.muNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.persistenceNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lacunarityNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.frequencyNum)).EndInit();
+            this.mapPropertiesBox.ResumeLayout(false);
+            this.mapPropertiesBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.maxAltNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ySizeNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.xSizeNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.yMapSizeNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.xMapSizeNum)).EndInit();
+            this.erosionTab.ResumeLayout(false);
+            this.hydroErosionGroup.ResumeLayout(false);
+            this.hydroErosionGroup.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.hydroPassesNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.timeStepNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.evapConstNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rainAmountNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rainChanceNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.waterCapNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.depRateNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.solubilityNum)).EndInit();
+            this.thermalErosionGroup.ResumeLayout(false);
+            this.thermalErosionGroup.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tErodePassNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.talusAngleNum)).EndInit();
+            this.textureMapTab.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.texSamplePicture)).EndInit();
+            this.colorMapGroup.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -802,34 +1521,62 @@
         private System.Windows.Forms.Button importMapButton;
         private System.Windows.Forms.OpenFileDialog importMapDialog;
         private System.Windows.Forms.Button addNoiseButton;
-        private System.Windows.Forms.TextBox xOffsetTextBox;
         private System.Windows.Forms.Label yOffsetLabel;
         private System.Windows.Forms.Label xOffsetLabel;
-        private System.Windows.Forms.TextBox yOffsetTextBox;
         private System.Windows.Forms.Label noiseWeightLabel;
         private System.Windows.Forms.Label slopeDistributionLabel;
         private System.Windows.Forms.Label persistenceLabel;
         private System.Windows.Forms.Label lacunarityLabel;
         private System.Windows.Forms.Label octaveLabel;
         private System.Windows.Forms.Label frequencyLabel;
-        private System.Windows.Forms.TextBox noiseWeightTextBox;
-        private System.Windows.Forms.TextBox muTextBox;
-        private System.Windows.Forms.TextBox persistTextBox;
-        private System.Windows.Forms.TextBox lacunarityTextBox;
-        private System.Windows.Forms.TextBox octavesTextBox;
-        private System.Windows.Forms.TextBox frequencyTextBox;
-        private System.Windows.Forms.TextBox ySizeTextBox;
-        private System.Windows.Forms.TextBox xSizeTextBox;
         private System.Windows.Forms.Label ySizeLabel;
         private System.Windows.Forms.Label xSizeLabel;
         private System.Windows.Forms.GroupBox mapPropertiesBox;
         private System.Windows.Forms.Label xActualSizeLabel;
-        private System.Windows.Forms.TextBox yActualSizeTextBox;
-        private System.Windows.Forms.TextBox xActualSizeTextBox;
         private System.Windows.Forms.Label yActualSizeLabel;
-        private System.Windows.Forms.TextBox maxAltTextBox;
         private System.Windows.Forms.Label maxAltLabel;
         private System.Windows.Forms.GroupBox noisePropBox;
         private System.Windows.Forms.ToolTip generalTooltip;
+        private System.Windows.Forms.NumericUpDown yOffsetNum;
+        private System.Windows.Forms.NumericUpDown xOffsetNum;
+        private System.Windows.Forms.NumericUpDown octavesNum;
+        private System.Windows.Forms.NumericUpDown noiseWeightNum;
+        private System.Windows.Forms.NumericUpDown muNum;
+        private System.Windows.Forms.NumericUpDown persistenceNum;
+        private System.Windows.Forms.NumericUpDown lacunarityNum;
+        private System.Windows.Forms.NumericUpDown frequencyNum;
+        private System.Windows.Forms.NumericUpDown maxAltNum;
+        private System.Windows.Forms.NumericUpDown ySizeNum;
+        private System.Windows.Forms.NumericUpDown xSizeNum;
+        private System.Windows.Forms.NumericUpDown yMapSizeNum;
+        private System.Windows.Forms.NumericUpDown xMapSizeNum;
+        private System.Windows.Forms.GroupBox hydroErosionGroup;
+        private System.Windows.Forms.GroupBox thermalErosionGroup;
+        private System.Windows.Forms.Button tErodeRunButton;
+        private System.Windows.Forms.Label tErodePassLabel;
+        private System.Windows.Forms.Label talusAngleLabel;
+        private System.Windows.Forms.NumericUpDown tErodePassNum;
+        private System.Windows.Forms.NumericUpDown talusAngleNum;
+        private System.Windows.Forms.Button hydroErodeRunButton;
+        private System.Windows.Forms.Label hydroPassesLabel;
+        private System.Windows.Forms.Label timeStepLabel;
+        private System.Windows.Forms.Label evapConstLabel;
+        private System.Windows.Forms.Label rainAmountLabel;
+        private System.Windows.Forms.Label rainChanceLabel;
+        private System.Windows.Forms.Label waterCapLabel;
+        private System.Windows.Forms.Label depRateLabel;
+        private System.Windows.Forms.Label solubilityLabel;
+        private System.Windows.Forms.NumericUpDown hydroPassesNum;
+        private System.Windows.Forms.NumericUpDown timeStepNum;
+        private System.Windows.Forms.NumericUpDown evapConstNum;
+        private System.Windows.Forms.NumericUpDown rainAmountNum;
+        private System.Windows.Forms.NumericUpDown rainChanceNum;
+        private System.Windows.Forms.NumericUpDown waterCapNum;
+        private System.Windows.Forms.NumericUpDown depRateNum;
+        private System.Windows.Forms.NumericUpDown solubilityNum;
+        private System.Windows.Forms.GroupBox colorMapGroup;
+        private System.Windows.Forms.PictureBox texSamplePicture;
+        private System.Windows.Forms.Button importTexSample;
+        private System.Windows.Forms.OpenFileDialog importTexSampleDialog;
     }
 }

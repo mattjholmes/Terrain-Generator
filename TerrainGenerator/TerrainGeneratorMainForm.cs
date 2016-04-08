@@ -15,18 +15,30 @@ namespace TerrainGenerator
     public partial class TerrainGeneratorMainForm : Form
     {
         private Terrain terrain;
-        int xSize = 1024;
-        int ySize = 1024;
-        float xMapSize = 10000;
-        float yMapSize = 10000;
-        float maxAlt = 1000;
-        int octaves = 8;
-        double frequency = 1;
-        double persistance = .45;
-        double lacunarity = 1.95;
-        double mu = 1.02; // useful range - 1.0 - about 1.01
-        double xOffset = 8.9;
-        double yOffset = 12.2;
+        private int xSize = 1024;
+        private int ySize = 1024;
+        private float xMapSize = 10000;
+        private float yMapSize = 10000;
+        private float maxAlt = 1000;
+        private int octaves = 8;
+        private double frequency = 1;
+        private double persistance = .45;
+        private double lacunarity = 1.95;
+        private double mu = 1.02; // useful range - 1.0 - about 1.01
+        private double noiseWeight = .5;
+        private double xOffset = 8.9;
+        private double yOffset = 12.2;
+        private float talusAngle = 30;
+        private int tErodePasses = 50;
+        private double solubility = .01;
+        private double depositionRate = .1;
+        private double waterCapacity = .01;
+        private double rainChance = .001;
+        private double rainAmount = 1;
+        private double evaporation = .0005;
+        private double timeStep = 1;
+        private int hydroErodePasses = 100;
+
 
         ColorBlend cb;
 
@@ -55,39 +67,38 @@ namespace TerrainGenerator
 
         private void TerrainGeneratorMainForm_Load(object sender, EventArgs e)
         {
-
         }
 
         private void generateTerrainButton_Click(object sender, EventArgs e)
         {
-            xOffset = Double.Parse(xOffsetTextBox.Text);
-            yOffset = Double.Parse(yOffsetTextBox.Text);
-            cb = new ColorBlend();
-            cb.Positions = new[] { 0, 1 / 3f, 1 / 2f, 3 / 4f, 7 / 8f, 1 };
-            cb.Colors = new[] { Color.FromArgb(61, 84, 51), Color.FromArgb(35, 50, 32), Color.FromArgb(35, 50, 32), Color.FromArgb(160, 153, 147), Color.FromArgb(247, 247, 251), Color.FromArgb(247, 247, 251) };
+            xOffset = (double)xOffsetNum.Value;
+            yOffset = (double)yOffsetNum.Value;
+            xSize = (int)xSizeNum.Value;
+            ySize = (int)ySizeNum.Value;
+            maxAlt = (float)maxAltNum.Value;
+            frequency = (double)frequencyNum.Value;
+            octaves = (int)octavesNum.Value;
+            persistance = (double)persistenceNum.Value;
+            lacunarity = (double)lacunarityNum.Value;
+            mu = (double)muNum.Value;
+
+            
 
             terrain = new Terrain(xSize, ySize, xMapSize, yMapSize, maxAlt);
             terrain.generateTerrain(xOffset, yOffset, frequency, octaves, persistance, lacunarity, mu);
-            terrain.setTextureSample(cb);
 
-            Bitmap map = terrain.getHeightBitmap();
+            if (texSamplePicture.Image == null)
+            {
+                cb = new ColorBlend();
+                cb.Positions = new[] { 0, 1 / 3f, 1 / 2f, 3 / 4f, 7 / 8f, 1 };
+                cb.Colors = new[] { Color.FromArgb(61, 84, 51), Color.FromArgb(35, 50, 32), Color.FromArgb(35, 50, 32), Color.FromArgb(160, 153, 147), Color.FromArgb(247, 247, 251), Color.FromArgb(247, 247, 251) };
+                terrain.setTextureSample(cb);
+                texSamplePicture.Image = terrain.getTextureSample();
+            }
 
-            heightMapPicture.Image = map;
+            heightMapPicture.Image = terrain.getHeightBitmap();
 
-            map = terrain.getTexture();
-
-            colorMapPicture.Image = map;
-
-            waterMapPicture.Image = map;
-            customMap1Picture.Image = map;
-            customMap2Picture.Image = map;
-
-            Update();
-        }
-
-        private void customMap1Tab_Click(object sender, EventArgs e)
-        {
-
+            colorMapPicture.Image = terrain.getTexture();
         }
 
         private void importMapButton_Click(object sender, EventArgs e)
@@ -102,10 +113,6 @@ namespace TerrainGenerator
                     {
                         terrain = new Terrain(xSize, ySize, xMapSize, yMapSize, maxAlt);
                         terrain.terrainFromTIFF(importMapDialog.FileName);
-
-                        Bitmap map = terrain.getHeightBitmap();
-
-                        heightMapPicture.Image = map;
                     }
                     catch (IOException ex)
                     {
@@ -117,45 +124,163 @@ namespace TerrainGenerator
                     terrain = new Terrain(xSize, ySize, xMapSize, yMapSize, maxAlt);
                     Bitmap inputBmp = new Bitmap(importMapDialog.FileName);
                     terrain.terrainFromBmp(inputBmp);
-                    Bitmap map = terrain.getHeightBitmap();
+                }
+                else
+                {
+                    MessageBox.Show("Could not import selected map");
+                    return;
+                }
 
-                    heightMapPicture.Image = map;
+                if (texSamplePicture.Image == null)
+                {
+                    cb = new ColorBlend();
+                    cb.Positions = new[] { 0, 1 / 3f, 1 / 2f, 3 / 4f, 7 / 8f, 1 };
+                    cb.Colors = new[] { Color.FromArgb(61, 84, 51), Color.FromArgb(35, 50, 32), Color.FromArgb(35, 50, 32), Color.FromArgb(160, 153, 147), Color.FromArgb(247, 247, 251), Color.FromArgb(247, 247, 251) };
+                    terrain.setTextureSample(cb);
+                    texSamplePicture.Image = terrain.getTextureSample();
+                }
+                
+                colorMapPicture.Image = terrain.getTexture();
+                heightMapPicture.Image = terrain.getHeightBitmap();
+            }
+        }
+
+        private void tErodeRunButton_Click(object sender, EventArgs e)
+        {
+            // extract relevant values from the form
+            talusAngle = (float)talusAngleNum.Value;
+            tErodePasses = (int)tErodePassNum.Value;
+
+            // make sure the terrain has been generated or imported
+            if (terrain != null)
+            {
+                // create a new modal dialog that will execute the erosion process, with progress bar
+                ProgressDialog progress = new ProgressDialog("Running Thermal Erosion", ThermalErosion);
+                progress.ShowDialog();
+                heightMapPicture.Image = terrain.getHeightBitmap();
+                colorMapPicture.Image = terrain.getTexture();
+            }
+            else
+            {
+                MessageBox.Show("Please generate a terrain before running erosion.");
+            }
+        }
+
+        private void ThermalErosion(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker worker = sender as BackgroundWorker;
+
+            for (int p = 0; p < tErodePasses; p++)
+            {
+                if (worker.CancellationPending)
+                {
+                    e.Cancel = true;
+                    break;
+                }
+                worker.ReportProgress(p * 100 / tErodePasses);
+                terrain.thermalErosion(talusAngle);
+            }
+        }
+
+        private void hydroErodeRunButton_Click(object sender, EventArgs e)
+        {
+            // extract relevant values from the form
+            solubility = (double)solubilityNum.Value;
+            depositionRate = (double)depRateNum.Value;
+            waterCapacity = (double)waterCapNum.Value;
+            rainChance = (double)rainChanceNum.Value;
+            rainAmount = (double)rainAmountNum.Value;
+            evaporation = (double)evapConstNum.Value;
+            timeStep = (double)timeStepNum.Value;
+            hydroErodePasses = (int)hydroPassesNum.Value;
+
+            // make sure the terrain has been generated or imported
+            if (terrain != null)
+            {
+                // create a new modal dialog that will execute the erosion process, with progress bar
+                ProgressDialog progress = new ProgressDialog("Running Hydraulic Erosion", HydroErosion);
+                progress.ShowDialog();
+                heightMapPicture.Image = terrain.getHeightBitmap();
+                colorMapPicture.Image = terrain.getTexture();
+                waterMapPicture.Image = terrain.getWaterMap(0.0f);
+            }
+            else
+            {
+                MessageBox.Show("Please generate a terrain before running erosion.");
+            }
+        }
+
+        private void HydroErosion(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker worker = sender as BackgroundWorker;
+
+            for (int p = 0; p < hydroErodePasses; p++)
+            {
+                if (worker.CancellationPending)
+                {
+                    e.Cancel = true;
+                    break;
+                }
+                worker.ReportProgress(p * 100 / hydroErodePasses);
+                terrain.vFieldHydroErosion(solubility, depositionRate, waterCapacity, rainChance, rainAmount, evaporation, timeStep);
+            }
+        }
+
+        private void importTexSample_Click(object sender, EventArgs e)
+        {
+            // show the file open dialog, and get the path from it
+            DialogResult result = importTexSampleDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                if (importTexSampleDialog.FileName.EndsWith(".bmp"))
+                {
+                    Bitmap inputBmp = new Bitmap(importTexSampleDialog.FileName);
+
+                    // make sure the size is correct
+                    if (inputBmp.Height == 1024 && inputBmp.Width == 1024)
+                    {
+                        terrain.setTextureSample(inputBmp);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Please select a 1024x1024 pixel bitmap");
+                    }
+
+                    texSamplePicture.Image = terrain.getTextureSample();
+                    colorMapPicture.Image = terrain.getTexture();
                 }
                 else
                 {
                     MessageBox.Show("Could not import selected map");
                 }
-                
-            }
 
-
-            Console.WriteLine(result);
-            Console.WriteLine(importMapDialog.FileName);
-        }
-
-        private void textBoxFilterNonNumeric(object sender, KeyPressEventArgs e)
-        {
-            char ch = e.KeyChar;
-
-            if (ch == 46 && xOffsetTextBox.Text.IndexOf('.') != -1)
-            {
-                e.Handled = true;
-                return;
-            }
-
-            if (!Char.IsDigit(ch) && ch != 8 && ch != 46)
-            {
-                e.Handled = true;
+                Console.WriteLine(importTexSampleDialog.FileName);
             }
         }
 
-        private void textBoxFilterNonInteger(object sender, KeyPressEventArgs e)
+        private void addNoiseButton_Click(object sender, EventArgs e)
         {
-            char ch = e.KeyChar;
+            xOffset = (double)xOffsetNum.Value;
+            yOffset = (double)yOffsetNum.Value;
+            xSize = (int)xSizeNum.Value;
+            ySize = (int)ySizeNum.Value;
+            maxAlt = (float)maxAltNum.Value;
+            frequency = (double)frequencyNum.Value;
+            octaves = (int)octavesNum.Value;
+            persistance = (double)persistenceNum.Value;
+            lacunarity = (double)lacunarityNum.Value;
+            mu = (double)muNum.Value;
+            noiseWeight = (double)noiseWeightNum.Value;
 
-            if (!Char.IsDigit(ch) && ch != 8)
+            if (terrain != null)
             {
-                e.Handled = true;
+                terrain.addTerrainNoise(noiseWeight, xOffset, yOffset, frequency, octaves, persistance, lacunarity, mu);
+                heightMapPicture.Image = terrain.getHeightBitmap();
+                colorMapPicture.Image = terrain.getTexture();
+            }
+            else
+            {
+                MessageBox.Show("Please generate or import terrain before adding noise.");
             }
         }
     }

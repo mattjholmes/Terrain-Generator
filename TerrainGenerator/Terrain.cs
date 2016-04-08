@@ -74,6 +74,9 @@ namespace TerrainGenerator
         // create a noise generator instance for use in terrain generation
         private NoiseGenerator generator = new NoiseGenerator();
 
+        // create a random number generator, used in rainfall chance calculation
+        Random rand;
+
         // Terrain class constructer, requires x and y size - this should be square for unity .raw terrain maps, or 2:1 rect for spherical terrain maps
         // xMapSize and yMapSize are the overall map size in meters, this is independent of the underlying bitmap whose size is determined by the x and y parameters
         // Also takes a maximum altitude, in meters
@@ -94,6 +97,7 @@ namespace TerrainGenerator
             oFlux = new OutflowFlux[x, y];
             tErosion = new double[x, y];
             talus = new double[x, y];
+            rand = new Random();
 
             // initialize the components of the water velocity and flux arrays
             for (int i = 0; i < xSize; i++)
@@ -248,12 +252,12 @@ namespace TerrainGenerator
                 for (int y = 0; y < input.Height; y ++)
                 {
                     inTerrain[x,y] = input.GetPixel(x, y).GetBrightness();
-                    inTerrain[x,y] += rand.NextDouble() * (1 / maxAltitude) * 2;
+                    //inTerrain[x,y] += rand.NextDouble() * (1 / maxAltitude) * 2;
                 }
             }
 
             // Smooth the input terrain using a slightly modified Laplacian smoothing algorithm
-            for (int x = 2; x < input.Width - 2; x++)
+            /*for (int x = 2; x < input.Width - 2; x++)
             {
                 for (int y = 2; y < input.Height - 2; y++)
                 {
@@ -269,7 +273,7 @@ namespace TerrainGenerator
                     }
                     inTerrain[x, y] = total/count;
                 }
-            }
+            }*/
 
             terrain = inTerrain;
             normalizeTerrain();
@@ -468,75 +472,80 @@ namespace TerrainGenerator
         // Thermal erosion is the process of material breaking apart due to thermal expansion and contraction
         // and falling down a slope if it is too steep
         // input parameters are the maximum stable slope angle, and the number of passes to execute
-        public void thermalErosion(float talusAngle, int passes)
+        public void thermalErosion(float talusAngle)
         {
             // maximum difference between neighboring locations
             double maxDiff = ((xActualSize / xSize) * Math.Tan(talusAngle * (Math.PI / 180))) / maxAltitude;
             // amount to move to the neighbors - higher values will lead to stairstepping in the output height map, but require less passes to move the same amount of material
             double hChange = maxDiff / 16;
 
-            for (int i = 0; i < passes; i++)
+            for (int x = 0; x < xSize; x++)
             {
-                for (int x = 0; x < xSize; x++)
+                for (int y = 0; y < ySize; y++)
                 {
-                    for (int y = 0; y < ySize; y ++)
+                    // find the neighbors below the maxDiff
+                    bool[,] lowNeighbors = new bool[3, 3];
+                    int numNeighbors = 0;
+                    for (int nx = -1; nx <= 1; nx++)
                     {
-                        // find the neighbors below the maxDiff
-                        bool[,] lowNeighbors = new bool[3, 3];
-                        int numNeighbors = 0;
-                        for (int nx = -1; nx <= 1; nx++)
+                        for (int ny = -1; ny <= 1; ny++)
                         {
-                            for (int ny = -1; ny <= 1; ny++)
+                            // make sure we don't go out of bounds
+                            if (x + nx >= 0 && x + nx < xSize && y + ny >= 0 && y + ny < ySize)
                             {
-                                // make sure we don't go out of bounds
-                                if (x + nx >= 0 && x + nx < xSize && y + ny >= 0 && y + ny < ySize)
+                                // if we are looking at the current cell, mark the lowNeighbor point as false
+                                if (nx == 0 && ny == 0)
                                 {
-                                    // if we are looking at the current cell, mark the lowNeighbor point as false
-                                    if (nx == 0 && ny == 0)
-                                    {
-                                        lowNeighbors[nx + 1, ny + 1] = false;
-                                    }
-                                    // if the difference between the current square and the current neighbor is greater than maxDiff, we will move material there later
-                                    else if (terrain[x, y] - terrain[x + nx, y + ny] > maxDiff)
-                                    {
-                                        lowNeighbors[nx + 1, ny + 1] = true;
-                                        numNeighbors++;
-                                    }
-                                    // otherwise, we will ignore that neighbor
-                                    else
-                                    {
-                                        lowNeighbors[nx + 1, ny + 1] = false;
-                                    }
+                                    lowNeighbors[nx + 1, ny + 1] = false;
                                 }
-                            } // for neighboring y
-                        }// for neighboring x
-                        double amountToMove = hChange / numNeighbors;
-
-                         // if any of the neighbors are lower than the max difference, swap the height change amount with the lowest neighbor
-                        for (int nx = -1; nx <= 1; nx++)
-                        {
-                            for (int ny = -1; ny <= 1; ny++)
-                            {
-                                // make sure we don't go out of bounds
-                                if (x + nx >= 0 && x + nx < xSize && y + ny >= 0 && y + ny < ySize)
+                                // if the difference between the current square and the current neighbor is greater than maxDiff, we will move material there later
+                                else if (terrain[x, y] - terrain[x + nx, y + ny] > maxDiff)
                                 {
-                                    // if we previously marked one of these squares as lower than maxDiff, we will now move material to it
-                                    // also add the amount removed to the erosion map, and the amount added to neighbors to the deposition map
-                                    if (lowNeighbors[nx +1, ny +1])
-                                    {
-                                        terrain[x, y] -= amountToMove;
-                                        terrain[x + nx, y + ny] += amountToMove;
-                                        tErosion[x, y] += amountToMove;
-                                        talus[x + nx, y + ny] += amountToMove;
-                                    }
+                                    lowNeighbors[nx + 1, ny + 1] = true;
+                                    numNeighbors++;
+                                }
+                                // otherwise, we will ignore that neighbor
+                                else
+                                {
+                                    lowNeighbors[nx + 1, ny + 1] = false;
+                                }
+                            }
+                        } // for neighboring y
+                    }// for neighboring x
+                    double amountToMove = hChange / numNeighbors;
+
+                    // if any of the neighbors are lower than the max difference, swap the height change amount with the lowest neighbor
+                    for (int nx = -1; nx <= 1; nx++)
+                    {
+                        for (int ny = -1; ny <= 1; ny++)
+                        {
+                            // make sure we don't go out of bounds
+                            if (x + nx >= 0 && x + nx < xSize && y + ny >= 0 && y + ny < ySize)
+                            {
+                                // if we previously marked one of these squares as lower than maxDiff, we will now move material to it
+                                // also add the amount removed to the erosion map, and the amount added to neighbors to the deposition map
+                                if (lowNeighbors[nx + 1, ny + 1])
+                                {
+                                    terrain[x, y] -= amountToMove;
+                                    terrain[x + nx, y + ny] += amountToMove;
+                                    tErosion[x, y] += amountToMove;
+                                    talus[x + nx, y + ny] += amountToMove;
                                 }
                             }
                         }
-                    }// for y
-                }// for x
-            }// for passes
-            // we've changed the terrain, need to recalculate the normals
+                    }
+                }// for y
+            }// for x
             calculateNormals();
+        }
+
+        // version of thermal erosion that does the looping for you
+        public void thermalErosion(float talusAngle, int passes)
+        {
+            for (int i = 0; i < passes; i++)
+            {
+                thermalErosion(talusAngle);
+            }
         }
 
         // Hydraulic Erosion based on velocity field, derived from the normal map
@@ -552,25 +561,25 @@ namespace TerrainGenerator
             double waterCapacity = wCap;
             double rainAmount = rainAmt / maxAltitude;
             double scale = xActualSize / xSize;
-            Random rand = new Random();
+            
             double[,] waterNew = new double[xSize, ySize];
             double[,] sedimentNew = new double[xSize, ySize];
 
-            Bitmap waterBmp = getWaterMap();
+            /*Bitmap waterBmp = getWaterMap();
             Bitmap heightMap = getHeightBitmap();
             Bitmap sedimentMap = getSedimentmap();
-            var form = new Form1();
+            var form = new Form1();*/
 
             grav = 9.8;
             pipeLength = Math.Min(xActualSize / xSize, yActualSize / ySize);
             pipeArea = Math.PI * Math.Pow(pipeLength / 2, 2);
             double k;
 
-            form.Show();
+            /*form.Show();
             form.pictureBox1.Image = waterBmp;
             form.pictureBox2.Image = heightMap;
             form.pictureBox3.Image = sedimentMap;
-            form.Update();
+            form.Update();*/
 
             // iterate through all 5 steps for the number of steps specified
             for (int n = 0; n < steps; n++)
@@ -586,7 +595,7 @@ namespace TerrainGenerator
                         }
                     }
                 }
-                //waterMap[xSize / 2, ySize / 2] += (1/maxAltitude) * timeStep;
+                waterMap[xSize / 2, ySize / 2] += (1/maxAltitude) * timeStep;
 
                 // second step - simulate flow, update waterMap and waterVel
 
@@ -598,7 +607,7 @@ namespace TerrainGenerator
                         // calculate the flow in each direction, edge cases = 0
                         if (x - 1 >= 0)
                         {
-                            oFlux[x, y].left = Math.Max(0, oFlux[x, y].left + timeStep * pipeArea * ((grav * maxAltitude * (terrain[x, y] + waterMap[x, y] - terrain[x - 1, y] + waterMap[x - 1, y])) / pipeLength));
+                            oFlux[x, y].left = Math.Max(0, oFlux[x, y].left + timeStep * pipeArea * ((grav  * ((terrain[x, y] + waterMap[x, y]) - (terrain[x - 1, y] + waterMap[x - 1, y]))) / pipeLength));
                         }
                         else
                         {
@@ -607,7 +616,7 @@ namespace TerrainGenerator
 
                         if (x + 1 < xSize)
                         {
-                            oFlux[x, y].right = Math.Max(0, oFlux[x, y].right + timeStep * pipeArea * ((grav * maxAltitude * (terrain[x, y] + waterMap[x,y] - terrain[x + 1, y] + waterMap[x + 1, y])) / pipeLength));
+                            oFlux[x, y].right = Math.Max(0, oFlux[x, y].right + timeStep * pipeArea * ((grav  * ((terrain[x, y] + waterMap[x,y]) - (terrain[x + 1, y] + waterMap[x + 1, y]))) / pipeLength));
                         }
                         else
                         {
@@ -616,7 +625,7 @@ namespace TerrainGenerator
 
                         if (y - 1 >= 0)
                         {
-                            oFlux[x, y].up = Math.Max(0, oFlux[x, y].up + timeStep * pipeArea * ((grav * maxAltitude * (terrain[x, y] + waterMap[x,y] - terrain[x, y - 1] + waterMap[x, y - 1])) / pipeLength));
+                            oFlux[x, y].up = Math.Max(0, oFlux[x, y].up + timeStep * pipeArea * ((grav  * ((terrain[x, y] + waterMap[x,y]) - (terrain[x, y - 1] + waterMap[x, y - 1]))) / pipeLength));
                         }
                         else
                         {
@@ -625,7 +634,7 @@ namespace TerrainGenerator
 
                         if (y + 1 < ySize)
                         {
-                            oFlux[x, y].down = Math.Max(0, oFlux[x, y].down + timeStep * pipeArea * ((grav * maxAltitude * (terrain[x, y] + waterMap[x, y] - terrain[x, y + 1] + waterMap[x, y + 1])) / pipeLength));
+                            oFlux[x, y].down = Math.Max(0, oFlux[x, y].down + timeStep * pipeArea * ((grav  * ((terrain[x, y] + waterMap[x, y]) - (terrain[x, y + 1] + waterMap[x, y + 1]))) / pipeLength));
                         }
                         else
                         {
@@ -774,20 +783,27 @@ namespace TerrainGenerator
                     }
                 }
 
-                waterBmp = getWaterMap();
+                /*waterBmp = getWaterMap();
                 form.textBox1.Text = n.ToString();
                 form.pictureBox1.Image = waterBmp;
                 heightMap = getHeightBitmap();
                 form.pictureBox2.Image = heightMap;
                 sedimentMap = getSedimentmap();
                 form.pictureBox3.Image = sedimentMap;
-                form.Update();
+                form.Update();*/
 
                 // we need to update the normals on each pass, we depend on them for some of the erosion equations
                 calculateNormals();
             }
         }
-        
+
+        //execute a single pass of hydraulic erosion
+        public void vFieldHydroErosion(double sol, double depRate, double wCap, double rainChance, double rainAmt, double evapConstant, double timeStep)
+        {
+            vFieldHydroErosion(sol, depRate, wCap, rainChance, rainAmt, evapConstant, timeStep, 1);
+        }
+
+
         public void calculateNormals()
         {
             // copy the real terrain into a working version, give it a border that we will dump later
@@ -1033,6 +1049,33 @@ namespace TerrainGenerator
         }
 
         // return a bitmap of the current water levels on the map
+        // parameter threshold is the minimum depth in meters to draw to the map
+        public Bitmap getWaterMap(float threshold)
+        {
+            Bitmap bmp = new Bitmap(xSize, ySize);
+            // bmp channel values are 8 bits
+            int output8;
+
+            for (int x = 0; x < xSize; x++)
+            {
+                for (int y = 0; y < ySize; y++)
+                {
+                    if (waterMap[x, y] * maxAltitude > threshold)
+                    {
+                        output8 = (int)(waterMap[x, y] * 255);
+                    }
+                    else
+                    {
+                        output8 = 0;
+                    }
+                    if (output8 < 0) output8 = 0;
+                    if (output8 > 255) output8 = 255;
+                    bmp.SetPixel(x, y, Color.FromArgb(255, output8, output8, output8));
+                }
+            }
+            return bmp;
+        }
+
         public Bitmap getWaterMap()
         {
             Bitmap bmp = new Bitmap(xSize, ySize);
@@ -1043,7 +1086,7 @@ namespace TerrainGenerator
             {
                 for (int y = 0; y < ySize; y++)
                 {
-                    output8 = (int)(waterMap[x, y] * 255 *4000);
+                    output8 = (int)(waterMap[x, y] * 255 * 50);                    
                     if (output8 < 0) output8 = 0;
                     if (output8 > 255) output8 = 255;
                     bmp.SetPixel(x, y, Color.FromArgb(255, output8, output8, output8));
@@ -1210,15 +1253,31 @@ namespace TerrainGenerator
             {
                 for (int y = 0; y < ySize; y++)
                 {
+                    int latitude = y * texSample.Height / ySize;
+                    if (latitude < 0) latitude = 0;
+                    if (latitude >= texSample.Height) latitude = texSample.Height - 1;
                     int altitude = (int)(terrain[x, y] * texSample.Width);
                     if (altitude < 0) altitude = 0;
                     if (altitude >= texSample.Width) altitude = texSample.Width - 1;
-                    Color color = texSample.GetPixel(altitude, 0);
+                    Color color = texSample.GetPixel(altitude, latitude);
                     output.SetPixel(x, y, color);
                 }
             }
 
             return output;
+        }
+
+        public Bitmap getTextureSample()
+        {
+            return texSample;
+        }
+
+        public void setTextureSample(Bitmap input)
+        {
+            if (input.Width == 1024 && input.Height == 1024)
+            {
+                texSample = input;
+            }
         }
     }
 }
