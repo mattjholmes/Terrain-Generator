@@ -97,6 +97,10 @@ namespace TerrainGenerator
                 terrain.setTextureSample(cb);
                 texSamplePicture.Image = terrain.getTextureSample();
             }
+            else
+            {
+                terrain.setTextureSample((Bitmap)texSamplePicture.Image);
+            }
 
             heightMapPicture.Image = terrain.getHeightBitmap();
 
@@ -141,7 +145,11 @@ namespace TerrainGenerator
                     terrain.setTextureSample(cb);
                     texSamplePicture.Image = terrain.getTextureSample();
                 }
-                
+                else
+                {
+                    terrain.setTextureSample((Bitmap)texSamplePicture.Image);
+                }
+
                 colorMapPicture.Image = terrain.getTexture();
                 heightMapPicture.Image = terrain.getHeightBitmap();
             }
