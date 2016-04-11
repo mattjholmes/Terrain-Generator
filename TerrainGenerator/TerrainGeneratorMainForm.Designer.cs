@@ -110,12 +110,39 @@
             this.tErodePassNum = new System.Windows.Forms.NumericUpDown();
             this.talusAngleNum = new System.Windows.Forms.NumericUpDown();
             this.textureMapTab = new System.Windows.Forms.TabPage();
-            this.importMapDialog = new System.Windows.Forms.OpenFileDialog();
-            this.generalTooltip = new System.Windows.Forms.ToolTip(this.components);
-            this.texSamplePicture = new System.Windows.Forms.PictureBox();
             this.colorMapGroup = new System.Windows.Forms.GroupBox();
             this.importTexSample = new System.Windows.Forms.Button();
+            this.texSamplePicture = new System.Windows.Forms.PictureBox();
+            this.importMapDialog = new System.Windows.Forms.OpenFileDialog();
+            this.generalTooltip = new System.Windows.Forms.ToolTip(this.components);
             this.importTexSampleDialog = new System.Windows.Forms.OpenFileDialog();
+            this.customMapBox = new System.Windows.Forms.GroupBox();
+            this.minSlopeNum = new System.Windows.Forms.NumericUpDown();
+            this.minSlopeFuzzNum = new System.Windows.Forms.NumericUpDown();
+            this.maxSlopeNum = new System.Windows.Forms.NumericUpDown();
+            this.maxSlopeFuzzNum = new System.Windows.Forms.NumericUpDown();
+            this.minAltNum = new System.Windows.Forms.NumericUpDown();
+            this.minAltFuzzNum = new System.Windows.Forms.NumericUpDown();
+            this.maxSplatAltNum = new System.Windows.Forms.NumericUpDown();
+            this.customMapSelect = new System.Windows.Forms.ComboBox();
+            this.customMapLabel = new System.Windows.Forms.Label();
+            this.minSlopeLabel = new System.Windows.Forms.Label();
+            this.minSlopeFuzzLabel = new System.Windows.Forms.Label();
+            this.maxSlopeLabel = new System.Windows.Forms.Label();
+            this.maxSlopeFuzzLabel = new System.Windows.Forms.Label();
+            this.minAltLabel = new System.Windows.Forms.Label();
+            this.minAltFuzzLabel = new System.Windows.Forms.Label();
+            this.maxAltiLabel = new System.Windows.Forms.Label();
+            this.maxAltFuzzNum = new System.Windows.Forms.NumericUpDown();
+            this.splatNoiseAmountNum = new System.Windows.Forms.NumericUpDown();
+            this.maxAltFuzzLabel = new System.Windows.Forms.Label();
+            this.noiseAmountLabel = new System.Windows.Forms.Label();
+            this.saveMapBox = new System.Windows.Forms.GroupBox();
+            this.mapSaveSelect = new System.Windows.Forms.ComboBox();
+            this.saveMapButton = new System.Windows.Forms.Button();
+            this.customMapButton = new System.Windows.Forms.Button();
+            this.saveHeightMapDialog = new System.Windows.Forms.SaveFileDialog();
+            this.saveBmpDialog = new System.Windows.Forms.SaveFileDialog();
             this.menuStrip1.SuspendLayout();
             this.heightMapPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.heightMapPicture)).BeginInit();
@@ -164,8 +191,19 @@
             ((System.ComponentModel.ISupportInitialize)(this.tErodePassNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.talusAngleNum)).BeginInit();
             this.textureMapTab.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.texSamplePicture)).BeginInit();
             this.colorMapGroup.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.texSamplePicture)).BeginInit();
+            this.customMapBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.minSlopeNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.minSlopeFuzzNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maxSlopeNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maxSlopeFuzzNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.minAltNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.minAltFuzzNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maxSplatAltNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maxAltFuzzNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splatNoiseAmountNum)).BeginInit();
+            this.saveMapBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -1365,6 +1403,8 @@
             // 
             // textureMapTab
             // 
+            this.textureMapTab.Controls.Add(this.saveMapBox);
+            this.textureMapTab.Controls.Add(this.customMapBox);
             this.textureMapTab.Controls.Add(this.colorMapGroup);
             this.textureMapTab.Location = new System.Drawing.Point(4, 22);
             this.textureMapTab.Name = "textureMapTab";
@@ -1372,20 +1412,6 @@
             this.textureMapTab.TabIndex = 2;
             this.textureMapTab.Text = "Maps";
             this.textureMapTab.UseVisualStyleBackColor = true;
-            // 
-            // importMapDialog
-            // 
-            this.importMapDialog.Filter = "Windows Bitmap|*.bmp|TIFF Images|*.tif";
-            this.importMapDialog.FilterIndex = 2;
-            // 
-            // texSamplePicture
-            // 
-            this.texSamplePicture.Location = new System.Drawing.Point(41, 19);
-            this.texSamplePicture.Name = "texSamplePicture";
-            this.texSamplePicture.Size = new System.Drawing.Size(80, 80);
-            this.texSamplePicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.texSamplePicture.TabIndex = 0;
-            this.texSamplePicture.TabStop = false;
             // 
             // colorMapGroup
             // 
@@ -1408,9 +1434,383 @@
             this.importTexSample.UseVisualStyleBackColor = true;
             this.importTexSample.Click += new System.EventHandler(this.importTexSample_Click);
             // 
+            // texSamplePicture
+            // 
+            this.texSamplePicture.Location = new System.Drawing.Point(41, 19);
+            this.texSamplePicture.Name = "texSamplePicture";
+            this.texSamplePicture.Size = new System.Drawing.Size(80, 80);
+            this.texSamplePicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.texSamplePicture.TabIndex = 0;
+            this.texSamplePicture.TabStop = false;
+            // 
+            // importMapDialog
+            // 
+            this.importMapDialog.Filter = "Windows Bitmap|*.bmp|TIFF Images|*.tif";
+            this.importMapDialog.FilterIndex = 2;
+            // 
             // importTexSampleDialog
             // 
             this.importTexSampleDialog.Filter = "Windows Bitmap|*.bmp";
+            // 
+            // customMapBox
+            // 
+            this.customMapBox.Controls.Add(this.customMapButton);
+            this.customMapBox.Controls.Add(this.noiseAmountLabel);
+            this.customMapBox.Controls.Add(this.maxAltFuzzLabel);
+            this.customMapBox.Controls.Add(this.splatNoiseAmountNum);
+            this.customMapBox.Controls.Add(this.maxAltFuzzNum);
+            this.customMapBox.Controls.Add(this.maxAltiLabel);
+            this.customMapBox.Controls.Add(this.minAltFuzzLabel);
+            this.customMapBox.Controls.Add(this.minAltLabel);
+            this.customMapBox.Controls.Add(this.maxSlopeFuzzLabel);
+            this.customMapBox.Controls.Add(this.maxSlopeLabel);
+            this.customMapBox.Controls.Add(this.minSlopeFuzzLabel);
+            this.customMapBox.Controls.Add(this.minSlopeLabel);
+            this.customMapBox.Controls.Add(this.customMapLabel);
+            this.customMapBox.Controls.Add(this.customMapSelect);
+            this.customMapBox.Controls.Add(this.maxSplatAltNum);
+            this.customMapBox.Controls.Add(this.minAltFuzzNum);
+            this.customMapBox.Controls.Add(this.minAltNum);
+            this.customMapBox.Controls.Add(this.maxSlopeFuzzNum);
+            this.customMapBox.Controls.Add(this.maxSlopeNum);
+            this.customMapBox.Controls.Add(this.minSlopeFuzzNum);
+            this.customMapBox.Controls.Add(this.minSlopeNum);
+            this.customMapBox.Location = new System.Drawing.Point(6, 154);
+            this.customMapBox.Name = "customMapBox";
+            this.customMapBox.Size = new System.Drawing.Size(168, 308);
+            this.customMapBox.TabIndex = 2;
+            this.customMapBox.TabStop = false;
+            this.customMapBox.Text = "Custom Splat Maps";
+            // 
+            // minSlopeNum
+            // 
+            this.minSlopeNum.DecimalPlaces = 2;
+            this.minSlopeNum.Location = new System.Drawing.Point(88, 46);
+            this.minSlopeNum.Maximum = new decimal(new int[] {
+            90,
+            0,
+            0,
+            0});
+            this.minSlopeNum.Name = "minSlopeNum";
+            this.minSlopeNum.Size = new System.Drawing.Size(74, 20);
+            this.minSlopeNum.TabIndex = 35;
+            this.minSlopeNum.ThousandsSeparator = true;
+            // 
+            // minSlopeFuzzNum
+            // 
+            this.minSlopeFuzzNum.DecimalPlaces = 2;
+            this.minSlopeFuzzNum.Location = new System.Drawing.Point(88, 72);
+            this.minSlopeFuzzNum.Maximum = new decimal(new int[] {
+            90,
+            0,
+            0,
+            0});
+            this.minSlopeFuzzNum.Name = "minSlopeFuzzNum";
+            this.minSlopeFuzzNum.Size = new System.Drawing.Size(74, 20);
+            this.minSlopeFuzzNum.TabIndex = 36;
+            this.minSlopeFuzzNum.ThousandsSeparator = true;
+            // 
+            // maxSlopeNum
+            // 
+            this.maxSlopeNum.DecimalPlaces = 2;
+            this.maxSlopeNum.Location = new System.Drawing.Point(88, 98);
+            this.maxSlopeNum.Maximum = new decimal(new int[] {
+            90,
+            0,
+            0,
+            0});
+            this.maxSlopeNum.Name = "maxSlopeNum";
+            this.maxSlopeNum.Size = new System.Drawing.Size(74, 20);
+            this.maxSlopeNum.TabIndex = 37;
+            this.maxSlopeNum.ThousandsSeparator = true;
+            this.maxSlopeNum.Value = new decimal(new int[] {
+            90,
+            0,
+            0,
+            0});
+            // 
+            // maxSlopeFuzzNum
+            // 
+            this.maxSlopeFuzzNum.DecimalPlaces = 2;
+            this.maxSlopeFuzzNum.Location = new System.Drawing.Point(88, 124);
+            this.maxSlopeFuzzNum.Maximum = new decimal(new int[] {
+            90,
+            0,
+            0,
+            0});
+            this.maxSlopeFuzzNum.Name = "maxSlopeFuzzNum";
+            this.maxSlopeFuzzNum.Size = new System.Drawing.Size(74, 20);
+            this.maxSlopeFuzzNum.TabIndex = 38;
+            this.maxSlopeFuzzNum.ThousandsSeparator = true;
+            // 
+            // minAltNum
+            // 
+            this.minAltNum.DecimalPlaces = 2;
+            this.minAltNum.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.minAltNum.Location = new System.Drawing.Point(88, 150);
+            this.minAltNum.Maximum = new decimal(new int[] {
+            9999999,
+            0,
+            0,
+            131072});
+            this.minAltNum.Name = "minAltNum";
+            this.minAltNum.Size = new System.Drawing.Size(74, 20);
+            this.minAltNum.TabIndex = 39;
+            this.minAltNum.ThousandsSeparator = true;
+            // 
+            // minAltFuzzNum
+            // 
+            this.minAltFuzzNum.DecimalPlaces = 2;
+            this.minAltFuzzNum.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.minAltFuzzNum.Location = new System.Drawing.Point(88, 176);
+            this.minAltFuzzNum.Maximum = new decimal(new int[] {
+            9999999,
+            0,
+            0,
+            131072});
+            this.minAltFuzzNum.Name = "minAltFuzzNum";
+            this.minAltFuzzNum.Size = new System.Drawing.Size(74, 20);
+            this.minAltFuzzNum.TabIndex = 40;
+            this.minAltFuzzNum.ThousandsSeparator = true;
+            // 
+            // maxSplatAltNum
+            // 
+            this.maxSplatAltNum.DecimalPlaces = 2;
+            this.maxSplatAltNum.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.maxSplatAltNum.Location = new System.Drawing.Point(88, 202);
+            this.maxSplatAltNum.Maximum = new decimal(new int[] {
+            9999999,
+            0,
+            0,
+            131072});
+            this.maxSplatAltNum.Name = "maxSplatAltNum";
+            this.maxSplatAltNum.Size = new System.Drawing.Size(74, 20);
+            this.maxSplatAltNum.TabIndex = 41;
+            this.maxSplatAltNum.ThousandsSeparator = true;
+            this.maxSplatAltNum.Value = new decimal(new int[] {
+            5000,
+            0,
+            0,
+            0});
+            // 
+            // customMapSelect
+            // 
+            this.customMapSelect.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.customMapSelect.FormattingEnabled = true;
+            this.customMapSelect.Items.AddRange(new object[] {
+            "Custom 1",
+            "Custom 2"});
+            this.customMapSelect.Location = new System.Drawing.Point(62, 19);
+            this.customMapSelect.MaxDropDownItems = 2;
+            this.customMapSelect.Name = "customMapSelect";
+            this.customMapSelect.Size = new System.Drawing.Size(100, 21);
+            this.customMapSelect.TabIndex = 42;
+            // 
+            // customMapLabel
+            // 
+            this.customMapLabel.AutoSize = true;
+            this.customMapLabel.Location = new System.Drawing.Point(6, 22);
+            this.customMapLabel.Name = "customMapLabel";
+            this.customMapLabel.Size = new System.Drawing.Size(42, 13);
+            this.customMapLabel.TabIndex = 43;
+            this.customMapLabel.Text = "Editing:";
+            // 
+            // minSlopeLabel
+            // 
+            this.minSlopeLabel.AutoSize = true;
+            this.minSlopeLabel.Location = new System.Drawing.Point(6, 48);
+            this.minSlopeLabel.Name = "minSlopeLabel";
+            this.minSlopeLabel.Size = new System.Drawing.Size(54, 13);
+            this.minSlopeLabel.TabIndex = 44;
+            this.minSlopeLabel.Text = "Min Slope";
+            // 
+            // minSlopeFuzzLabel
+            // 
+            this.minSlopeFuzzLabel.AutoSize = true;
+            this.minSlopeFuzzLabel.Location = new System.Drawing.Point(6, 74);
+            this.minSlopeFuzzLabel.Name = "minSlopeFuzzLabel";
+            this.minSlopeFuzzLabel.Size = new System.Drawing.Size(79, 13);
+            this.minSlopeFuzzLabel.TabIndex = 45;
+            this.minSlopeFuzzLabel.Text = "Min Slope Fuzz";
+            // 
+            // maxSlopeLabel
+            // 
+            this.maxSlopeLabel.AutoSize = true;
+            this.maxSlopeLabel.Location = new System.Drawing.Point(6, 100);
+            this.maxSlopeLabel.Name = "maxSlopeLabel";
+            this.maxSlopeLabel.Size = new System.Drawing.Size(57, 13);
+            this.maxSlopeLabel.TabIndex = 46;
+            this.maxSlopeLabel.Text = "Max Slope";
+            // 
+            // maxSlopeFuzzLabel
+            // 
+            this.maxSlopeFuzzLabel.AutoSize = true;
+            this.maxSlopeFuzzLabel.Location = new System.Drawing.Point(6, 126);
+            this.maxSlopeFuzzLabel.Name = "maxSlopeFuzzLabel";
+            this.maxSlopeFuzzLabel.Size = new System.Drawing.Size(82, 13);
+            this.maxSlopeFuzzLabel.TabIndex = 47;
+            this.maxSlopeFuzzLabel.Text = "Max Slope Fuzz";
+            // 
+            // minAltLabel
+            // 
+            this.minAltLabel.AutoSize = true;
+            this.minAltLabel.Location = new System.Drawing.Point(6, 152);
+            this.minAltLabel.Name = "minAltLabel";
+            this.minAltLabel.Size = new System.Drawing.Size(62, 13);
+            this.minAltLabel.TabIndex = 48;
+            this.minAltLabel.Text = "Min Altitude";
+            // 
+            // minAltFuzzLabel
+            // 
+            this.minAltFuzzLabel.AutoSize = true;
+            this.minAltFuzzLabel.Location = new System.Drawing.Point(6, 178);
+            this.minAltFuzzLabel.Name = "minAltFuzzLabel";
+            this.minAltFuzzLabel.Size = new System.Drawing.Size(64, 13);
+            this.minAltFuzzLabel.TabIndex = 49;
+            this.minAltFuzzLabel.Text = "Min Alt Fuzz";
+            // 
+            // maxAltiLabel
+            // 
+            this.maxAltiLabel.AutoSize = true;
+            this.maxAltiLabel.Location = new System.Drawing.Point(6, 204);
+            this.maxAltiLabel.Name = "maxAltiLabel";
+            this.maxAltiLabel.Size = new System.Drawing.Size(65, 13);
+            this.maxAltiLabel.TabIndex = 50;
+            this.maxAltiLabel.Text = "Max Altitude";
+            // 
+            // maxAltFuzzNum
+            // 
+            this.maxAltFuzzNum.DecimalPlaces = 2;
+            this.maxAltFuzzNum.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.maxAltFuzzNum.Location = new System.Drawing.Point(88, 228);
+            this.maxAltFuzzNum.Maximum = new decimal(new int[] {
+            9999999,
+            0,
+            0,
+            131072});
+            this.maxAltFuzzNum.Name = "maxAltFuzzNum";
+            this.maxAltFuzzNum.Size = new System.Drawing.Size(74, 20);
+            this.maxAltFuzzNum.TabIndex = 51;
+            this.maxAltFuzzNum.ThousandsSeparator = true;
+            // 
+            // splatNoiseAmountNum
+            // 
+            this.splatNoiseAmountNum.DecimalPlaces = 2;
+            this.splatNoiseAmountNum.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.splatNoiseAmountNum.Location = new System.Drawing.Point(88, 254);
+            this.splatNoiseAmountNum.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.splatNoiseAmountNum.Name = "splatNoiseAmountNum";
+            this.splatNoiseAmountNum.Size = new System.Drawing.Size(74, 20);
+            this.splatNoiseAmountNum.TabIndex = 52;
+            this.splatNoiseAmountNum.ThousandsSeparator = true;
+            this.splatNoiseAmountNum.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            // 
+            // maxAltFuzzLabel
+            // 
+            this.maxAltFuzzLabel.AutoSize = true;
+            this.maxAltFuzzLabel.Location = new System.Drawing.Point(6, 230);
+            this.maxAltFuzzLabel.Name = "maxAltFuzzLabel";
+            this.maxAltFuzzLabel.Size = new System.Drawing.Size(67, 13);
+            this.maxAltFuzzLabel.TabIndex = 53;
+            this.maxAltFuzzLabel.Text = "Max Alt Fuzz";
+            // 
+            // noiseAmountLabel
+            // 
+            this.noiseAmountLabel.AutoSize = true;
+            this.noiseAmountLabel.Location = new System.Drawing.Point(6, 256);
+            this.noiseAmountLabel.Name = "noiseAmountLabel";
+            this.noiseAmountLabel.Size = new System.Drawing.Size(73, 13);
+            this.noiseAmountLabel.TabIndex = 54;
+            this.noiseAmountLabel.Text = "Noise Amount";
+            // 
+            // saveMapBox
+            // 
+            this.saveMapBox.Controls.Add(this.saveMapButton);
+            this.saveMapBox.Controls.Add(this.mapSaveSelect);
+            this.saveMapBox.Location = new System.Drawing.Point(6, 468);
+            this.saveMapBox.Name = "saveMapBox";
+            this.saveMapBox.Size = new System.Drawing.Size(168, 74);
+            this.saveMapBox.TabIndex = 3;
+            this.saveMapBox.TabStop = false;
+            this.saveMapBox.Text = "Save Maps";
+            // 
+            // mapSaveSelect
+            // 
+            this.mapSaveSelect.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.mapSaveSelect.FormattingEnabled = true;
+            this.mapSaveSelect.Items.AddRange(new object[] {
+            "Height Map",
+            "Color Map",
+            "Water Map",
+            "Custom Map 1",
+            "Custom Map 2",
+            "Normal Map",
+            "Slope Map",
+            "Hydraulic Erosion Map",
+            "Sediment Deposition Map",
+            "Thermal Erosion Map",
+            "Talus Map"});
+            this.mapSaveSelect.Location = new System.Drawing.Point(9, 19);
+            this.mapSaveSelect.Name = "mapSaveSelect";
+            this.mapSaveSelect.Size = new System.Drawing.Size(153, 21);
+            this.mapSaveSelect.TabIndex = 0;
+            // 
+            // saveMapButton
+            // 
+            this.saveMapButton.Location = new System.Drawing.Point(41, 46);
+            this.saveMapButton.Name = "saveMapButton";
+            this.saveMapButton.Size = new System.Drawing.Size(75, 23);
+            this.saveMapButton.TabIndex = 1;
+            this.saveMapButton.Text = "Save Map";
+            this.saveMapButton.UseVisualStyleBackColor = true;
+            this.saveMapButton.Click += new System.EventHandler(this.saveMapButton_Click);
+            // 
+            // customMapButton
+            // 
+            this.customMapButton.Location = new System.Drawing.Point(41, 279);
+            this.customMapButton.Name = "customMapButton";
+            this.customMapButton.Size = new System.Drawing.Size(75, 23);
+            this.customMapButton.TabIndex = 55;
+            this.customMapButton.Text = "Generate";
+            this.customMapButton.UseVisualStyleBackColor = true;
+            this.customMapButton.Click += new System.EventHandler(this.customMapButton_Click);
+            // 
+            // saveHeightMapDialog
+            // 
+            this.saveHeightMapDialog.Filter = "Windows Bitmap|*.bmp|TIFF Image|*.tif|RAW Heightmap|*.raw";
+            this.saveHeightMapDialog.FilterIndex = 2;
+            // 
+            // saveBmpDialog
+            // 
+            this.saveBmpDialog.Filter = "Windows Bitmap|*.bmp";
             // 
             // TerrainGeneratorMainForm
             // 
@@ -1483,8 +1883,20 @@
             ((System.ComponentModel.ISupportInitialize)(this.tErodePassNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.talusAngleNum)).EndInit();
             this.textureMapTab.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.texSamplePicture)).EndInit();
             this.colorMapGroup.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.texSamplePicture)).EndInit();
+            this.customMapBox.ResumeLayout(false);
+            this.customMapBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.minSlopeNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.minSlopeFuzzNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maxSlopeNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maxSlopeFuzzNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.minAltNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.minAltFuzzNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maxSplatAltNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maxAltFuzzNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splatNoiseAmountNum)).EndInit();
+            this.saveMapBox.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1578,5 +1990,32 @@
         private System.Windows.Forms.PictureBox texSamplePicture;
         private System.Windows.Forms.Button importTexSample;
         private System.Windows.Forms.OpenFileDialog importTexSampleDialog;
+        private System.Windows.Forms.GroupBox customMapBox;
+        private System.Windows.Forms.ComboBox customMapSelect;
+        private System.Windows.Forms.NumericUpDown maxSplatAltNum;
+        private System.Windows.Forms.NumericUpDown minAltFuzzNum;
+        private System.Windows.Forms.NumericUpDown minAltNum;
+        private System.Windows.Forms.NumericUpDown maxSlopeFuzzNum;
+        private System.Windows.Forms.NumericUpDown maxSlopeNum;
+        private System.Windows.Forms.NumericUpDown minSlopeFuzzNum;
+        private System.Windows.Forms.NumericUpDown minSlopeNum;
+        private System.Windows.Forms.Label maxAltiLabel;
+        private System.Windows.Forms.Label minAltFuzzLabel;
+        private System.Windows.Forms.Label minAltLabel;
+        private System.Windows.Forms.Label maxSlopeFuzzLabel;
+        private System.Windows.Forms.Label maxSlopeLabel;
+        private System.Windows.Forms.Label minSlopeFuzzLabel;
+        private System.Windows.Forms.Label minSlopeLabel;
+        private System.Windows.Forms.Label customMapLabel;
+        private System.Windows.Forms.GroupBox saveMapBox;
+        private System.Windows.Forms.Label noiseAmountLabel;
+        private System.Windows.Forms.Label maxAltFuzzLabel;
+        private System.Windows.Forms.NumericUpDown splatNoiseAmountNum;
+        private System.Windows.Forms.NumericUpDown maxAltFuzzNum;
+        private System.Windows.Forms.Button saveMapButton;
+        private System.Windows.Forms.ComboBox mapSaveSelect;
+        private System.Windows.Forms.Button customMapButton;
+        private System.Windows.Forms.SaveFileDialog saveHeightMapDialog;
+        private System.Windows.Forms.SaveFileDialog saveBmpDialog;
     }
 }

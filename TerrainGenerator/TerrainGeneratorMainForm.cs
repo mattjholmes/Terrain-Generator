@@ -75,6 +75,8 @@ namespace TerrainGenerator
             yOffset = (double)yOffsetNum.Value;
             xSize = (int)xSizeNum.Value;
             ySize = (int)ySizeNum.Value;
+            xMapSize = (float)xMapSizeNum.Value;
+            yMapSize = (float)yMapSizeNum.Value;
             maxAlt = (float)maxAltNum.Value;
             frequency = (double)frequencyNum.Value;
             octaves = (int)octavesNum.Value;
@@ -283,5 +285,312 @@ namespace TerrainGenerator
                 MessageBox.Show("Please generate or import terrain before adding noise.");
             }
         }
+
+        private void customMapButton_Click(object sender, EventArgs e)
+        {
+            if (terrain != null)
+            {
+                string choice = customMapSelect.Text;
+                double minSlope = (double)minSlopeNum.Value;
+                double minSlopeFuzz = (double)minSlopeFuzzNum.Value;
+                double maxSlope = (double)maxSlopeNum.Value;
+                double maxSlopeFuzz = (double)maxSlopeFuzzNum.Value;
+                double minAlt = (double)minAltNum.Value;
+                double minAltFuzz = (double)minAltFuzzNum.Value;
+                double maxSplatAlt = (double)maxSplatAltNum.Value;
+                double maxAltFuzz = (double)maxAltFuzzNum.Value;
+                double splatNoiseAmount = (double)splatNoiseAmountNum.Value;
+
+                switch (choice)
+                {
+                    case "Custom 1":
+                        customMap1Picture.Image = terrain.getSplatMap(minAlt, maxSplatAlt, minAltFuzz, maxAltFuzz, minSlope, maxSlope, minSlopeFuzz, maxSlopeFuzz, splatNoiseAmount);
+                        break;
+                    case "Custom 2":
+                        customMap2Picture.Image = terrain.getSplatMap(minAlt, maxSplatAlt, minAltFuzz, maxAltFuzz, minSlope, maxSlope, minSlopeFuzz, maxSlopeFuzz, splatNoiseAmount);
+                        break;
+                    default:
+                        MessageBox.Show("Please make a valid selection.");
+                        break;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please generate or import a terrain first.");
+            }
+        }
+
+        private void saveMapButton_Click(object sender, EventArgs e)
+        {
+            string choice = mapSaveSelect.Text;
+
+            switch (choice)
+            {
+                case "Height Map":
+                    SaveHeightMap();
+                    break;
+                case "Color Map":
+                    SaveColorMap();
+                    break;
+                case "Water Map":
+                    SaveWaterMap();
+                    break;
+                case "Custom Map 1":
+                    SaveCustomMap1();
+                    break;
+                case "Custom Map 2":
+                    SaveCustomMap2();
+                    break;
+                case "Normal Map":
+                    SaveNormalMap();
+                    break;
+                case "Slope Map":
+                    SaveSlopeMap();
+                    break;
+                case "Hydraulic Erosion Map":
+                    SaveHydroErosionMap();
+                    break;
+                case "Sediment Deposition Map":
+                    SaveDepositMap();
+                    break;
+                case "Thermal Erosion Map":
+                    SaveThermErosionMap();
+                    break;
+                case "Talus Map":
+                    SaveTalusMap();
+                    break;
+                default:
+                    MessageBox.Show("Please make a valid selection.");
+                    break;
+            }
+        }
+        void SaveHeightMap()
+        {
+            DialogResult result = saveHeightMapDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                if (saveHeightMapDialog.FileName.EndsWith(".bmp"))
+                {
+                    terrain.getHeightBitmap().Save(saveHeightMapDialog.FileName);
+                }
+                else if (saveHeightMapDialog.FileName.EndsWith(".tif"))
+                {
+                    terrain.saveTIFF(saveHeightMapDialog.FileName);
+                }
+                else if (saveHeightMapDialog.FileName.EndsWith(".raw"))
+                {
+                    terrain.saveHeightRaw(saveHeightMapDialog.FileName);
+                }
+                else
+                {
+                    MessageBox.Show("Invalid file type.");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Problem with saving.");
+            }
+        }
+        void SaveColorMap()
+        {
+            DialogResult result = saveBmpDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                if (saveBmpDialog.FileName.EndsWith(".bmp"))
+                {
+                    terrain.getTexture().Save(saveBmpDialog.FileName);
+                }
+                else
+                {
+                    MessageBox.Show("Invalid File Type.");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Problem with saving.");
+            }
+        }
+        void SaveWaterMap()
+        {
+            DialogResult result = saveHeightMapDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                if (saveHeightMapDialog.FileName.EndsWith(".bmp"))
+                {
+                    terrain.getWaterMap(0).Save(saveHeightMapDialog.FileName);
+                }
+                else if (saveHeightMapDialog.FileName.EndsWith(".tif"))
+                {
+                    terrain.saveWaterTIFF(saveHeightMapDialog.FileName);
+                }
+                else if (saveHeightMapDialog.FileName.EndsWith(".raw"))
+                {
+                    terrain.saveWaterRaw(saveHeightMapDialog.FileName, 0);
+                }
+                else
+                {
+                    MessageBox.Show("Invalid file type.");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Problem with saving.");
+            }
+        }
+        void SaveCustomMap1()
+        {
+            DialogResult result = saveBmpDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                if (saveBmpDialog.FileName.EndsWith(".bmp"))
+                {
+                    customMap1Picture.Image.Save(saveBmpDialog.FileName);
+                }
+                else
+                {
+                    MessageBox.Show("Invalid File Type.");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Problem with saving.");
+            }
+        }
+        void SaveCustomMap2()
+        {
+            DialogResult result = saveBmpDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                if (saveBmpDialog.FileName.EndsWith(".bmp"))
+                {
+                    customMap2Picture.Image.Save(saveBmpDialog.FileName);
+                }
+                else
+                {
+                    MessageBox.Show("Invalid File Type.");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Problem with saving.");
+            }
+        }
+        void SaveNormalMap()
+        {
+            DialogResult result = saveBmpDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                if (saveBmpDialog.FileName.EndsWith(".bmp"))
+                {
+                    terrain.getNormalMap().Save(saveBmpDialog.FileName);
+                }
+                else
+                {
+                    MessageBox.Show("Invalid File Type.");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Problem with saving.");
+            }
+        }
+        void SaveSlopeMap()
+        {
+            DialogResult result = saveBmpDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                if (saveBmpDialog.FileName.EndsWith(".bmp"))
+                {
+                    terrain.getSlopeMap().Save(saveBmpDialog.FileName);
+                }
+                else
+                {
+                    MessageBox.Show("Invalid File Type.");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Problem with saving.");
+            }
+        }
+        void SaveHydroErosionMap()
+        {
+            DialogResult result = saveBmpDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                if (saveBmpDialog.FileName.EndsWith(".bmp"))
+                {
+                    terrain.getErosionMap().Save(saveBmpDialog.FileName);
+                }
+                else
+                {
+                    MessageBox.Show("Invalid File Type.");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Problem with saving.");
+            }
+        }
+        void SaveDepositMap()
+        {
+            DialogResult result = saveBmpDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                if (saveBmpDialog.FileName.EndsWith(".bmp"))
+                {
+                    terrain.getDepositionMap().Save(saveBmpDialog.FileName);
+                }
+                else
+                {
+                    MessageBox.Show("Invalid File Type.");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Problem with saving.");
+            }
+        }
+        void SaveThermErosionMap()
+        {
+            DialogResult result = saveBmpDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                if (saveBmpDialog.FileName.EndsWith(".bmp"))
+                {
+                    terrain.getThermalErosionMap().Save(saveBmpDialog.FileName);
+                }
+                else
+                {
+                    MessageBox.Show("Invalid File Type.");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Problem with saving.");
+            }
+        }
+        void SaveTalusMap()
+        {
+            DialogResult result = saveBmpDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                if (saveBmpDialog.FileName.EndsWith(".bmp"))
+                {
+                    terrain.getTalusMap().Save(saveBmpDialog.FileName);
+                }
+                else
+                {
+                    MessageBox.Show("Invalid File Type.");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Problem with saving.");
+            }
+        }
     }
 }
+
+
+

@@ -252,12 +252,12 @@ namespace TerrainGenerator
                 for (int y = 0; y < input.Height; y ++)
                 {
                     inTerrain[x,y] = input.GetPixel(x, y).GetBrightness();
-                    //inTerrain[x,y] += rand.NextDouble() * (1 / maxAltitude) * 2;
+                    inTerrain[x,y] += rand.NextDouble() * (1 / maxAltitude) * 2;
                 }
             }
 
             // Smooth the input terrain using a slightly modified Laplacian smoothing algorithm
-            /*for (int x = 2; x < input.Width - 2; x++)
+            for (int x = 2; x < input.Width - 2; x++)
             {
                 for (int y = 2; y < input.Height - 2; y++)
                 {
@@ -273,7 +273,7 @@ namespace TerrainGenerator
                     }
                     inTerrain[x, y] = total/count;
                 }
-            }*/
+            }
 
             terrain = inTerrain;
             normalizeTerrain();
@@ -607,7 +607,7 @@ namespace TerrainGenerator
                         // calculate the flow in each direction, edge cases = 0
                         if (x - 1 >= 0)
                         {
-                            oFlux[x, y].left = Math.Max(0, oFlux[x, y].left + timeStep * pipeArea * ((grav  * ((terrain[x, y] + waterMap[x, y]) - (terrain[x - 1, y] + waterMap[x - 1, y]))) / pipeLength));
+                            oFlux[x, y].left = Math.Max(0, (oFlux[x, y].left + timeStep * pipeArea * ((grav  * maxAltitude * ((terrain[x, y] + waterMap[x, y]) - (terrain[x - 1, y] + waterMap[x - 1, y]))) / pipeLength))/ maxAltitude);
                         }
                         else
                         {
@@ -616,7 +616,7 @@ namespace TerrainGenerator
 
                         if (x + 1 < xSize)
                         {
-                            oFlux[x, y].right = Math.Max(0, oFlux[x, y].right + timeStep * pipeArea * ((grav  * ((terrain[x, y] + waterMap[x,y]) - (terrain[x + 1, y] + waterMap[x + 1, y]))) / pipeLength));
+                            oFlux[x, y].right = Math.Max(0, (oFlux[x, y].right + timeStep * pipeArea * ((grav  * maxAltitude * ((terrain[x, y] + waterMap[x,y]) - (terrain[x + 1, y] + waterMap[x + 1, y]))) / pipeLength)) / maxAltitude);
                         }
                         else
                         {
@@ -625,7 +625,7 @@ namespace TerrainGenerator
 
                         if (y - 1 >= 0)
                         {
-                            oFlux[x, y].up = Math.Max(0, oFlux[x, y].up + timeStep * pipeArea * ((grav  * ((terrain[x, y] + waterMap[x,y]) - (terrain[x, y - 1] + waterMap[x, y - 1]))) / pipeLength));
+                            oFlux[x, y].up = Math.Max(0, (oFlux[x, y].up + timeStep * pipeArea * ((grav  * maxAltitude * ((terrain[x, y] + waterMap[x,y]) - (terrain[x, y - 1] + waterMap[x, y - 1]))) / pipeLength)) / maxAltitude);
                         }
                         else
                         {
@@ -634,7 +634,7 @@ namespace TerrainGenerator
 
                         if (y + 1 < ySize)
                         {
-                            oFlux[x, y].down = Math.Max(0, oFlux[x, y].down + timeStep * pipeArea * ((grav  * ((terrain[x, y] + waterMap[x, y]) - (terrain[x, y + 1] + waterMap[x, y + 1]))) / pipeLength));
+                            oFlux[x, y].down = Math.Max(0, (oFlux[x, y].down + timeStep * pipeArea * ((grav  * maxAltitude * ((terrain[x, y] + waterMap[x, y]) - (terrain[x, y + 1] + waterMap[x, y + 1]))) / pipeLength)) / maxAltitude);
                         }
                         else
                         {
@@ -912,6 +912,39 @@ namespace TerrainGenerator
                     for (int x = 0; x < xSize; x++)
                     {
                         samples[x] = (ushort)(terrain[x, y] * ushort.MaxValue);
+                    }
+                    byte[] buffer = new byte[samples.Length * sizeof(ushort)];
+                    Buffer.BlockCopy(samples, 0, buffer, 0, buffer.Length);
+                    output.WriteScanline(buffer, y);
+                }
+            }
+        }
+
+        // save 16-bit grayscale TIFF watermap
+        public void saveWaterTIFF(string filename)
+        {
+            using (Tiff output = Tiff.Open(filename, "w"))
+            {
+                output.SetField(TiffTag.IMAGEWIDTH, xSize);
+                output.SetField(TiffTag.IMAGELENGTH, ySize);
+                output.SetField(TiffTag.SAMPLESPERPIXEL, 1); // 1 color channel
+                output.SetField(TiffTag.BITSPERSAMPLE, 16); // 16 bits per pixel
+                output.SetField(TiffTag.ORIENTATION, Orientation.TOPLEFT);
+                output.SetField(TiffTag.ROWSPERSTRIP, ySize);
+                output.SetField(TiffTag.XRESOLUTION, 88.0);
+                output.SetField(TiffTag.YRESOLUTION, 88.0);
+                output.SetField(TiffTag.RESOLUTIONUNIT, ResUnit.CENTIMETER);
+                output.SetField(TiffTag.PLANARCONFIG, PlanarConfig.CONTIG);
+                output.SetField(TiffTag.PHOTOMETRIC, Photometric.MINISBLACK);
+                output.SetField(TiffTag.COMPRESSION, Compression.NONE);
+                output.SetField(TiffTag.FILLORDER, FillOrder.MSB2LSB);
+
+                for (int y = 0; y < ySize; y++)
+                {
+                    ushort[] samples = new ushort[xSize];
+                    for (int x = 0; x < xSize; x++)
+                    {
+                        samples[x] = (ushort)(waterMap[x, y] * ushort.MaxValue);
                     }
                     byte[] buffer = new byte[samples.Length * sizeof(ushort)];
                     Buffer.BlockCopy(samples, 0, buffer, 0, buffer.Length);
