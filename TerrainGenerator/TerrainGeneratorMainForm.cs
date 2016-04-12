@@ -344,10 +344,14 @@ namespace TerrainGenerator
                     SaveWaterMap();
                     break;
                 case "Custom Map 1":
-                    SaveCustomMap1();
+                    if (customMap1Picture.Image != null)
+                    { SaveCustomMap1(); }
+                    else { MessageBox.Show("Please generate a custom map before saving."); }
                     break;
                 case "Custom Map 2":
-                    SaveCustomMap2();
+                    if (customMap2Picture.Image != null)
+                    { SaveCustomMap2(); }
+                    else { MessageBox.Show("Please generate a custom map before saving."); }
                     break;
                 case "Normal Map":
                     SaveNormalMap();

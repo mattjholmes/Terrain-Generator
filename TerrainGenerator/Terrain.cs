@@ -338,6 +338,16 @@ namespace TerrainGenerator
             tErosion = new double[xSize, ySize];
             talus = new double[xSize, ySize];
 
+            // initialize the components of the water velocity and flux arrays
+            for (int i = 0; i < xSize; i++)
+            {
+                for (int j = 0; j < ySize; j++)
+                {
+                    waterVel[i, j] = new Vector(0, 0);
+                    oFlux[i, j] = new OutflowFlux();
+                }
+            }
+
             terrain = inTerrain;
             normalizeTerrain();
             calculateNormals();
@@ -536,6 +546,7 @@ namespace TerrainGenerator
                     }
                 }// for y
             }// for x
+            normalizeTerrain();
             calculateNormals();
         }
 
@@ -912,6 +923,14 @@ namespace TerrainGenerator
                     for (int x = 0; x < xSize; x++)
                     {
                         samples[x] = (ushort)(terrain[x, y] * ushort.MaxValue);
+                        if (samples[x] > ushort.MaxValue)
+                        {
+                            samples[x] = ushort.MaxValue;
+                        }
+                        else if (samples[x] < 0)
+                        {
+                            samples[x] = 0;
+                        }
                     }
                     byte[] buffer = new byte[samples.Length * sizeof(ushort)];
                     Buffer.BlockCopy(samples, 0, buffer, 0, buffer.Length);
