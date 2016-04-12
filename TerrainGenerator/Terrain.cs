@@ -546,7 +546,6 @@ namespace TerrainGenerator
                     }
                 }// for y
             }// for x
-            normalizeTerrain();
             calculateNormals();
         }
 
