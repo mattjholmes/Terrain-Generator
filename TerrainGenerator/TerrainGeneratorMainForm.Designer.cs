@@ -110,37 +110,37 @@
             this.tErodePassNum = new System.Windows.Forms.NumericUpDown();
             this.talusAngleNum = new System.Windows.Forms.NumericUpDown();
             this.textureMapTab = new System.Windows.Forms.TabPage();
+            this.saveMapBox = new System.Windows.Forms.GroupBox();
+            this.saveMapButton = new System.Windows.Forms.Button();
+            this.mapSaveSelect = new System.Windows.Forms.ComboBox();
+            this.customMapBox = new System.Windows.Forms.GroupBox();
+            this.customMapButton = new System.Windows.Forms.Button();
+            this.noiseAmountLabel = new System.Windows.Forms.Label();
+            this.maxAltFuzzLabel = new System.Windows.Forms.Label();
+            this.splatNoiseAmountNum = new System.Windows.Forms.NumericUpDown();
+            this.maxAltFuzzNum = new System.Windows.Forms.NumericUpDown();
+            this.maxAltiLabel = new System.Windows.Forms.Label();
+            this.minAltFuzzLabel = new System.Windows.Forms.Label();
+            this.minAltLabel = new System.Windows.Forms.Label();
+            this.maxSlopeFuzzLabel = new System.Windows.Forms.Label();
+            this.maxSlopeLabel = new System.Windows.Forms.Label();
+            this.minSlopeFuzzLabel = new System.Windows.Forms.Label();
+            this.minSlopeLabel = new System.Windows.Forms.Label();
+            this.customMapLabel = new System.Windows.Forms.Label();
+            this.customMapSelect = new System.Windows.Forms.ComboBox();
+            this.maxSplatAltNum = new System.Windows.Forms.NumericUpDown();
+            this.minAltFuzzNum = new System.Windows.Forms.NumericUpDown();
+            this.minAltNum = new System.Windows.Forms.NumericUpDown();
+            this.maxSlopeFuzzNum = new System.Windows.Forms.NumericUpDown();
+            this.maxSlopeNum = new System.Windows.Forms.NumericUpDown();
+            this.minSlopeFuzzNum = new System.Windows.Forms.NumericUpDown();
+            this.minSlopeNum = new System.Windows.Forms.NumericUpDown();
             this.colorMapGroup = new System.Windows.Forms.GroupBox();
             this.importTexSample = new System.Windows.Forms.Button();
             this.texSamplePicture = new System.Windows.Forms.PictureBox();
             this.importMapDialog = new System.Windows.Forms.OpenFileDialog();
             this.generalTooltip = new System.Windows.Forms.ToolTip(this.components);
             this.importTexSampleDialog = new System.Windows.Forms.OpenFileDialog();
-            this.customMapBox = new System.Windows.Forms.GroupBox();
-            this.minSlopeNum = new System.Windows.Forms.NumericUpDown();
-            this.minSlopeFuzzNum = new System.Windows.Forms.NumericUpDown();
-            this.maxSlopeNum = new System.Windows.Forms.NumericUpDown();
-            this.maxSlopeFuzzNum = new System.Windows.Forms.NumericUpDown();
-            this.minAltNum = new System.Windows.Forms.NumericUpDown();
-            this.minAltFuzzNum = new System.Windows.Forms.NumericUpDown();
-            this.maxSplatAltNum = new System.Windows.Forms.NumericUpDown();
-            this.customMapSelect = new System.Windows.Forms.ComboBox();
-            this.customMapLabel = new System.Windows.Forms.Label();
-            this.minSlopeLabel = new System.Windows.Forms.Label();
-            this.minSlopeFuzzLabel = new System.Windows.Forms.Label();
-            this.maxSlopeLabel = new System.Windows.Forms.Label();
-            this.maxSlopeFuzzLabel = new System.Windows.Forms.Label();
-            this.minAltLabel = new System.Windows.Forms.Label();
-            this.minAltFuzzLabel = new System.Windows.Forms.Label();
-            this.maxAltiLabel = new System.Windows.Forms.Label();
-            this.maxAltFuzzNum = new System.Windows.Forms.NumericUpDown();
-            this.splatNoiseAmountNum = new System.Windows.Forms.NumericUpDown();
-            this.maxAltFuzzLabel = new System.Windows.Forms.Label();
-            this.noiseAmountLabel = new System.Windows.Forms.Label();
-            this.saveMapBox = new System.Windows.Forms.GroupBox();
-            this.mapSaveSelect = new System.Windows.Forms.ComboBox();
-            this.saveMapButton = new System.Windows.Forms.Button();
-            this.customMapButton = new System.Windows.Forms.Button();
             this.saveHeightMapDialog = new System.Windows.Forms.SaveFileDialog();
             this.saveBmpDialog = new System.Windows.Forms.SaveFileDialog();
             this.menuStrip1.SuspendLayout();
@@ -191,19 +191,19 @@
             ((System.ComponentModel.ISupportInitialize)(this.tErodePassNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.talusAngleNum)).BeginInit();
             this.textureMapTab.SuspendLayout();
+            this.saveMapBox.SuspendLayout();
+            this.customMapBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splatNoiseAmountNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maxAltFuzzNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maxSplatAltNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.minAltFuzzNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.minAltNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maxSlopeFuzzNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maxSlopeNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.minSlopeFuzzNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.minSlopeNum)).BeginInit();
             this.colorMapGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.texSamplePicture)).BeginInit();
-            this.customMapBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.minSlopeNum)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.minSlopeFuzzNum)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.maxSlopeNum)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.maxSlopeFuzzNum)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.minAltNum)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.minAltFuzzNum)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.maxSplatAltNum)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.maxAltFuzzNum)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.splatNoiseAmountNum)).BeginInit();
-            this.saveMapBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -277,7 +277,7 @@
             this.generateTerrainButton.Location = new System.Drawing.Point(37, 487);
             this.generateTerrainButton.Name = "generateTerrainButton";
             this.generateTerrainButton.Size = new System.Drawing.Size(103, 23);
-            this.generateTerrainButton.TabIndex = 0;
+            this.generateTerrainButton.TabIndex = 18;
             this.generateTerrainButton.Text = "Generate Terrain";
             this.generalTooltip.SetToolTip(this.generateTerrainButton, "Generate new terrain, overwriting any existing terrain.");
             this.generateTerrainButton.UseVisualStyleBackColor = true;
@@ -297,7 +297,7 @@
             this.mapTabs.Name = "mapTabs";
             this.mapTabs.SelectedIndex = 0;
             this.mapTabs.Size = new System.Drawing.Size(515, 571);
-            this.mapTabs.TabIndex = 3;
+            this.mapTabs.TabIndex = 0;
             // 
             // heightMapTab
             // 
@@ -441,7 +441,7 @@
             this.toolTabs.Name = "toolTabs";
             this.toolTabs.SelectedIndex = 0;
             this.toolTabs.Size = new System.Drawing.Size(188, 571);
-            this.toolTabs.TabIndex = 4;
+            this.toolTabs.TabIndex = 2;
             // 
             // generateTab
             // 
@@ -479,7 +479,7 @@
             this.noisePropBox.Location = new System.Drawing.Point(6, 144);
             this.noisePropBox.Name = "noisePropBox";
             this.noisePropBox.Size = new System.Drawing.Size(168, 228);
-            this.noisePropBox.TabIndex = 24;
+            this.noisePropBox.TabIndex = 2;
             this.noisePropBox.TabStop = false;
             this.noisePropBox.Text = "Noise Generator Properties";
             // 
@@ -504,7 +504,7 @@
             -2147352576});
             this.yOffsetNum.Name = "yOffsetNum";
             this.yOffsetNum.Size = new System.Drawing.Size(74, 20);
-            this.yOffsetNum.TabIndex = 38;
+            this.yOffsetNum.TabIndex = 9;
             this.yOffsetNum.ThousandsSeparator = true;
             // 
             // xOffsetNum
@@ -528,7 +528,7 @@
             -2147352576});
             this.xOffsetNum.Name = "xOffsetNum";
             this.xOffsetNum.Size = new System.Drawing.Size(74, 20);
-            this.xOffsetNum.TabIndex = 37;
+            this.xOffsetNum.TabIndex = 8;
             this.xOffsetNum.ThousandsSeparator = true;
             // 
             // octavesNum
@@ -546,7 +546,7 @@
             0});
             this.octavesNum.Name = "octavesNum";
             this.octavesNum.Size = new System.Drawing.Size(74, 20);
-            this.octavesNum.TabIndex = 32;
+            this.octavesNum.TabIndex = 11;
             this.octavesNum.Value = new decimal(new int[] {
             8,
             0,
@@ -569,7 +569,7 @@
             0});
             this.noiseWeightNum.Name = "noiseWeightNum";
             this.noiseWeightNum.Size = new System.Drawing.Size(74, 20);
-            this.noiseWeightNum.TabIndex = 36;
+            this.noiseWeightNum.TabIndex = 16;
             this.noiseWeightNum.ThousandsSeparator = true;
             this.noiseWeightNum.Value = new decimal(new int[] {
             5,
@@ -598,7 +598,7 @@
             0});
             this.muNum.Name = "muNum";
             this.muNum.Size = new System.Drawing.Size(74, 20);
-            this.muNum.TabIndex = 35;
+            this.muNum.TabIndex = 15;
             this.muNum.ThousandsSeparator = true;
             this.muNum.Value = new decimal(new int[] {
             1005,
@@ -627,7 +627,7 @@
             196608});
             this.persistenceNum.Name = "persistenceNum";
             this.persistenceNum.Size = new System.Drawing.Size(74, 20);
-            this.persistenceNum.TabIndex = 34;
+            this.persistenceNum.TabIndex = 14;
             this.persistenceNum.ThousandsSeparator = true;
             this.persistenceNum.Value = new decimal(new int[] {
             5,
@@ -656,7 +656,7 @@
             131072});
             this.lacunarityNum.Name = "lacunarityNum";
             this.lacunarityNum.Size = new System.Drawing.Size(74, 20);
-            this.lacunarityNum.TabIndex = 33;
+            this.lacunarityNum.TabIndex = 13;
             this.lacunarityNum.ThousandsSeparator = true;
             this.lacunarityNum.Value = new decimal(new int[] {
             19,
@@ -680,7 +680,7 @@
             131072});
             this.frequencyNum.Name = "frequencyNum";
             this.frequencyNum.Size = new System.Drawing.Size(74, 20);
-            this.frequencyNum.TabIndex = 32;
+            this.frequencyNum.TabIndex = 10;
             this.frequencyNum.ThousandsSeparator = true;
             this.frequencyNum.Value = new decimal(new int[] {
             1,
@@ -791,7 +791,7 @@
             this.mapPropertiesBox.Location = new System.Drawing.Point(6, 6);
             this.mapPropertiesBox.Name = "mapPropertiesBox";
             this.mapPropertiesBox.Size = new System.Drawing.Size(168, 132);
-            this.mapPropertiesBox.TabIndex = 23;
+            this.mapPropertiesBox.TabIndex = 1;
             this.mapPropertiesBox.TabStop = false;
             this.mapPropertiesBox.Text = "Map Properties";
             // 
@@ -816,7 +816,7 @@
             0});
             this.maxAltNum.Name = "maxAltNum";
             this.maxAltNum.Size = new System.Drawing.Size(74, 20);
-            this.maxAltNum.TabIndex = 31;
+            this.maxAltNum.TabIndex = 7;
             this.maxAltNum.ThousandsSeparator = true;
             this.maxAltNum.Value = new decimal(new int[] {
             5000,
@@ -839,7 +839,7 @@
             0});
             this.ySizeNum.Name = "ySizeNum";
             this.ySizeNum.Size = new System.Drawing.Size(74, 20);
-            this.ySizeNum.TabIndex = 30;
+            this.ySizeNum.TabIndex = 4;
             this.ySizeNum.Value = new decimal(new int[] {
             256,
             0,
@@ -861,7 +861,7 @@
             0});
             this.xSizeNum.Name = "xSizeNum";
             this.xSizeNum.Size = new System.Drawing.Size(74, 20);
-            this.xSizeNum.TabIndex = 29;
+            this.xSizeNum.TabIndex = 3;
             this.xSizeNum.Value = new decimal(new int[] {
             256,
             0,
@@ -889,7 +889,7 @@
             0});
             this.yMapSizeNum.Name = "yMapSizeNum";
             this.yMapSizeNum.Size = new System.Drawing.Size(74, 20);
-            this.yMapSizeNum.TabIndex = 28;
+            this.yMapSizeNum.TabIndex = 6;
             this.yMapSizeNum.ThousandsSeparator = true;
             this.yMapSizeNum.Value = new decimal(new int[] {
             10000,
@@ -918,7 +918,7 @@
             0});
             this.xMapSizeNum.Name = "xMapSizeNum";
             this.xMapSizeNum.Size = new System.Drawing.Size(74, 20);
-            this.xMapSizeNum.TabIndex = 25;
+            this.xMapSizeNum.TabIndex = 5;
             this.xMapSizeNum.ThousandsSeparator = true;
             this.xMapSizeNum.Value = new decimal(new int[] {
             10000,
@@ -983,7 +983,7 @@
             this.addNoiseButton.Location = new System.Drawing.Point(37, 516);
             this.addNoiseButton.Name = "addNoiseButton";
             this.addNoiseButton.Size = new System.Drawing.Size(103, 23);
-            this.addNoiseButton.TabIndex = 2;
+            this.addNoiseButton.TabIndex = 19;
             this.addNoiseButton.Text = "Add Noise";
             this.generalTooltip.SetToolTip(this.addNoiseButton, "Add noise, mixed with the existing terrain.");
             this.addNoiseButton.UseVisualStyleBackColor = true;
@@ -995,7 +995,7 @@
             this.importMapButton.Location = new System.Drawing.Point(37, 458);
             this.importMapButton.Name = "importMapButton";
             this.importMapButton.Size = new System.Drawing.Size(103, 23);
-            this.importMapButton.TabIndex = 1;
+            this.importMapButton.TabIndex = 17;
             this.importMapButton.Text = "Import Map";
             this.generalTooltip.SetToolTip(this.importMapButton, "Import a BMP or 16-bit grayscale TIFF.\r\n");
             this.importMapButton.UseVisualStyleBackColor = true;
@@ -1044,8 +1044,9 @@
             this.hydroErodeRunButton.Location = new System.Drawing.Point(45, 231);
             this.hydroErodeRunButton.Name = "hydroErodeRunButton";
             this.hydroErodeRunButton.Size = new System.Drawing.Size(75, 23);
-            this.hydroErodeRunButton.TabIndex = 38;
+            this.hydroErodeRunButton.TabIndex = 31;
             this.hydroErodeRunButton.Text = "Run";
+            this.generalTooltip.SetToolTip(this.hydroErodeRunButton, "Execute Hydraulic Erosion.");
             this.hydroErodeRunButton.UseVisualStyleBackColor = true;
             this.hydroErodeRunButton.Click += new System.EventHandler(this.hydroErodeRunButton_Click);
             // 
@@ -1057,6 +1058,7 @@
             this.hydroPassesLabel.Size = new System.Drawing.Size(41, 13);
             this.hydroPassesLabel.TabIndex = 48;
             this.hydroPassesLabel.Text = "Passes";
+            this.generalTooltip.SetToolTip(this.hydroPassesLabel, "Number of passes to execute.");
             // 
             // timeStepLabel
             // 
@@ -1066,6 +1068,7 @@
             this.timeStepLabel.Size = new System.Drawing.Size(55, 13);
             this.timeStepLabel.TabIndex = 47;
             this.timeStepLabel.Text = "Time Step";
+            this.generalTooltip.SetToolTip(this.timeStepLabel, "Time step is the amount of time to simulate per pass, in seconds.");
             // 
             // evapConstLabel
             // 
@@ -1075,6 +1078,7 @@
             this.evapConstLabel.Size = new System.Drawing.Size(64, 13);
             this.evapConstLabel.TabIndex = 46;
             this.evapConstLabel.Text = "Evaporation";
+            this.generalTooltip.SetToolTip(this.evapConstLabel, "Evaporation is the amount of water that is removed from each pixel on each pass.");
             // 
             // rainAmountLabel
             // 
@@ -1084,6 +1088,8 @@
             this.rainAmountLabel.Size = new System.Drawing.Size(68, 13);
             this.rainAmountLabel.TabIndex = 45;
             this.rainAmountLabel.Text = "Rain Amount";
+            this.generalTooltip.SetToolTip(this.rainAmountLabel, "Rain amount is the amount of water to be added to a pixel on the map when rain oc" +
+        "curs.");
             // 
             // rainChanceLabel
             // 
@@ -1093,6 +1099,7 @@
             this.rainChanceLabel.Size = new System.Drawing.Size(69, 13);
             this.rainChanceLabel.TabIndex = 44;
             this.rainChanceLabel.Text = "Rain Chance";
+            this.generalTooltip.SetToolTip(this.rainChanceLabel, "Rain chance is the chance, per pixel, per pass, that rain will be generated.");
             // 
             // waterCapLabel
             // 
@@ -1102,6 +1109,7 @@
             this.waterCapLabel.Size = new System.Drawing.Size(80, 13);
             this.waterCapLabel.TabIndex = 43;
             this.waterCapLabel.Text = "Water Capacity";
+            this.generalTooltip.SetToolTip(this.waterCapLabel, "Water Capacity is the total amount of sediment water may carry.");
             // 
             // depRateLabel
             // 
@@ -1111,6 +1119,7 @@
             this.depRateLabel.Size = new System.Drawing.Size(69, 13);
             this.depRateLabel.TabIndex = 42;
             this.depRateLabel.Text = "Deposit Rate";
+            this.generalTooltip.SetToolTip(this.depRateLabel, "Deposit rate is the amount of material that may be deposited in a single pass.\r\n");
             // 
             // solubilityLabel
             // 
@@ -1120,6 +1129,7 @@
             this.solubilityLabel.Size = new System.Drawing.Size(48, 13);
             this.solubilityLabel.TabIndex = 38;
             this.solubilityLabel.Text = "Solubility";
+            this.generalTooltip.SetToolTip(this.solubilityLabel, "Solubility is the amount of material that may be dissolved in a single pass.");
             // 
             // hydroPassesNum
             // 
@@ -1136,7 +1146,7 @@
             0});
             this.hydroPassesNum.Name = "hydroPassesNum";
             this.hydroPassesNum.Size = new System.Drawing.Size(74, 20);
-            this.hydroPassesNum.TabIndex = 41;
+            this.hydroPassesNum.TabIndex = 30;
             this.hydroPassesNum.ThousandsSeparator = true;
             this.hydroPassesNum.Value = new decimal(new int[] {
             200,
@@ -1165,7 +1175,7 @@
             131072});
             this.timeStepNum.Name = "timeStepNum";
             this.timeStepNum.Size = new System.Drawing.Size(74, 20);
-            this.timeStepNum.TabIndex = 40;
+            this.timeStepNum.TabIndex = 29;
             this.timeStepNum.ThousandsSeparator = true;
             this.timeStepNum.Value = new decimal(new int[] {
             1,
@@ -1189,10 +1199,10 @@
             0});
             this.evapConstNum.Name = "evapConstNum";
             this.evapConstNum.Size = new System.Drawing.Size(74, 20);
-            this.evapConstNum.TabIndex = 39;
+            this.evapConstNum.TabIndex = 28;
             this.evapConstNum.ThousandsSeparator = true;
             this.evapConstNum.Value = new decimal(new int[] {
-            5,
+            1,
             0,
             0,
             327680});
@@ -1213,13 +1223,13 @@
             0});
             this.rainAmountNum.Name = "rainAmountNum";
             this.rainAmountNum.Size = new System.Drawing.Size(74, 20);
-            this.rainAmountNum.TabIndex = 38;
+            this.rainAmountNum.TabIndex = 27;
             this.rainAmountNum.ThousandsSeparator = true;
             this.rainAmountNum.Value = new decimal(new int[] {
             1,
             0,
             0,
-            0});
+            65536});
             // 
             // rainChanceNum
             // 
@@ -1237,13 +1247,13 @@
             0});
             this.rainChanceNum.Name = "rainChanceNum";
             this.rainChanceNum.Size = new System.Drawing.Size(74, 20);
-            this.rainChanceNum.TabIndex = 37;
+            this.rainChanceNum.TabIndex = 26;
             this.rainChanceNum.ThousandsSeparator = true;
             this.rainChanceNum.Value = new decimal(new int[] {
             5,
             0,
             0,
-            196608});
+            131072});
             // 
             // waterCapNum
             // 
@@ -1261,7 +1271,7 @@
             0});
             this.waterCapNum.Name = "waterCapNum";
             this.waterCapNum.Size = new System.Drawing.Size(74, 20);
-            this.waterCapNum.TabIndex = 36;
+            this.waterCapNum.TabIndex = 25;
             this.waterCapNum.ThousandsSeparator = true;
             this.waterCapNum.Value = new decimal(new int[] {
             1,
@@ -1285,7 +1295,7 @@
             0});
             this.depRateNum.Name = "depRateNum";
             this.depRateNum.Size = new System.Drawing.Size(74, 20);
-            this.depRateNum.TabIndex = 35;
+            this.depRateNum.TabIndex = 24;
             this.depRateNum.ThousandsSeparator = true;
             this.depRateNum.Value = new decimal(new int[] {
             1,
@@ -1309,13 +1319,13 @@
             0});
             this.solubilityNum.Name = "solubilityNum";
             this.solubilityNum.Size = new System.Drawing.Size(74, 20);
-            this.solubilityNum.TabIndex = 34;
+            this.solubilityNum.TabIndex = 23;
             this.solubilityNum.ThousandsSeparator = true;
             this.solubilityNum.Value = new decimal(new int[] {
-            1,
+            5,
             0,
             0,
-            65536});
+            131072});
             // 
             // thermalErosionGroup
             // 
@@ -1336,8 +1346,9 @@
             this.tErodeRunButton.Location = new System.Drawing.Point(45, 76);
             this.tErodeRunButton.Name = "tErodeRunButton";
             this.tErodeRunButton.Size = new System.Drawing.Size(75, 23);
-            this.tErodeRunButton.TabIndex = 37;
+            this.tErodeRunButton.TabIndex = 22;
             this.tErodeRunButton.Text = "Run";
+            this.generalTooltip.SetToolTip(this.tErodeRunButton, "Execute Thermal Erosion");
             this.tErodeRunButton.UseVisualStyleBackColor = true;
             this.tErodeRunButton.Click += new System.EventHandler(this.tErodeRunButton_Click);
             // 
@@ -1349,6 +1360,7 @@
             this.tErodePassLabel.Size = new System.Drawing.Size(41, 13);
             this.tErodePassLabel.TabIndex = 36;
             this.tErodePassLabel.Text = "Passes";
+            this.generalTooltip.SetToolTip(this.tErodePassLabel, "Number of passes to execute");
             // 
             // talusAngleLabel
             // 
@@ -1358,6 +1370,7 @@
             this.talusAngleLabel.Size = new System.Drawing.Size(63, 13);
             this.talusAngleLabel.TabIndex = 35;
             this.talusAngleLabel.Text = "Talus Angle";
+            this.generalTooltip.SetToolTip(this.talusAngleLabel, "Talus angle is angle above which material will fall downslope");
             // 
             // tErodePassNum
             // 
@@ -1374,7 +1387,7 @@
             0});
             this.tErodePassNum.Name = "tErodePassNum";
             this.tErodePassNum.Size = new System.Drawing.Size(74, 20);
-            this.tErodePassNum.TabIndex = 34;
+            this.tErodePassNum.TabIndex = 21;
             this.tErodePassNum.ThousandsSeparator = true;
             this.tErodePassNum.Value = new decimal(new int[] {
             50,
@@ -1393,7 +1406,7 @@
             0});
             this.talusAngleNum.Name = "talusAngleNum";
             this.talusAngleNum.Size = new System.Drawing.Size(74, 20);
-            this.talusAngleNum.TabIndex = 33;
+            this.talusAngleNum.TabIndex = 20;
             this.talusAngleNum.ThousandsSeparator = true;
             this.talusAngleNum.Value = new decimal(new int[] {
             30,
@@ -1413,44 +1426,49 @@
             this.textureMapTab.Text = "Maps";
             this.textureMapTab.UseVisualStyleBackColor = true;
             // 
-            // colorMapGroup
+            // saveMapBox
             // 
-            this.colorMapGroup.Controls.Add(this.importTexSample);
-            this.colorMapGroup.Controls.Add(this.texSamplePicture);
-            this.colorMapGroup.Location = new System.Drawing.Point(6, 6);
-            this.colorMapGroup.Name = "colorMapGroup";
-            this.colorMapGroup.Size = new System.Drawing.Size(168, 142);
-            this.colorMapGroup.TabIndex = 1;
-            this.colorMapGroup.TabStop = false;
-            this.colorMapGroup.Text = "Color Map";
+            this.saveMapBox.Controls.Add(this.saveMapButton);
+            this.saveMapBox.Controls.Add(this.mapSaveSelect);
+            this.saveMapBox.Location = new System.Drawing.Point(6, 468);
+            this.saveMapBox.Name = "saveMapBox";
+            this.saveMapBox.Size = new System.Drawing.Size(168, 74);
+            this.saveMapBox.TabIndex = 3;
+            this.saveMapBox.TabStop = false;
+            this.saveMapBox.Text = "Save Maps";
             // 
-            // importTexSample
+            // saveMapButton
             // 
-            this.importTexSample.Location = new System.Drawing.Point(34, 108);
-            this.importTexSample.Name = "importTexSample";
-            this.importTexSample.Size = new System.Drawing.Size(92, 23);
-            this.importTexSample.TabIndex = 1;
-            this.importTexSample.Text = "Import Sample";
-            this.importTexSample.UseVisualStyleBackColor = true;
-            this.importTexSample.Click += new System.EventHandler(this.importTexSample_Click);
+            this.saveMapButton.Location = new System.Drawing.Point(41, 46);
+            this.saveMapButton.Name = "saveMapButton";
+            this.saveMapButton.Size = new System.Drawing.Size(75, 23);
+            this.saveMapButton.TabIndex = 45;
+            this.saveMapButton.Text = "Save Map";
+            this.generalTooltip.SetToolTip(this.saveMapButton, "Save the selected map.");
+            this.saveMapButton.UseVisualStyleBackColor = true;
+            this.saveMapButton.Click += new System.EventHandler(this.saveMapButton_Click);
             // 
-            // texSamplePicture
+            // mapSaveSelect
             // 
-            this.texSamplePicture.Location = new System.Drawing.Point(41, 19);
-            this.texSamplePicture.Name = "texSamplePicture";
-            this.texSamplePicture.Size = new System.Drawing.Size(80, 80);
-            this.texSamplePicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.texSamplePicture.TabIndex = 0;
-            this.texSamplePicture.TabStop = false;
-            // 
-            // importMapDialog
-            // 
-            this.importMapDialog.Filter = "Windows Bitmap|*.bmp|TIFF Images|*.tif";
-            this.importMapDialog.FilterIndex = 2;
-            // 
-            // importTexSampleDialog
-            // 
-            this.importTexSampleDialog.Filter = "Windows Bitmap|*.bmp";
+            this.mapSaveSelect.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.mapSaveSelect.FormattingEnabled = true;
+            this.mapSaveSelect.Items.AddRange(new object[] {
+            "Height Map",
+            "Color Map",
+            "Water Map",
+            "Custom Map 1",
+            "Custom Map 2",
+            "Normal Map",
+            "Slope Map",
+            "Hydraulic Erosion Map",
+            "Sediment Deposition Map",
+            "Thermal Erosion Map",
+            "Talus Map"});
+            this.mapSaveSelect.Location = new System.Drawing.Point(9, 19);
+            this.mapSaveSelect.Name = "mapSaveSelect";
+            this.mapSaveSelect.Size = new System.Drawing.Size(153, 21);
+            this.mapSaveSelect.TabIndex = 44;
+            this.generalTooltip.SetToolTip(this.mapSaveSelect, "Choose a map to be saved.");
             // 
             // customMapBox
             // 
@@ -1482,232 +1500,36 @@
             this.customMapBox.TabStop = false;
             this.customMapBox.Text = "Custom Splat Maps";
             // 
-            // minSlopeNum
+            // customMapButton
             // 
-            this.minSlopeNum.DecimalPlaces = 2;
-            this.minSlopeNum.Location = new System.Drawing.Point(88, 46);
-            this.minSlopeNum.Maximum = new decimal(new int[] {
-            90,
-            0,
-            0,
-            0});
-            this.minSlopeNum.Name = "minSlopeNum";
-            this.minSlopeNum.Size = new System.Drawing.Size(74, 20);
-            this.minSlopeNum.TabIndex = 35;
-            this.minSlopeNum.ThousandsSeparator = true;
+            this.customMapButton.Location = new System.Drawing.Point(41, 279);
+            this.customMapButton.Name = "customMapButton";
+            this.customMapButton.Size = new System.Drawing.Size(75, 23);
+            this.customMapButton.TabIndex = 43;
+            this.customMapButton.Text = "Generate";
+            this.generalTooltip.SetToolTip(this.customMapButton, "Create the selected splat map.");
+            this.customMapButton.UseVisualStyleBackColor = true;
+            this.customMapButton.Click += new System.EventHandler(this.customMapButton_Click);
             // 
-            // minSlopeFuzzNum
+            // noiseAmountLabel
             // 
-            this.minSlopeFuzzNum.DecimalPlaces = 2;
-            this.minSlopeFuzzNum.Location = new System.Drawing.Point(88, 72);
-            this.minSlopeFuzzNum.Maximum = new decimal(new int[] {
-            90,
-            0,
-            0,
-            0});
-            this.minSlopeFuzzNum.Name = "minSlopeFuzzNum";
-            this.minSlopeFuzzNum.Size = new System.Drawing.Size(74, 20);
-            this.minSlopeFuzzNum.TabIndex = 36;
-            this.minSlopeFuzzNum.ThousandsSeparator = true;
+            this.noiseAmountLabel.AutoSize = true;
+            this.noiseAmountLabel.Location = new System.Drawing.Point(6, 256);
+            this.noiseAmountLabel.Name = "noiseAmountLabel";
+            this.noiseAmountLabel.Size = new System.Drawing.Size(73, 13);
+            this.noiseAmountLabel.TabIndex = 54;
+            this.noiseAmountLabel.Text = "Noise Amount";
+            this.generalTooltip.SetToolTip(this.noiseAmountLabel, "Amount of gradient noise to be added to the splat map.");
             // 
-            // maxSlopeNum
+            // maxAltFuzzLabel
             // 
-            this.maxSlopeNum.DecimalPlaces = 2;
-            this.maxSlopeNum.Location = new System.Drawing.Point(88, 98);
-            this.maxSlopeNum.Maximum = new decimal(new int[] {
-            90,
-            0,
-            0,
-            0});
-            this.maxSlopeNum.Name = "maxSlopeNum";
-            this.maxSlopeNum.Size = new System.Drawing.Size(74, 20);
-            this.maxSlopeNum.TabIndex = 37;
-            this.maxSlopeNum.ThousandsSeparator = true;
-            this.maxSlopeNum.Value = new decimal(new int[] {
-            90,
-            0,
-            0,
-            0});
-            // 
-            // maxSlopeFuzzNum
-            // 
-            this.maxSlopeFuzzNum.DecimalPlaces = 2;
-            this.maxSlopeFuzzNum.Location = new System.Drawing.Point(88, 124);
-            this.maxSlopeFuzzNum.Maximum = new decimal(new int[] {
-            90,
-            0,
-            0,
-            0});
-            this.maxSlopeFuzzNum.Name = "maxSlopeFuzzNum";
-            this.maxSlopeFuzzNum.Size = new System.Drawing.Size(74, 20);
-            this.maxSlopeFuzzNum.TabIndex = 38;
-            this.maxSlopeFuzzNum.ThousandsSeparator = true;
-            // 
-            // minAltNum
-            // 
-            this.minAltNum.DecimalPlaces = 2;
-            this.minAltNum.Increment = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.minAltNum.Location = new System.Drawing.Point(88, 150);
-            this.minAltNum.Maximum = new decimal(new int[] {
-            9999999,
-            0,
-            0,
-            131072});
-            this.minAltNum.Name = "minAltNum";
-            this.minAltNum.Size = new System.Drawing.Size(74, 20);
-            this.minAltNum.TabIndex = 39;
-            this.minAltNum.ThousandsSeparator = true;
-            // 
-            // minAltFuzzNum
-            // 
-            this.minAltFuzzNum.DecimalPlaces = 2;
-            this.minAltFuzzNum.Increment = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.minAltFuzzNum.Location = new System.Drawing.Point(88, 176);
-            this.minAltFuzzNum.Maximum = new decimal(new int[] {
-            9999999,
-            0,
-            0,
-            131072});
-            this.minAltFuzzNum.Name = "minAltFuzzNum";
-            this.minAltFuzzNum.Size = new System.Drawing.Size(74, 20);
-            this.minAltFuzzNum.TabIndex = 40;
-            this.minAltFuzzNum.ThousandsSeparator = true;
-            // 
-            // maxSplatAltNum
-            // 
-            this.maxSplatAltNum.DecimalPlaces = 2;
-            this.maxSplatAltNum.Increment = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.maxSplatAltNum.Location = new System.Drawing.Point(88, 202);
-            this.maxSplatAltNum.Maximum = new decimal(new int[] {
-            9999999,
-            0,
-            0,
-            131072});
-            this.maxSplatAltNum.Name = "maxSplatAltNum";
-            this.maxSplatAltNum.Size = new System.Drawing.Size(74, 20);
-            this.maxSplatAltNum.TabIndex = 41;
-            this.maxSplatAltNum.ThousandsSeparator = true;
-            this.maxSplatAltNum.Value = new decimal(new int[] {
-            5000,
-            0,
-            0,
-            0});
-            // 
-            // customMapSelect
-            // 
-            this.customMapSelect.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.customMapSelect.FormattingEnabled = true;
-            this.customMapSelect.Items.AddRange(new object[] {
-            "Custom 1",
-            "Custom 2"});
-            this.customMapSelect.Location = new System.Drawing.Point(62, 19);
-            this.customMapSelect.MaxDropDownItems = 2;
-            this.customMapSelect.Name = "customMapSelect";
-            this.customMapSelect.Size = new System.Drawing.Size(100, 21);
-            this.customMapSelect.TabIndex = 42;
-            // 
-            // customMapLabel
-            // 
-            this.customMapLabel.AutoSize = true;
-            this.customMapLabel.Location = new System.Drawing.Point(6, 22);
-            this.customMapLabel.Name = "customMapLabel";
-            this.customMapLabel.Size = new System.Drawing.Size(42, 13);
-            this.customMapLabel.TabIndex = 43;
-            this.customMapLabel.Text = "Editing:";
-            // 
-            // minSlopeLabel
-            // 
-            this.minSlopeLabel.AutoSize = true;
-            this.minSlopeLabel.Location = new System.Drawing.Point(6, 48);
-            this.minSlopeLabel.Name = "minSlopeLabel";
-            this.minSlopeLabel.Size = new System.Drawing.Size(54, 13);
-            this.minSlopeLabel.TabIndex = 44;
-            this.minSlopeLabel.Text = "Min Slope";
-            // 
-            // minSlopeFuzzLabel
-            // 
-            this.minSlopeFuzzLabel.AutoSize = true;
-            this.minSlopeFuzzLabel.Location = new System.Drawing.Point(6, 74);
-            this.minSlopeFuzzLabel.Name = "minSlopeFuzzLabel";
-            this.minSlopeFuzzLabel.Size = new System.Drawing.Size(79, 13);
-            this.minSlopeFuzzLabel.TabIndex = 45;
-            this.minSlopeFuzzLabel.Text = "Min Slope Fuzz";
-            // 
-            // maxSlopeLabel
-            // 
-            this.maxSlopeLabel.AutoSize = true;
-            this.maxSlopeLabel.Location = new System.Drawing.Point(6, 100);
-            this.maxSlopeLabel.Name = "maxSlopeLabel";
-            this.maxSlopeLabel.Size = new System.Drawing.Size(57, 13);
-            this.maxSlopeLabel.TabIndex = 46;
-            this.maxSlopeLabel.Text = "Max Slope";
-            // 
-            // maxSlopeFuzzLabel
-            // 
-            this.maxSlopeFuzzLabel.AutoSize = true;
-            this.maxSlopeFuzzLabel.Location = new System.Drawing.Point(6, 126);
-            this.maxSlopeFuzzLabel.Name = "maxSlopeFuzzLabel";
-            this.maxSlopeFuzzLabel.Size = new System.Drawing.Size(82, 13);
-            this.maxSlopeFuzzLabel.TabIndex = 47;
-            this.maxSlopeFuzzLabel.Text = "Max Slope Fuzz";
-            // 
-            // minAltLabel
-            // 
-            this.minAltLabel.AutoSize = true;
-            this.minAltLabel.Location = new System.Drawing.Point(6, 152);
-            this.minAltLabel.Name = "minAltLabel";
-            this.minAltLabel.Size = new System.Drawing.Size(62, 13);
-            this.minAltLabel.TabIndex = 48;
-            this.minAltLabel.Text = "Min Altitude";
-            // 
-            // minAltFuzzLabel
-            // 
-            this.minAltFuzzLabel.AutoSize = true;
-            this.minAltFuzzLabel.Location = new System.Drawing.Point(6, 178);
-            this.minAltFuzzLabel.Name = "minAltFuzzLabel";
-            this.minAltFuzzLabel.Size = new System.Drawing.Size(64, 13);
-            this.minAltFuzzLabel.TabIndex = 49;
-            this.minAltFuzzLabel.Text = "Min Alt Fuzz";
-            // 
-            // maxAltiLabel
-            // 
-            this.maxAltiLabel.AutoSize = true;
-            this.maxAltiLabel.Location = new System.Drawing.Point(6, 204);
-            this.maxAltiLabel.Name = "maxAltiLabel";
-            this.maxAltiLabel.Size = new System.Drawing.Size(65, 13);
-            this.maxAltiLabel.TabIndex = 50;
-            this.maxAltiLabel.Text = "Max Altitude";
-            // 
-            // maxAltFuzzNum
-            // 
-            this.maxAltFuzzNum.DecimalPlaces = 2;
-            this.maxAltFuzzNum.Increment = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.maxAltFuzzNum.Location = new System.Drawing.Point(88, 228);
-            this.maxAltFuzzNum.Maximum = new decimal(new int[] {
-            9999999,
-            0,
-            0,
-            131072});
-            this.maxAltFuzzNum.Name = "maxAltFuzzNum";
-            this.maxAltFuzzNum.Size = new System.Drawing.Size(74, 20);
-            this.maxAltFuzzNum.TabIndex = 51;
-            this.maxAltFuzzNum.ThousandsSeparator = true;
+            this.maxAltFuzzLabel.AutoSize = true;
+            this.maxAltFuzzLabel.Location = new System.Drawing.Point(6, 230);
+            this.maxAltFuzzLabel.Name = "maxAltFuzzLabel";
+            this.maxAltFuzzLabel.Size = new System.Drawing.Size(67, 13);
+            this.maxAltFuzzLabel.TabIndex = 53;
+            this.maxAltFuzzLabel.Text = "Max Alt Fuzz";
+            this.generalTooltip.SetToolTip(this.maxAltFuzzLabel, "Number of meters below the max altitude to interpolate.");
             // 
             // splatNoiseAmountNum
             // 
@@ -1725,7 +1547,7 @@
             0});
             this.splatNoiseAmountNum.Name = "splatNoiseAmountNum";
             this.splatNoiseAmountNum.Size = new System.Drawing.Size(74, 20);
-            this.splatNoiseAmountNum.TabIndex = 52;
+            this.splatNoiseAmountNum.TabIndex = 42;
             this.splatNoiseAmountNum.ThousandsSeparator = true;
             this.splatNoiseAmountNum.Value = new decimal(new int[] {
             1,
@@ -1733,75 +1555,282 @@
             0,
             65536});
             // 
-            // maxAltFuzzLabel
+            // maxAltFuzzNum
             // 
-            this.maxAltFuzzLabel.AutoSize = true;
-            this.maxAltFuzzLabel.Location = new System.Drawing.Point(6, 230);
-            this.maxAltFuzzLabel.Name = "maxAltFuzzLabel";
-            this.maxAltFuzzLabel.Size = new System.Drawing.Size(67, 13);
-            this.maxAltFuzzLabel.TabIndex = 53;
-            this.maxAltFuzzLabel.Text = "Max Alt Fuzz";
+            this.maxAltFuzzNum.DecimalPlaces = 2;
+            this.maxAltFuzzNum.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.maxAltFuzzNum.Location = new System.Drawing.Point(88, 228);
+            this.maxAltFuzzNum.Maximum = new decimal(new int[] {
+            9999999,
+            0,
+            0,
+            131072});
+            this.maxAltFuzzNum.Name = "maxAltFuzzNum";
+            this.maxAltFuzzNum.Size = new System.Drawing.Size(74, 20);
+            this.maxAltFuzzNum.TabIndex = 41;
+            this.maxAltFuzzNum.ThousandsSeparator = true;
             // 
-            // noiseAmountLabel
+            // maxAltiLabel
             // 
-            this.noiseAmountLabel.AutoSize = true;
-            this.noiseAmountLabel.Location = new System.Drawing.Point(6, 256);
-            this.noiseAmountLabel.Name = "noiseAmountLabel";
-            this.noiseAmountLabel.Size = new System.Drawing.Size(73, 13);
-            this.noiseAmountLabel.TabIndex = 54;
-            this.noiseAmountLabel.Text = "Noise Amount";
+            this.maxAltiLabel.AutoSize = true;
+            this.maxAltiLabel.Location = new System.Drawing.Point(6, 204);
+            this.maxAltiLabel.Name = "maxAltiLabel";
+            this.maxAltiLabel.Size = new System.Drawing.Size(65, 13);
+            this.maxAltiLabel.TabIndex = 50;
+            this.maxAltiLabel.Text = "Max Altitude";
+            this.generalTooltip.SetToolTip(this.maxAltiLabel, "Maximum altitude, in meters, for this splat map.");
             // 
-            // saveMapBox
+            // minAltFuzzLabel
             // 
-            this.saveMapBox.Controls.Add(this.saveMapButton);
-            this.saveMapBox.Controls.Add(this.mapSaveSelect);
-            this.saveMapBox.Location = new System.Drawing.Point(6, 468);
-            this.saveMapBox.Name = "saveMapBox";
-            this.saveMapBox.Size = new System.Drawing.Size(168, 74);
-            this.saveMapBox.TabIndex = 3;
-            this.saveMapBox.TabStop = false;
-            this.saveMapBox.Text = "Save Maps";
+            this.minAltFuzzLabel.AutoSize = true;
+            this.minAltFuzzLabel.Location = new System.Drawing.Point(6, 178);
+            this.minAltFuzzLabel.Name = "minAltFuzzLabel";
+            this.minAltFuzzLabel.Size = new System.Drawing.Size(64, 13);
+            this.minAltFuzzLabel.TabIndex = 49;
+            this.minAltFuzzLabel.Text = "Min Alt Fuzz";
+            this.generalTooltip.SetToolTip(this.minAltFuzzLabel, "Number of meters above the min altitude to interpolate.");
             // 
-            // mapSaveSelect
+            // minAltLabel
             // 
-            this.mapSaveSelect.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.mapSaveSelect.FormattingEnabled = true;
-            this.mapSaveSelect.Items.AddRange(new object[] {
-            "Height Map",
-            "Color Map",
-            "Water Map",
-            "Custom Map 1",
-            "Custom Map 2",
-            "Normal Map",
-            "Slope Map",
-            "Hydraulic Erosion Map",
-            "Sediment Deposition Map",
-            "Thermal Erosion Map",
-            "Talus Map"});
-            this.mapSaveSelect.Location = new System.Drawing.Point(9, 19);
-            this.mapSaveSelect.Name = "mapSaveSelect";
-            this.mapSaveSelect.Size = new System.Drawing.Size(153, 21);
-            this.mapSaveSelect.TabIndex = 0;
+            this.minAltLabel.AutoSize = true;
+            this.minAltLabel.Location = new System.Drawing.Point(6, 152);
+            this.minAltLabel.Name = "minAltLabel";
+            this.minAltLabel.Size = new System.Drawing.Size(62, 13);
+            this.minAltLabel.TabIndex = 48;
+            this.minAltLabel.Text = "Min Altitude";
+            this.generalTooltip.SetToolTip(this.minAltLabel, "Minimum altitude, in meters, for this splat map.");
             // 
-            // saveMapButton
+            // maxSlopeFuzzLabel
             // 
-            this.saveMapButton.Location = new System.Drawing.Point(41, 46);
-            this.saveMapButton.Name = "saveMapButton";
-            this.saveMapButton.Size = new System.Drawing.Size(75, 23);
-            this.saveMapButton.TabIndex = 1;
-            this.saveMapButton.Text = "Save Map";
-            this.saveMapButton.UseVisualStyleBackColor = true;
-            this.saveMapButton.Click += new System.EventHandler(this.saveMapButton_Click);
+            this.maxSlopeFuzzLabel.AutoSize = true;
+            this.maxSlopeFuzzLabel.Location = new System.Drawing.Point(6, 126);
+            this.maxSlopeFuzzLabel.Name = "maxSlopeFuzzLabel";
+            this.maxSlopeFuzzLabel.Size = new System.Drawing.Size(82, 13);
+            this.maxSlopeFuzzLabel.TabIndex = 47;
+            this.maxSlopeFuzzLabel.Text = "Max Slope Fuzz";
+            this.generalTooltip.SetToolTip(this.maxSlopeFuzzLabel, "Number of degrees below the max slope to be interpolated.");
             // 
-            // customMapButton
+            // maxSlopeLabel
             // 
-            this.customMapButton.Location = new System.Drawing.Point(41, 279);
-            this.customMapButton.Name = "customMapButton";
-            this.customMapButton.Size = new System.Drawing.Size(75, 23);
-            this.customMapButton.TabIndex = 55;
-            this.customMapButton.Text = "Generate";
-            this.customMapButton.UseVisualStyleBackColor = true;
-            this.customMapButton.Click += new System.EventHandler(this.customMapButton_Click);
+            this.maxSlopeLabel.AutoSize = true;
+            this.maxSlopeLabel.Location = new System.Drawing.Point(6, 100);
+            this.maxSlopeLabel.Name = "maxSlopeLabel";
+            this.maxSlopeLabel.Size = new System.Drawing.Size(57, 13);
+            this.maxSlopeLabel.TabIndex = 46;
+            this.maxSlopeLabel.Text = "Max Slope";
+            this.generalTooltip.SetToolTip(this.maxSlopeLabel, "Maximum slope, in degrees, for this splat map.");
+            // 
+            // minSlopeFuzzLabel
+            // 
+            this.minSlopeFuzzLabel.AutoSize = true;
+            this.minSlopeFuzzLabel.Location = new System.Drawing.Point(6, 74);
+            this.minSlopeFuzzLabel.Name = "minSlopeFuzzLabel";
+            this.minSlopeFuzzLabel.Size = new System.Drawing.Size(79, 13);
+            this.minSlopeFuzzLabel.TabIndex = 45;
+            this.minSlopeFuzzLabel.Text = "Min Slope Fuzz";
+            this.generalTooltip.SetToolTip(this.minSlopeFuzzLabel, "Range, in degrees, that will be interpolated above the min slope.");
+            // 
+            // minSlopeLabel
+            // 
+            this.minSlopeLabel.AutoSize = true;
+            this.minSlopeLabel.Location = new System.Drawing.Point(6, 48);
+            this.minSlopeLabel.Name = "minSlopeLabel";
+            this.minSlopeLabel.Size = new System.Drawing.Size(54, 13);
+            this.minSlopeLabel.TabIndex = 44;
+            this.minSlopeLabel.Text = "Min Slope";
+            this.generalTooltip.SetToolTip(this.minSlopeLabel, "Minimum Slope, in degrees, for this splat map.");
+            // 
+            // customMapLabel
+            // 
+            this.customMapLabel.AutoSize = true;
+            this.customMapLabel.Location = new System.Drawing.Point(6, 22);
+            this.customMapLabel.Name = "customMapLabel";
+            this.customMapLabel.Size = new System.Drawing.Size(42, 13);
+            this.customMapLabel.TabIndex = 43;
+            this.customMapLabel.Text = "Editing:";
+            // 
+            // customMapSelect
+            // 
+            this.customMapSelect.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.customMapSelect.FormattingEnabled = true;
+            this.customMapSelect.Items.AddRange(new object[] {
+            "Custom 1",
+            "Custom 2"});
+            this.customMapSelect.Location = new System.Drawing.Point(62, 19);
+            this.customMapSelect.MaxDropDownItems = 2;
+            this.customMapSelect.Name = "customMapSelect";
+            this.customMapSelect.Size = new System.Drawing.Size(100, 21);
+            this.customMapSelect.TabIndex = 33;
+            this.generalTooltip.SetToolTip(this.customMapSelect, "Select which splat map is being edited.");
+            // 
+            // maxSplatAltNum
+            // 
+            this.maxSplatAltNum.DecimalPlaces = 2;
+            this.maxSplatAltNum.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.maxSplatAltNum.Location = new System.Drawing.Point(88, 202);
+            this.maxSplatAltNum.Maximum = new decimal(new int[] {
+            9999999,
+            0,
+            0,
+            131072});
+            this.maxSplatAltNum.Name = "maxSplatAltNum";
+            this.maxSplatAltNum.Size = new System.Drawing.Size(74, 20);
+            this.maxSplatAltNum.TabIndex = 40;
+            this.maxSplatAltNum.ThousandsSeparator = true;
+            this.maxSplatAltNum.Value = new decimal(new int[] {
+            5000,
+            0,
+            0,
+            0});
+            // 
+            // minAltFuzzNum
+            // 
+            this.minAltFuzzNum.DecimalPlaces = 2;
+            this.minAltFuzzNum.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.minAltFuzzNum.Location = new System.Drawing.Point(88, 176);
+            this.minAltFuzzNum.Maximum = new decimal(new int[] {
+            9999999,
+            0,
+            0,
+            131072});
+            this.minAltFuzzNum.Name = "minAltFuzzNum";
+            this.minAltFuzzNum.Size = new System.Drawing.Size(74, 20);
+            this.minAltFuzzNum.TabIndex = 39;
+            this.minAltFuzzNum.ThousandsSeparator = true;
+            // 
+            // minAltNum
+            // 
+            this.minAltNum.DecimalPlaces = 2;
+            this.minAltNum.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.minAltNum.Location = new System.Drawing.Point(88, 150);
+            this.minAltNum.Maximum = new decimal(new int[] {
+            9999999,
+            0,
+            0,
+            131072});
+            this.minAltNum.Name = "minAltNum";
+            this.minAltNum.Size = new System.Drawing.Size(74, 20);
+            this.minAltNum.TabIndex = 38;
+            this.minAltNum.ThousandsSeparator = true;
+            // 
+            // maxSlopeFuzzNum
+            // 
+            this.maxSlopeFuzzNum.DecimalPlaces = 2;
+            this.maxSlopeFuzzNum.Location = new System.Drawing.Point(88, 124);
+            this.maxSlopeFuzzNum.Maximum = new decimal(new int[] {
+            90,
+            0,
+            0,
+            0});
+            this.maxSlopeFuzzNum.Name = "maxSlopeFuzzNum";
+            this.maxSlopeFuzzNum.Size = new System.Drawing.Size(74, 20);
+            this.maxSlopeFuzzNum.TabIndex = 37;
+            this.maxSlopeFuzzNum.ThousandsSeparator = true;
+            // 
+            // maxSlopeNum
+            // 
+            this.maxSlopeNum.DecimalPlaces = 2;
+            this.maxSlopeNum.Location = new System.Drawing.Point(88, 98);
+            this.maxSlopeNum.Maximum = new decimal(new int[] {
+            90,
+            0,
+            0,
+            0});
+            this.maxSlopeNum.Name = "maxSlopeNum";
+            this.maxSlopeNum.Size = new System.Drawing.Size(74, 20);
+            this.maxSlopeNum.TabIndex = 36;
+            this.maxSlopeNum.ThousandsSeparator = true;
+            this.maxSlopeNum.Value = new decimal(new int[] {
+            90,
+            0,
+            0,
+            0});
+            // 
+            // minSlopeFuzzNum
+            // 
+            this.minSlopeFuzzNum.DecimalPlaces = 2;
+            this.minSlopeFuzzNum.Location = new System.Drawing.Point(88, 72);
+            this.minSlopeFuzzNum.Maximum = new decimal(new int[] {
+            90,
+            0,
+            0,
+            0});
+            this.minSlopeFuzzNum.Name = "minSlopeFuzzNum";
+            this.minSlopeFuzzNum.Size = new System.Drawing.Size(74, 20);
+            this.minSlopeFuzzNum.TabIndex = 35;
+            this.minSlopeFuzzNum.ThousandsSeparator = true;
+            // 
+            // minSlopeNum
+            // 
+            this.minSlopeNum.DecimalPlaces = 2;
+            this.minSlopeNum.Location = new System.Drawing.Point(88, 46);
+            this.minSlopeNum.Maximum = new decimal(new int[] {
+            90,
+            0,
+            0,
+            0});
+            this.minSlopeNum.Name = "minSlopeNum";
+            this.minSlopeNum.Size = new System.Drawing.Size(74, 20);
+            this.minSlopeNum.TabIndex = 34;
+            this.minSlopeNum.ThousandsSeparator = true;
+            // 
+            // colorMapGroup
+            // 
+            this.colorMapGroup.Controls.Add(this.importTexSample);
+            this.colorMapGroup.Controls.Add(this.texSamplePicture);
+            this.colorMapGroup.Location = new System.Drawing.Point(6, 6);
+            this.colorMapGroup.Name = "colorMapGroup";
+            this.colorMapGroup.Size = new System.Drawing.Size(168, 142);
+            this.colorMapGroup.TabIndex = 1;
+            this.colorMapGroup.TabStop = false;
+            this.colorMapGroup.Text = "Color Map";
+            // 
+            // importTexSample
+            // 
+            this.importTexSample.Location = new System.Drawing.Point(34, 108);
+            this.importTexSample.Name = "importTexSample";
+            this.importTexSample.Size = new System.Drawing.Size(92, 23);
+            this.importTexSample.TabIndex = 32;
+            this.importTexSample.Text = "Import Sample";
+            this.generalTooltip.SetToolTip(this.importTexSample, "Import a new texture sample, in BMP format, to be used to generate the color map." +
+        "");
+            this.importTexSample.UseVisualStyleBackColor = true;
+            this.importTexSample.Click += new System.EventHandler(this.importTexSample_Click);
+            // 
+            // texSamplePicture
+            // 
+            this.texSamplePicture.Location = new System.Drawing.Point(41, 19);
+            this.texSamplePicture.Name = "texSamplePicture";
+            this.texSamplePicture.Size = new System.Drawing.Size(80, 80);
+            this.texSamplePicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.texSamplePicture.TabIndex = 0;
+            this.texSamplePicture.TabStop = false;
+            this.generalTooltip.SetToolTip(this.texSamplePicture, "The texture sample being used to generate the color map.");
+            // 
+            // importMapDialog
+            // 
+            this.importMapDialog.Filter = "Windows Bitmap|*.bmp|TIFF Images|*.tif";
+            this.importMapDialog.FilterIndex = 2;
+            // 
+            // importTexSampleDialog
+            // 
+            this.importTexSampleDialog.Filter = "Windows Bitmap|*.bmp";
             // 
             // saveHeightMapDialog
             // 
@@ -1883,20 +1912,20 @@
             ((System.ComponentModel.ISupportInitialize)(this.tErodePassNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.talusAngleNum)).EndInit();
             this.textureMapTab.ResumeLayout(false);
-            this.colorMapGroup.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.texSamplePicture)).EndInit();
+            this.saveMapBox.ResumeLayout(false);
             this.customMapBox.ResumeLayout(false);
             this.customMapBox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.minSlopeNum)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.minSlopeFuzzNum)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.maxSlopeNum)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.maxSlopeFuzzNum)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.minAltNum)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.minAltFuzzNum)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.maxSplatAltNum)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.maxAltFuzzNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.splatNoiseAmountNum)).EndInit();
-            this.saveMapBox.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.maxAltFuzzNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maxSplatAltNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.minAltFuzzNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.minAltNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maxSlopeFuzzNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maxSlopeNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.minSlopeFuzzNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.minSlopeNum)).EndInit();
+            this.colorMapGroup.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.texSamplePicture)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

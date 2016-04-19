@@ -378,6 +378,7 @@ namespace TerrainGenerator
         }
         void SaveHeightMap()
         {
+            saveHeightMapDialog.FileName = "";
             DialogResult result = saveHeightMapDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
@@ -405,6 +406,7 @@ namespace TerrainGenerator
         }
         void SaveColorMap()
         {
+            saveBmpDialog.FileName = "";
             DialogResult result = saveBmpDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
@@ -424,6 +426,7 @@ namespace TerrainGenerator
         }
         void SaveWaterMap()
         {
+            saveHeightMapDialog.FileName = "";
             DialogResult result = saveHeightMapDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
@@ -451,6 +454,7 @@ namespace TerrainGenerator
         }
         void SaveCustomMap1()
         {
+            saveBmpDialog.FileName = "";
             DialogResult result = saveBmpDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
@@ -470,6 +474,7 @@ namespace TerrainGenerator
         }
         void SaveCustomMap2()
         {
+            saveBmpDialog.FileName = "";
             DialogResult result = saveBmpDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
@@ -489,6 +494,7 @@ namespace TerrainGenerator
         }
         void SaveNormalMap()
         {
+            saveBmpDialog.FileName = "";
             DialogResult result = saveBmpDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
@@ -508,6 +514,7 @@ namespace TerrainGenerator
         }
         void SaveSlopeMap()
         {
+            saveBmpDialog.FileName = "";
             DialogResult result = saveBmpDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
@@ -527,6 +534,7 @@ namespace TerrainGenerator
         }
         void SaveHydroErosionMap()
         {
+            saveBmpDialog.FileName = "";
             DialogResult result = saveBmpDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
@@ -546,6 +554,7 @@ namespace TerrainGenerator
         }
         void SaveDepositMap()
         {
+            saveBmpDialog.FileName = "";
             DialogResult result = saveBmpDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
@@ -565,6 +574,7 @@ namespace TerrainGenerator
         }
         void SaveThermErosionMap()
         {
+            saveBmpDialog.FileName = "";
             DialogResult result = saveBmpDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
@@ -584,6 +594,7 @@ namespace TerrainGenerator
         }
         void SaveTalusMap()
         {
+            saveBmpDialog.FileName = "";
             DialogResult result = saveBmpDialog.ShowDialog();
             if (result == DialogResult.OK)
             {

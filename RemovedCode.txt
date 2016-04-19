@@ -587,3 +587,226 @@ class WaterParticle
             return total / maxValue;
         }
         */
+
+		using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media.Media3D;
+
+namespace TerrainGenerator
+{
+    class WaterParticleSystem
+    {
+        public struct Particle
+        {
+            Vector position;
+            Vector velocity;
+            int life;
+
+            public Particle(Vector pos)
+            {
+                position = pos;
+                velocity = new Vector();
+                life = 0;
+            }
+
+            public Vector getPosition()
+            {
+                return position;
+            }
+
+            public Vector getVelocity()
+            {
+                return velocity;
+            }
+
+            public void setPosition(Vector p)
+            {
+                position = p;
+            }
+
+            public void setVelocity(Vector v)
+            {
+                velocity = v;
+            }
+
+            public void stepLife()
+            {
+                life++;
+            }
+
+            public int getLife()
+            {
+                return life;
+            }
+        }
+
+        public WaterParticleSystem(int size)
+        {
+            this.size = size;
+            particles = new Particle[size];
+        }
+
+        int size = 0;
+        int elements = 0;
+        Particle[] particles;
+        float flowSpeed = 50;
+        double flowMomentum = 0.5;
+        double minSpeed = 0.75;
+        int minLife = 20;
+        Random rand = new Random();
+
+        public int getSize()
+        {
+            return size;
+        }
+
+        public int getNumParticles()
+        {
+            return elements;
+        }
+
+        public void setSize(int size)
+        {
+            this.size = size;
+            particles = new Particle[size];
+        }
+
+        public Particle getParticleAt(int index)
+        {
+            return particles.ElementAt(index);
+        }
+
+        public void addParticle(Particle w)
+        {
+            if (elements < size)
+            {
+                particles[elements] = w;
+                elements++;
+            }
+        }
+
+        public void runStep(Vector3D[,] normals, double xScale, double yScale, int xSize, int ySize)
+        {
+            for (int i = 0; i < particles.Length; i++)
+            {
+                int xPos = (int)(particles[i].getPosition().X / xScale);
+                int yPos = (int)(particles[i].getPosition().Y / yScale);
+                if (xPos >= 0 && xPos < xSize && yPos >= 0 && yPos < ySize)
+                {
+                    Vector v = new Vector(normals[xPos, yPos].X, -normals[xPos, yPos].Y);
+                    v *= flowSpeed;
+                    v = (v * 1 / flowMomentum) + (particles[i].getVelocity() * flowMomentum);
+                    particles[i].setVelocity(v);
+                    particles[i].setPosition(particles[i].getPosition() + particles[i].getVelocity());
+                    particles[i].stepLife();
+                    if (particles[i].getVelocity().Length < minSpeed && particles[i].getLife() > minLife)
+                    {
+                        particles[i] = new Particle(new Vector(rand.Next(xSize) * xScale, rand.Next(ySize) * yScale));
+                    }
+                }
+            }
+        }
+    }
+}
+
+            /*
+            int xSize = 512;
+            int ySize = xSize;
+            float xMapSize = 20000;
+            float yMapSize = xMapSize;
+            float maxAlt = 5000;
+            int octaves = 8;
+            double frequency = 1;
+            double persistance = .45;
+            double lacunarity = 1.95;
+            double mu = 1.01; // useful range - 1.0 - about 1.02
+            double xOffset = 9.6;
+            double yOffset = 23.7;
+            
+            string filename = "terrain.raw";
+            string bmpFile = "terrain.bmp";
+            string texFile = "texture.bmp";
+            string tifFile = "terrain.tif";
+            string inBmpFile = "squarebasin.bmp";
+            string erosionMap = "erosionmap.bmp";
+            string depositionMap = "depositionMap.bmp";
+            string waterMap = "watermap.bmp";
+            string waterRaw = "water.raw";
+            string normalMap = "normalmap.bmp";
+            string slopeMap = "slope.bmp";
+            string inTif = "input.tif";
+            Bitmap inBmp = new Bitmap(inBmpFile);
+            Bitmap bmp = new Bitmap(xSize, ySize);
+            Terrain terrain = new Terrain(xSize, ySize, xMapSize, yMapSize, maxAlt);
+            ColorBlend cb = new ColorBlend();
+            cb.Positions = new[] { 0, 1 / 3f, 1 / 2f, 3 / 4f, 7 / 8f, 1 };
+            cb.Colors = new[] { Color.FromArgb(61, 84, 51), Color.FromArgb(35, 50, 32), Color.FromArgb(35, 50, 32), Color.FromArgb(160, 153, 147), Color.FromArgb(247, 247, 251), Color.FromArgb(247, 247, 251) };
+
+            //terrain.terrainFromBmp(inBmp);
+            //terrain.terrainFromTIFF(inTif);
+            //terrain.addTerrainNoise(0, xOffset, yOffset, frequency, octaves, persistance, lacunarity, mu);
+            terrain.generateTerrain(xOffset, yOffset, frequency, octaves, persistance, lacunarity, mu);
+            terrain.setTextureSample(cb);
+            bmp = terrain.getHeightBitmap();
+            terrain.saveHeightRaw("beforeErosion.raw");
+            bmp.Save("terrainBeforeErosion.bmp");
+            terrain.thermalErosion(45, 25);
+            terrain.vFieldHydroErosion(.01, .1, .05, .05, .1, .00005, 1, 800);
+            terrain.saveHeightRaw(filename);
+            terrain.saveTIFF(tifFile);
+            bmp = terrain.getNormalMap();
+            bmp.Save(normalMap);
+            bmp = terrain.getHeightBitmap();
+            bmp.Save(bmpFile);
+            bmp = terrain.getTexture();
+            bmp.Save(texFile);
+            bmp = terrain.getErosionMap();
+            bmp.Save(erosionMap);
+            bmp = terrain.getDepositionMap();
+            bmp.Save(depositionMap);
+            bmp = terrain.getThermalErosionMap();
+            bmp.Save("thermalErosion.bmp");
+            bmp = terrain.getTalusMap();
+            bmp.Save("talus.bmp");
+            bmp = terrain.getWaterMap(.5f);
+            bmp.Save(waterMap);
+            terrain.saveWaterRaw(waterRaw,5);
+            bmp = terrain.getSlopeMap();
+            bmp.Save(slopeMap);
+            bmp = terrain.getSplatMap(1000, 5000, 500, 0, 0, 40, 0, 15, .1);
+            bmp.Save("snow.bmp");
+            bmp = terrain.getSplatMap(0, 1500, 0, 1000, 0, 45, 0, 20, .3);
+            bmp.Save("trees.bmp");
+            bmp = terrain.getSplatMap(0, 1500, 0, 1000, 0, 65, 0, 20, .4);
+            bmp.Save("grass.bmp");*/
+			
+        /*
+        // pick a random vector based on the hash
+        private static double Grad(int hash, double x, double y, double z)
+        {
+            switch (hash & 0x0F)
+            {
+                case 0x0: return x + y;
+                case 0x1: return -x + y;
+                case 0x2: return x - y;
+                case 0x3: return -x - y;
+                case 0x4: return x + z;
+                case 0x5: return -x + z;
+                case 0x6: return x - z;
+                case 0x7: return -x - z;
+                case 0x8: return y + z;
+                case 0x9: return -y + z;
+                case 0xA: return y - z;
+                case 0xB: return -y - z;
+                case 0xC: return y + x;
+                case 0xD: return -y + z;
+                case 0xE: return y - x;
+                case 0xF: return -y - z;
+                default: return 0; // should never happen
+            }
+        }
+        */

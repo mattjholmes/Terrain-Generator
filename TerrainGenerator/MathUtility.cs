@@ -28,7 +28,7 @@ namespace TerrainGenerator
             return g.X * x + g.Y * y;
         }
 
-        // generate a random list including all ints ONCE from 0...N
+        // generate a random list including all ints ONCE from 0...Max
         public static int[] generateRandomOrder(int max)
         {
             List<int> source = new List<int>();
@@ -49,6 +49,7 @@ namespace TerrainGenerator
             return output.ToArray();
         }
 
+        // generate a random list including all ints ONCE from Min...Max
         public static int[] generateRandomOrder(int min, int max)
         {
             if (min > max)

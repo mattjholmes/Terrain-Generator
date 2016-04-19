@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Matthew Holmes")]
 [assembly: AssemblyProduct("Procedural Terrain Generator")]
-[assembly: AssemblyCopyright("Copyright ©  2016")]
+[assembly: AssemblyCopyright("©2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
