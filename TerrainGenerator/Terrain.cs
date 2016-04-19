@@ -69,7 +69,7 @@ namespace TerrainGenerator
         private double pipeLength;
 
         // gradient sample map for generating terrain texture
-        private Bitmap texSample = new Bitmap(1024, 1024);
+        private Bitmap texSample;
 
         // create a noise generator instance for use in terrain generation
         private NoiseGenerator generator = new NoiseGenerator();
@@ -98,6 +98,7 @@ namespace TerrainGenerator
             tErosion = new double[x, y];
             talus = new double[x, y];
             rand = new Random();
+            texSample = new Bitmap(1024, 1024);
 
             // initialize the components of the water velocity and flux arrays
             for (int i = 0; i < xSize; i++)
@@ -1314,7 +1315,6 @@ namespace TerrainGenerator
                     output.SetPixel(x, y, color);
                 }
             }
-
             return output;
         }
 
